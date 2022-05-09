@@ -1,4 +1,5 @@
-.idea
 db.sqlite3
+.vscode/
+env/
+static/
 *.pyc
-__pycache__

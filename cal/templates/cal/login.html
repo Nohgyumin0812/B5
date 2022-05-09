@@ -1,0 +1,27 @@
+{% extends 'templates/base.html' %}
+
+{% block header %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block main %}
+
+<div id="login">
+    
+    <form action="{% url 'login' %}" method="POST">
+    {% csrf_token %}
+        <div id="logo"><img src="{% static 'img/icons8-입안자-24.png' %}"><p>언제 만나</p></div>
+
+        <div class="input-box">
+            <input id="username" type="text" name="username" placeholder="ID">
+        </div>
+            
+        <div class="input-box">
+            <input id="password" type="password" name="password" placeholder="PASSWORD">
+        </div>
+        <button type="submit">LOGIN</button><br>
+        <a href="signup.html">아직 회원이 아니신가요?</a>
+    </form>        
+</div>
+
+{% endblock %}

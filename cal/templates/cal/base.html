@@ -1,0 +1,81 @@
+{% load static %}
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>언제 만나</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    
+    {% block head %}
+    {% endblock %}
+
+    <!-- Bootstrap CSS 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg"
+      crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'cal/css/styles.css' %}">
+    <title>Django Calendar App</title>-->
+  </head>
+  <body>
+    <div id="body-wrapper">
+      <header>
+          <a id="navbar-brand" href="#">
+              <div>
+                  <img src="{% static 'img/icons8-농구-30.png' %}">
+                  <img src="{% static 'img/icons8-야구-공-30.png' %}">
+                  <img src="{% static 'img/icons8-축구-2-30.png' %}">
+              </div>
+          </a>
+          <div id="navbar-nav">
+              <ul>
+                  {% if user.is_authenticated %}
+                  {% comment %}
+                  <!-- <li><a class="nav-link" href="{% url 'cal:logout' %}">LOGOUT</a></li>
+                  <li><a class="nav-link" href="{% url 'cal:mypage' %}">MY PAGE</a></li> -->
+                  {% endcomment %}
+                  <li><a class="nav-link" href="#">LOGOUT</a></li>
+                  <li><a class="nav-link" href="#">MY PAGE</a></li>
+
+
+                  {% else %}
+                  {% comment %}
+                  <!-- <li><a class="nav-link" href="{% url 'cal:login' %}">LOGIN</a></li>
+                  <li><a class="nav-link" href="{% url 'cal:join' %}">JOIN</a></li> -->
+                  {% endcomment %}
+                  <li><a class="nav-link" href="#">LOGIN</a></li>
+                  <li><a class="nav-link" href="#">JOIN</a></li>
+                  
+
+                  {% endif %}
+              </ul>
+          </div>
+      </header>
+      <main>
+        {% block main %}
+        {% endblock %}
+      </main>
+      <footer>
+        <ul>
+            <li>언제 만나_B5</li>
+        </ul>
+      </footer>
+    </div>
+  </body>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"></script>
+
+    {% block script %}
+    {% endblock %}
+  </body>
+</html>
