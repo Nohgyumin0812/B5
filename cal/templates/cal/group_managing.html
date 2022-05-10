@@ -1,0 +1,31 @@
+{% extends 'cal/base.html' %}
+{% load static %}
+
+{% block header %}
+<!--<link rel="stylesheet" type="text/css" href="{% static 'css/group_managing.css' %}">-->
+<link rel="stylesheet" type="text/css" href="/cal/static/css/group_managing.css">
+{% endblock %}
+{% block main %}
+<div id="group-outer">
+    <div id="my-group">
+        <p><img src="{% static 'img/icons8-group-32 (1).png' %}">내 그룹</p>
+        <div id="my-group-inner">
+            <button type="submit"><img class="icons" src="/cal/static/img/KakaoTalk_20220510_230525576_01.png"><br>그룹 만들기</button>
+            <div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+    <div id="group-invite">
+        <p><img src="{% static 'img/icons8-add-user-group-man-man-24.png' %}">그룹 초대 요청</p>
+        <div id="group-invite-inner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
