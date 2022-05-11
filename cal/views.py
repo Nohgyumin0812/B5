@@ -65,3 +65,18 @@ def event(request, event_id=None):
             Event.objects.filter(pk=event_id).delete()
             return HttpResponseRedirect(reverse('cal:calendar'))
     return render(request, 'cal/event.html', {'form': form})
+
+def signup(request):
+    """
+    회원가입
+    """
+    form =""
+    return render(request, 'cal/signup.html', {'form':form})
+
+
+
+def group_making(request):
+    return render(request, 'cal/group_making.html')
+
+def group_managing(request):
+    return render(request, 'cal/group_managing.html')

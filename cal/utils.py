@@ -19,7 +19,7 @@ class Calendar(HTMLCalendar):
 	def formatday(self, day, events):
 		events_per_day = events.filter(date__day=day)
 
-
+		"""
 		loc = '09230740'
 		url = 'https://weather.naver.com/today/%s' % (loc)
 		raw = requests.get(url)
@@ -72,7 +72,8 @@ class Calendar(HTMLCalendar):
 
 		else:
 			d = ''
-
+	"""
+		d=''
 		print()
 		for event in events_per_day:
 			d += f'<li> {event.get_html_url} </li>'
