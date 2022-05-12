@@ -2,8 +2,9 @@
 {% load static %}
 
 {% block header %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static './css/signup.css' %}">
 {% endblock %}
+
 {% block main %}
 
 {% if error %}
@@ -20,17 +21,17 @@
 
     <div id="outer">
         <div class="input-box" style="display:block; float:left;">
-            <input name="username"  type="text" placeholder="ID">
-        </div>
-
-        <div class="input-box">
-            <input name="password1"  type="password" placeholder="PASSWORD" style="margin-right:10px;">
-            <input name="password2"  type="password" placeholder="CONFIRM PASSWORD">
+            <input name="username" id="username" type="text" placeholder="ID" value="{{ form.username.value|default_if_none:'' }}">
         </div>
         
         <div class="input-box">
-            <input name="address"  type="email" placeholder="ADDRESS" style="margin-right:10px;">
-            <input name="tel"  type="tel" placeholder="PHONE NUMBER">
+            <input name="password1" id="password1" type="password" placeholder="PASSWORD" style="margin-right:10px;" value="{{ form.username.value|default_if_none:'' }}">
+            <input name="password2" id="password2" type="password" placeholder="CONFIRM PASSWORD" value="{{ form.username.value|default_if_none:'' }}">
+        </div>
+        
+        <div class="input-box">
+            <input name="email" id="email" type="email" placeholder="ADDRESS" style="margin-right:10px;" value="{{ form.username.value|default_if_none:'' }}">
+            <input name="tel" id="tel"  type="tel" placeholder="PHONE NUMBER" value="{{ form.username.value|default_if_none:'' }}">
         </div>
     </div>
 
