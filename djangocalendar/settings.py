@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'common.apps.CommonConfig',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -122,3 +123,14 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'static').replace('\\', '/')
 # URL that your STATIC files will be accessible through the browser.
 STATIC_URL = '/static/'
+
+<<<<<<< HEAD
+<<<<<<< HEAD
+LOGIN_REDIRECT_URL ='/'
+LOGOUT_REDIRECT_URL ='/'
+=======
+LOGOUT_REDIRECT_URL = 'main'
+>>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
+=======
+LOGOUT_REDIRECT_URL = 'main'
+>>>>>>> fede2d955a2c0055c41e2159225127809f9607dd

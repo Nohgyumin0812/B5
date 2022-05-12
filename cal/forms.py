@@ -1,14 +1,12 @@
-from django.forms import ModelForm, DateInput
+from django.forms import ModelForm
 from cal.models import Event
 
-class EventForm(ModelForm):
+class SignupForm(ModelForm):
+  password_check = forms.CharField(max_length=20, widget=forms.PasswordInput(attrs={'class':'pw2'}))
   class Meta:
-    model = Event
-    widgets = {
-      'date': DateInput(attrs={'type': 'datetime'}, format='%Y-%m-%d'),
-    }
-    fields = '__all__'
-
-  def __init__(self, *args, **kwargs):
-    super(EventForm, self).__init__(*args, **kwargs)
-    self.fields['date'].input_formats = ('%Y-%m-%d',)
+      model = Member
+      fields = ['username', 'password', 'password_check', 'name']
+      widgets = {
+        'username' : forms.TextInput(attrs={'class':'username'}),
+        'password' : forms.PasswordInput(attrs={'class':'pw1'})
+      }

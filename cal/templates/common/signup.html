@@ -2,8 +2,9 @@
 {% load static %}
 
 {% block header %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static './css/signup.css' %}">
 {% endblock %}
+
 {% block main %}
 
 {% if error %}
@@ -13,24 +14,24 @@
 {% endif %}
 
 <div id="signup">
-    <form action="{% url 'cal:signup' %}" method="POST">
+    <form action="{% url 'common:signup' %}" method="POST">
         {% csrf_token %}
-
+        {{form.as_p}}
         <div id="logo"><img src="{% static 'img/icons8-입안자-24.png' %}"><p>언제 만나</p></div>
 
     <div id="outer">
         <div class="input-box" style="display:block; float:left;">
-            <input name="username"  type="text" placeholder="ID">
+            <input name="username" id="username" type="text" placeholder="ID" value="{{ form.username.value|default_if_none:'' }}">
         </div>
-        
+
         <div class="input-box">
-            <input name="password1"  type="password" placeholder="PASSWORD" style="margin-right:10px;">
-            <input name="password2"  type="password" placeholder="CONFIRM PASSWORD">
+            <input name="password1" id="password1" type="password" placeholder="PASSWORD" style="margin-right:10px;" value="{{ form.username.value|default_if_none:'' }}">
+            <input name="password2" id="password2" type="password" placeholder="CONFIRM PASSWORD" value="{{ form.username.value|default_if_none:'' }}">
         </div>
-        
+
         <div class="input-box">
-            <input name="address"  type="email" placeholder="ADDRESS" style="margin-right:10px;">
-            <input name="tel"  type="tel" placeholder="PHONE NUMBER">
+            <input name="email" id="email" type="email" placeholder="ADDRESS" style="margin-right:10px;" value="{{ form.username.value|default_if_none:'' }}">
+            <input name="tel" id="tel"  type="tel" placeholder="PHONE NUMBER" value="{{ form.username.value|default_if_none:'' }}">
         </div>
     </div>
 

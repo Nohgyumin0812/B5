@@ -4,15 +4,26 @@
 <html lang="ko">
   <head>
     <!-- Required meta tags -->
+    {% block header %}
+    {% endblock %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>언제 만나</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static './css/base.css' %}">
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
     
-    {% block head %}
-    {% endblock %}
+    
+>>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
+=======
+    
+    
+>>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
 
-    <!-- Bootstrap CSS 
+
+
+    <!-- Bootstrap CSS
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
       crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg"
@@ -42,27 +53,44 @@
 
 
                   {% else %}
-                  {% comment %}
-                  <!-- <li><a class="nav-link" href="{% url 'cal:login' %}">LOGIN</a></li>
-                  <li><a class="nav-link" href="{% url 'cal:join' %}">JOIN</a></li> -->
-                  {% endcomment %}
-                  <li><a class="nav-link" href="#">LOGIN</a></li>
-                  <li><a class="nav-link" href="#">JOIN</a></li>
+<<<<<<< HEAD
+<<<<<<< HEAD
+                  <li><a class="nav-link" href="{% url 'common:login' %}">LOGIN</a></li>
+                  <li><a class="nav-link" href="{% url 'common:signup' %}">JOIN</a></li>
+
+                  <!-- <li><a class="nav-link" href="#">LOGIN</a></li>
+                  <li><a class="nav-link" href="#">JOIN</a></li> -->
+
+=======
+=======
+>>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
+                  <li><a class="nav-link" href="{% url 'cal:login' %}">LOGIN</a></li>
+                  <li><a class="nav-link" href="{% url 'cal:signup' %}">JOIN</a></li>
+
+                  <!-- <li><a class="nav-link" href="#">LOGIN</a></li>
+                  <li><a class="nav-link" href="#">JOIN</a></li> -->
                   
+>>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
 
                   {% endif %}
               </ul>
           </div>
       </header>
-      <main>
-        {% block main %}
-        {% endblock %}
-      </main>
-      <footer>
-        <ul>
-            <li>언제 만나_B5</li>
-        </ul>
-      </footer>
+<<<<<<< HEAD
+<<<<<<< HEAD
+
+=======
+      
+>>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
+=======
+      
+>>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
+      <div id="body-content">
+        <section>
+          {% block main %}
+          {% endblock %}
+        </section>
+      </div>
     </div>
   </body>
 
@@ -77,5 +105,15 @@
 
     {% block script %}
     {% endblock %}
+
+<<<<<<< HEAD
+<<<<<<< HEAD
+
+=======
+    
+>>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
+=======
+    
+>>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
   </body>
 </html>

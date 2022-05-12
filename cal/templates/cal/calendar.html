@@ -13,6 +13,7 @@
 	<a class="btn btn-info right" href="{% url 'cal:event_new' %}"> New Event </a>
 </div> -->
 
+<div id="logo"><img src="{% static 'img/icons8-입안자-24.png' %}"><p>언제 만나</p></div>
 <div class="calender_box">
     <div class="calender">
         <div class="header">
@@ -37,26 +38,28 @@
     <script src="{% static 'scripts/calender.js' %}"></script>
 </div>
 
+
 <div class="day-add">
     <button class="day-btn"><img src="{% static 'img/icons8-추가-48.png' %}" width="30px"><span>내가 운동할 수 있는 날 추가하기</span></button>
 </div>
 
-<div class="list-area">
+<div class="list-area" id="list-area-1">
     <p><img src="{% static 'img/icons8-달리는-24.png' %}" width="30px">선호 운동 리스트</p>
     <div class="list-box"></div>
 </div>
 
-<div class="list-area">
+<div class="list-area" id="list-area-2">
     <p><img src="{% static 'img/icons8-group-32.png' %}" width="30px">참여자 리스트</p>
     <div class="list-box"></div>
     <button class="part-btn" id="invitation-btn">초대하기</button>
     <button class="part-btn" id="kick-btn">강퇴하기</button>
 </div>
 
-<div class="list-area">
+<div class="list-area" id="list-area-3">
     <p><img src="{% static 'img/icons8-chat-room-24.png' %}" width="30px">추천</p>
     <div class="list-box"></div>
 </div>
-
+{% comment %}
 {{ calendar }}
+{% endcomment %}
 {% endblock %}
