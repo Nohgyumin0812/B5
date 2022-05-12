@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 from django.shortcuts import render, get_object_or_404, redirect
 from .form import MemberForm, SignupForm
@@ -93,6 +94,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .form import MemberForm, SignupForm
 
 >>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
+=======
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .form import MemberForm, SignupForm
+
+>>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
 def login(request):
     form = MemberForm()
     return render(request, 'login.html', {'form':form})
@@ -117,6 +124,10 @@ def main(request):
         else:
             return redirect('login')
 <<<<<<< HEAD
+<<<<<<< HEAD
+        return render(request, 'main.html')
+>>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
+=======
         return render(request, 'main.html')
 >>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
 =======
