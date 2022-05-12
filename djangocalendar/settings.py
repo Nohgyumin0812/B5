@@ -124,17 +124,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static').replace('\\', '/')
 # URL that your STATIC files will be accessible through the browser.
 STATIC_URL = '/static/'
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 LOGIN_REDIRECT_URL ='/'
 LOGOUT_REDIRECT_URL ='/'
-=======
-LOGOUT_REDIRECT_URL = 'main'
->>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
-=======
-LOGOUT_REDIRECT_URL = 'main'
->>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
-=======
-LOGOUT_REDIRECT_URL = 'main'
->>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
+

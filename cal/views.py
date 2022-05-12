@@ -1,10 +1,11 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-
+from datetime import datetime, timedelta, date
 from django.shortcuts import render, get_object_or_404, redirect
-from .form import MemberForm, SignupForm
+from django.http import HttpResponse, HttpResponseRedirect
+from django.views import generic
+from django.urls import reverse
+from django.utils.safestring import mark_safe
+import calendar
 
-<<<<<<< HEAD
 from .models import *
 from .utils import Calendar
 from .forms import EventForm
@@ -13,12 +14,7 @@ def index(request):
     return render(request, 'cal/main.html')
 
 
-def signup(request):
-    """
-    회원가입
-    """
-    form =""
-    return render(request, 'cal/signup.html', {'form':form})
+
 
 def calendar(request):
     return render(request, 'cal/calendar.html')
@@ -87,49 +83,3 @@ def event(request, event_id=None):
             return HttpResponseRedirect(reverse('cal:calendar'))
     return render(request, 'cal/event.html', {'form': form})
 """
-=======
-=======
-
-from django.shortcuts import render, get_object_or_404, redirect
-from .form import MemberForm, SignupForm
-
->>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
-=======
-
-from django.shortcuts import render, get_object_or_404, redirect
-from .form import MemberForm, SignupForm
-
->>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
-def login(request):
-    form = MemberForm()
-    return render(request, 'login.html', {'form':form})
-
-def signup(request):
-    if request.method == 'POST':
-        form = SignupForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('login')
-    form = SignupForm()
-    return render(request, 'signup.html', {'form':form})
-
-def main(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        member = Member.objects.get(username=username, password=password)
-        if member is not None:
-            request.session['memberId'] = member.id
-            return render(request, 'main.html', {'memberId': member.name})
-        else:
-            return redirect('login')
-<<<<<<< HEAD
-<<<<<<< HEAD
-        return render(request, 'main.html')
->>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
-=======
-        return render(request, 'main.html')
->>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
-=======
-        return render(request, 'main.html')
->>>>>>> fede2d955a2c0055c41e2159225127809f9607dd

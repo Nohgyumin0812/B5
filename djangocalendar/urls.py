@@ -19,26 +19,7 @@ from cal import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     path('', include('cal.urls')),
     path('common/', include('common.urls')),
     path('', views.index, name='index'),
-=======
-=======
->>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
-=======
->>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
-    path('login/', views.login, name='login'),
-    path('signUp/', views.signUp, name='signUp'),
-    path('main/', views.main, name='main'),
-    path('logout/', views.logout, name='logout'),
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
-=======
->>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
-=======
->>>>>>> fede2d955a2c0055c41e2159225127809f9607dd
 ]
