@@ -1,0 +1,19 @@
+@font-face {
+    font-family: 'KOTRA_BOLD-Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.1/KOTRA_BOLD-Bold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SuncheonB';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202-2@1.0/SuncheonB.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+#my-group p, #group-invite p{
+    font-family: 'SuncheonB';
+}
+.icons img{
+    -webkit-filter: opacity(.5) drop-shadow(0 0 0 #94CEF2);
+    filter:opacity(.5) drop-shadow(0 0 0 #94CEF2);
+}
