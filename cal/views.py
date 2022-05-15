@@ -5,12 +5,36 @@ from django.views import generic
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 import calendar
-
-from .models import *
-from .forms import EventForm
+import requests
+import bs4
+import datetime as dt
+import json
 
 def index(request):
-    return render(request, 'cal/calendar.html')
+    loc = '09230740'
+    url = 'https://weather.naver.com/today/%s' % (loc)
+    raw = requests.get(url)
+    html = bs4.BeautifulSoup(raw.text, 'html.parser')
+    target = html.find('ul', {'class': 'week_list'})
+    day_datas = target.find_all('div', {'class': 'day_data'})
+    weather_dic = {}
+
+    for day_data in day_datas:
+        date_data = day_data.find('span', {'class': 'date'})
+        weather_inner = day_data.find_all('span', {'class': 'weather_inner'})
+        for weathers in weather_inner:
+            timeslot = weathers.find('span', {'class': 'timeslot'})
+            weather = weathers.find('i', {'class': 'ico'})
+            if timeslot.text == '오전':
+                weather_dic[date_data.text] = []
+                weather_dic[date_data.text].append(weather.text)
+
+    file_path = "./sample.json"
+    with open(file_path, 'w') as outfile:
+        json.dump(weather_dic, outfile)
+    print(weather_dic)
+
+    return render(request, 'cal/calendar.html', weather_dic)
 
 def calendar(request):
     return render(request, 'cal/calendar.html')
@@ -21,61 +45,3 @@ def group_making(request):
 def group_managing(request):
     return render(request, 'cal/group_managing.html')
 
-
-
-
-
-"""
-class CalendarView(generic.ListView):
-    model = Event
-    template_name = 'cal/calendar.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        d = get_date(self.request.GET.get('month', None))
-        cal = Calendar(d.year, d.month)
-        html_cal = cal.formatmonth(withyear=True)
-        context['calendar'] = mark_safe(html_cal)
-        context['prev_month'] = prev_month(d)
-        context['next_month'] = next_month(d)
-        return context
-
-def get_date(req_month):
-    if req_month:
-        year, month = (int(x) for x in req_month.split('-'))
-        return date(year, month, day=1)
-    return datetime.today()
-
-def prev_month(d):
-    first = d.replace(day=1)
-    prev_month = first - timedelta(days=1)
-    month = 'month=' + str(prev_month.year) + '-' + str(prev_month.month)
-    return month
-
-def next_month(d):
-    days_in_month = calendar.monthrange(d.year, d.month)[1]
-    last = d.replace(day=days_in_month)
-    next_month = last + timedelta(days=1)
-    month = 'month=' + str(next_month.year) + '-' + str(next_month.month)
-    return month
-
-##일정저장 및 수정##
-def event(request, event_id=None):
-    instance = Event()
-    if event_id:
-        instance = get_object_or_404(Event, pk=event_id)
-    else:
-        instance = Event()
-
-    form = EventForm(request.POST or None, instance=instance)
-    if request.POST and 'save' in request.POST and form.is_valid():
-        form.save()
-        return HttpResponseRedirect(reverse('cal:calendar'))
-
-##일정삭제##
-    if request.POST and 'delete' in request.POST:
-        if event_id:
-            Event.objects.filter(pk=event_id).delete()
-            return HttpResponseRedirect(reverse('cal:calendar'))
-    return render(request, 'cal/event.html', {'form': form})
-"""
