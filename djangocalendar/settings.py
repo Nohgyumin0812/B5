@@ -127,6 +127,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static').replace('\\', '/')
 STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = '/calendar'
-LOGOUT_REDIRECT_URL = '/calendar'
+LOGOUT_REDIRECT_URL = '/'
 
 AUTH_USER_MODEL = 'common.CustomUser'

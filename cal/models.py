@@ -10,3 +10,8 @@ class Event(models.Model):
     def get_html_url(self):
         url = reverse('cal:event_edit', args=(self.id,))
         return f'<a href="{url}"> {self.title} </a>'
+
+"""
+class group(models.Model):
+    user_group = models.OneToOneField('user_group')
+"""
