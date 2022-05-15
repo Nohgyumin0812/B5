@@ -31,7 +31,7 @@ def index(request):
 
     file_path = "./sample.json"
     with open(file_path, 'w') as outfile:
-        json.dump(weather_dic, outfile)
+        json.dump(weather_dic, outfile, ensure_ascii=False)
     print(weather_dic)
 
     return render(request, 'cal/calendar.html', weather_dic)
