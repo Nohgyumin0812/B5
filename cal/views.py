@@ -7,14 +7,10 @@ from django.utils.safestring import mark_safe
 import calendar
 
 from .models import *
-from .utils import Calendar
 from .forms import EventForm
 
 def index(request):
-    return render(request, 'cal/main.html')
-
-
-
+    return render(request, 'cal/calendar.html')
 
 def calendar(request):
     return render(request, 'cal/calendar.html')
