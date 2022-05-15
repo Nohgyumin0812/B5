@@ -1,16 +1,16 @@
-from datetime import datetime, timedelta, date
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse, HttpResponseRedirect
-from django.views import generic
-from django.urls import reverse
-from django.utils.safestring import mark_safe
-import calendar
-import requests
-import bs4
-import datetime as dt
 import json
+import bs4
+import requests
+from django.shortcuts import render
+from django.http import HttpResponse
+
+
 
 def index(request):
+    return HttpResponse("startpage")
+
+
+def calendar(request):
     loc = '09230740'
     url = 'https://weather.naver.com/today/%s' % (loc)
     raw = requests.get(url)
@@ -33,13 +33,10 @@ def index(request):
     with open(file_path, 'w') as outfile:
         json.dump(weather_dic, outfile, ensure_ascii=False)
     print(weather_dic)
-
     return render(request, 'cal/calendar.html', weather_dic)
 
-def calendar(request):
-    return render(request, 'cal/calendar.html')
-
 def group_making(request):
+
     return render(request, 'cal/group_making.html')
 
 def group_managing(request):
