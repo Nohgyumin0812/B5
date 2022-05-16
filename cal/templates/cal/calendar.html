@@ -30,7 +30,6 @@
             <div class="dates"></div>
         </div>
     </div>
-    <script src="{% static 'scripts/calender.js' %}"></script>
 </div>
 
 
@@ -54,7 +53,85 @@
     <p><img src="{% static 'img/icons8-chat-room-24.png' %}" width="30px">추천</p>
     <div class="list-box"></div>
 </div>
-{% comment %}
-{{ calendar }}
-{% endcomment %}
+
+{% endblock %}
+
+{% block script %}
+<script> 
+    const date = new Date();
+    const renderCalender = () => {
+        const viewYear = date.getFullYear();
+        const viewMonth = date.getMonth();
+
+        document.querySelector('.year-month').textContent = `${viewYear}년 ${viewMonth + 1}월`;
+
+        const prevLast = new Date(viewYear, viewMonth, 0);
+        const thisLast = new Date(viewYear, viewMonth+1, 0);
+
+        const PLDate = prevLast.getDate();
+        const PLDay = prevLast.getDay();
+
+        const TLDate = thisLast.getDate();
+        const TLDay = thisLast.getDay();
+
+        const prevDates = [];
+        const thisDates = [...Array(TLDate + 1).keys()].slice(1);
+        const nextDates = [];
+
+        if (PLDay !==6) {
+            for (let i = 0; i<PLDay +1; i++){
+                prevDates.unshift(PLDate -i);
+            }
+        }
+
+        for (let i = 1; i < 7 - TLDay; i++){
+            nextDates.push(i);
+        }
+
+
+        const weather_data = "{{ data }}".replace(/&quot;/g, "\"");
+        const result = JSON.parse(weather_data);
+        var k = Object.keys(result);
+
+        const dates = prevDates.concat(thisDates, nextDates);
+        const firstDateIndex = dates.indexOf(1);
+        const lastDateIndex = dates.lastIndexOf(TLDate);
+
+        const m = viewMonth + 1;
+
+        dates.forEach((date, i) => {
+            const condition = i >= firstDateIndex && i < lastDateIndex+1
+                                ? 'this'
+                                : 'other';
+            //날씨 띄우기
+            for(j=0; j<k.length; j++){
+                var tmp = m.toString() + "." + date.toString() + ".";
+                if(tmp !== k[j]){
+                    if(result[tmp] !== undefined){
+                        dates[i] = `<div class = "date"><span class = "${condition}">${date}<span id="wet" style="margin-left:20px;">${result[tmp]}</span></span></div>`;
+                    } 
+                    else{
+                        dates[i] = `<div class = "date"><span class = "${condition}">${date}<span id="wet" style="margin-left:20px;"></span></span></div>`;
+                    }
+                }
+            }
+        })
+
+        document.querySelector('.dates').innerHTML = dates.join('');
+
+
+
+        const today = new Date();
+        if (viewMonth === today.getMonth() && viewYear === today.getFullYear()) {
+            for (let date of document.querySelectorAll('.this')) {
+                if (+date.innerText === today.getDate()) {
+                    date.classList.add('today');
+                    break;
+                }
+            }
+        }
+    };
+
+    renderCalender();
+</script>
 {% endblock %}

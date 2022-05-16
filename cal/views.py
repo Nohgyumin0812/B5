@@ -26,14 +26,16 @@ def calendar(request):
             timeslot = weathers.find('span', {'class': 'timeslot'})
             weather = weathers.find('i', {'class': 'ico'})
             if timeslot.text == '오전':
-                weather_dic[date_data.text] = []
-                weather_dic[date_data.text].append(weather.text)
-
+                # weather_dic[date_data.text] = []
+                # weather_dic[date_data.text].append(weather.text)
+                weather_dic[date_data.text] = weather.text
+    
     file_path = "./sample.json"
     with open(file_path, 'w') as outfile:
         json.dump(weather_dic, outfile, ensure_ascii=False)
-    print(weather_dic)
-    return render(request, 'cal/calendar.html', weather_dic)
+    data = json.dumps(weather_dic, ensure_ascii=False)
+    print(data)
+    return render(request, 'cal/calendar.html', {'data':data})
 
 def group_making(request):
 
