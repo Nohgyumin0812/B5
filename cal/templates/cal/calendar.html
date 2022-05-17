@@ -90,6 +90,9 @@
 
 
         const weather_data = "{{ data }}".replace(/&quot;/g, "\"");
+        var w = "{% static 'img/icons8-구름-48.png' %}";
+        console.log(w);
+        console.log(typeof(w));
         const result = JSON.parse(weather_data);
         var k = Object.keys(result);
 
@@ -106,9 +109,42 @@
             //날씨 띄우기
             for(j=0; j<k.length; j++){
                 var tmp = m.toString() + "." + date.toString() + ".";
+                
                 if(tmp !== k[j]){
                     if(result[tmp] !== undefined){
-                        dates[i] = `<div class = "date"><span class = "${condition}">${date}<span id="wet" style="margin-left:20px;">${result[tmp]}</span></span></div>`;
+                        if (result[tmp] === "맑음"){
+                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-태양-48.png' %}""></span></div>`;
+                        }
+                        else if(result[tmp] === "구름많음" || result[tmp] === "구름조금"){
+                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-부분적으로-흐린-날-48.png' %}""></span></div>`;
+                        }
+                        else if(result[tmp] === "비" || result[tmp] === "가끔 비, 한때 비" || result[tmp] === "소나기"){
+                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-강렬한-비-48.png' %}""></span></div>`;
+                        }
+                        else if(result[tmp] === "흐림"){
+                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-구름-48.png' %}""></span></div>`;
+                        }
+                        else if(result[tmp] === "눈" || result[tmp] === "가끔 눈, 한때 눈"){
+                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-눈-48.png' %}""></span></div>`;
+                        }
+                        else if(result[tmp] === "비 또는 눈" || result[tmp] === "눈 또는 비" || result[tmp] === "가끔 비 또는 눈, 한때 비 또는 눈" || result[tmp] === "가끔 눈 또는 비, 한때 눈 또는 비"){
+                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-진눈깨비-48.png' %}""></span></div>`;
+                        }
+                        else if(result[tmp] === "안개" || result[tmp] === "연무" || result[tmp] === "박무 (엷은 안개)"){
+                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-안개-날-48.png' %}""></span></div>`;
+                        }
+                        else if(result[tmp] === "빗방울"){
+                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-젖은-48.png' %}""></span></div>`;
+                        }
+                        else if(result[tmp] === "눈날림"){
+                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-눈-폭풍-48.png' %}""></span></div>`;
+                        }
+                        else if(result[tmp] === "낙뢰"){
+                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-폭풍-48.png' %}""></span></div>`;
+                        }
+                        else if(result[tmp] === "황사"){
+                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-먼지-48.png' %}""></span></div>`;
+                        }
                     } 
                     else{
                         dates[i] = `<div class = "date"><span class = "${condition}">${date}<span id="wet" style="margin-left:20px;"></span></span></div>`;
