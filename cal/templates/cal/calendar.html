@@ -14,7 +14,27 @@
         <div class="header">
             <div class="year-month"></div>
             <div class="schedule-add">
-                <button class="schedule-btn">일정 추가</button>
+                <a href="javascript:openPop();" class="schedule-btn">일정 추가</a>
+            </div>
+            <div class="popup_layer" id="popup_layer" style="display: none;">
+                <div class="popup_box">
+                    <div id="border">
+                        <div style="height: 10px; width: 375px; float: top;">
+                            <a href="javascript:closePop();"><img src="{% static 'img/ic_close.svg' %}" class="m_header-banner-close" width="30px" height="30px"></a>
+                          </div>
+                          <!--팝업 컨텐츠 영역-->
+                          <div class="popup_cont">
+                              <form>
+                                  {% csrf_token %}
+                                  <br>
+                                  <span>일정명</span><input type="text" style="width:185px; height:25px;" name="sche-name"><br><br>
+                                  <span>날짜</span><input type="date" style="width:180px; height:25px; padding-left:10px;" name="sche-date"><br><br>
+                                  <span>메모</span><textarea style="resize:none; width:200px; height:100px; vertical-align:middle;" name="sche-memo"></textarea><br><br>
+                                  <button type="submit" class="btn_close">추가하기</button><br><br>
+                              </form>
+                          </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="main">
@@ -169,5 +189,14 @@
     };
 
     renderCalender();
+
+    function openPop() {
+        document.getElementById("popup_layer").style.display = "block";
+    
+    }
+    function closePop() {
+        document.getElementById("popup_layer").style.display = "none";
+    }
+
 </script>
 {% endblock %}
