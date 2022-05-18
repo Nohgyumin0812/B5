@@ -1,5 +1,8 @@
 from django.forms import ModelForm, DateInput
 from cal.models import Event
+from .models import *
+from django import forms
+
 
 class EventForm(ModelForm):
   class Meta:
@@ -12,3 +15,11 @@ class EventForm(ModelForm):
   def __init__(self, *args, **kwargs):
     super(EventForm, self).__init__(*args, **kwargs)
     self.fields['date'].input_formats = ('%Y-%m-%d',)
+
+
+
+class GroupForm(forms.ModelForm):
+
+  class Meta:
+    model = CustomGroup
+    fields = ["groupname", "sports", "friendname", "friendname"]

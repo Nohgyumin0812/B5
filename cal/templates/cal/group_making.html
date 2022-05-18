@@ -7,35 +7,34 @@
 {% block main %}
 
 <div id="make-group">
-    <form action="{% url 'cal:group_making' %}" method="POST">
+    <form action="{% url 'cal:group_making' %}" method="POST" enctype= "multipart/form-data">
         {% csrf_token %}
-
         <div id="logo"><img src="{% static 'img/icons8-입안자-24.png' %}"><p>언제 만나</p></div>
 
     <div id="outer">
         <div class="input-box">
             <p>그룹 이름을 알려주세요.</p>
-            <input name="groupname"  type="text" placeholder="그룹 이름 입력">
+            <input name="groupname" id = "groupname" type="text" placeholder="그룹 이름 입력">
         </div>
         <br>
         <div id="check">
             <p>그룹의 운동을 선택해주세요.</p>
             <div id="inner-check">
                 <br>
-                <label><input type="checkbox" value="1"><img src="{% static 'img/icons8-축구-2-30.png' %}">축구</label>
-                <label><input type="checkbox" value="2"><img src="{% static 'img/icons8-달리는-24.png' %}">조깅</label>
-                <label><input type="checkbox" value="3"><img src="{% static 'img/icons8-농구-30.png' %}">농구</label><br><br>
-                <label><input type="checkbox" value="4"><img src="{% static 'img/icons8-shuttercock-32.png' %}">배드민턴</label>
-                <label><input type="checkbox" value="5"><img src="{% static 'img/icons8-야구-공-30.png' %}">야구</label>
-                <label><input type="checkbox" value="6"><img src="{% static 'img/icons8-테니스-30.png' %}">테니스</label>
+            <label><input type="checkbox" name = "sports" value="1"><img src="{% static 'img/icons8-축구-2-30.png' %}">축구</label>
+            <label><input type="checkbox" name = "sports" value="2"><img src="{% static 'img/icons8-달리는-24.png' %}">조깅</label>
+            <label><input type="checkbox" name = "sports" value="3"><img src="{% static 'img/icons8-농구-30.png' %}">농구</label><br><br>
+            <label><input type="checkbox" name = "sports" value="4"><img src="{% static 'img/icons8-shuttercock-32.png' %}">배드민턴</label>
+            <label><input type="checkbox" name = "sports" value="5"><img src="{% static 'img/icons8-야구-공-30.png' %}">야구</label>
+            <label><input type="checkbox" name = "sports" value="6"><img src="{% static 'img/icons8-테니스-30.png' %}">테니스</label>
                 <br><br>
             </div>
         </div>
         <br>
         <div class="input-box">
             <p>친구 초대</p>
-            <input name="f-id"  type="text" placeholder="ID"><br>
-            <input name="f-id"  type="text" placeholder="ID"><br>
+            <input name="friendname"  id="f1" type="text" placeholder="ID"><br>
+            <input name="friendname"  id="f2"  type="text" placeholder="ID"><br>
             <button type="submit"><img src="{% static 'img/icons8-add-30.png' %}">ADD MORE</button>
         </div><br>
         <button id="create-group" type="submit">그룹 만들기</button>
