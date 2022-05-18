@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import GroupForm
 from .models import CustomGroup
 
+
 def index(request):
     return render(request, 'common/login.html')
 
@@ -33,13 +34,22 @@ def calendar(request):
                 # weather_dic[date_data.text] = []
                 # weather_dic[date_data.text].append(weather.text)
                 weather_dic[date_data.text] = weather.text
-    
+
+
     file_path = "./sample.json"
     with open(file_path, 'w') as outfile:
         json.dump(weather_dic, outfile, ensure_ascii=False)
     data = json.dumps(weather_dic, ensure_ascii=False)
     print(data)
-    return render(request, 'cal/calendar.html', {'data':data})
+    return render(request, 'cal/calendar.html', {'data': data})
+
+
+@login_required()
+def group_making(request):
+    if request.method == 'POST':
+        form = GroupForm(request.POST)
+        print(request.POST)
+        # owner = request.username
 
 
 @login_required()
