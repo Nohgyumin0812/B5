@@ -35,6 +35,7 @@ def calendar(request):
                 # weather_dic[date_data.text].append(weather.text)
                 weather_dic[date_data.text] = weather.text
 
+
     file_path = "./sample.json"
     with open(file_path, 'w') as outfile:
         json.dump(weather_dic, outfile, ensure_ascii=False)
