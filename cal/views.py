@@ -5,10 +5,10 @@ import requests
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-
+import ast
 from .forms import GroupForm
 from .models import CustomGroup
-
+from common.models import CustomUser
 
 def index(request):
     return render(request, 'common/login.html')
@@ -40,7 +40,8 @@ def calendar(request):
     with open(file_path, 'w') as outfile:
         json.dump(weather_dic, outfile, ensure_ascii=False)
     data = json.dumps(weather_dic, ensure_ascii=False)
-    print(data)
+
+
     return render(request, 'cal/calendar.html', {'data': data})
 
 
@@ -49,16 +50,7 @@ def group_making(request):
     if request.method == 'POST':
         form = GroupForm(request.POST)
         print(request.POST)
-        # owner = request.username
-
-
-@login_required()
-def group_making(request):
-    if request.method == 'POST':
-        form = GroupForm(request.POST)
-        print(request.POST)
-        # owner = request.username
-
+        print(form)
         if form.is_valid():
             group = form.save(commit=False)
             print('##################')
@@ -75,3 +67,20 @@ def group_making(request):
 def group_managing(request):
     return render(request, 'cal/group_managing.html')
 
+@login_required()
+def data_sports(request):
+    sportsall = CustomGroup.objects.get(owner_id = request.user.id).sports
+    sportsall = ast.literal_eval(sportsall)
+    print(sportsall)
+    return render(request, 'calendar.html', {'sports': sportsall})
+
+@login_required()
+def data_member(request):
+    owner = CustomUser.objects.get(id = request.user.id).username
+    member = CustomGroup.objects.get(owner_id = request.user.id).friendname
+    member = ast.literal_eval(member)
+    if '' in member:
+        member.remove('')
+    membersall = [owner]+ member
+    print(membersall)
+    return render(request, 'calendar.html', {'membersall': membersall})
