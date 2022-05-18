@@ -1,5 +1,8 @@
 from django.db import models
 from django.urls import reverse
+from django.db import models
+from django.contrib.auth.models import AbstractUser
+from common.models import CustomUser
 
 class Event(models.Model):
     title = models.CharField(max_length=200)
@@ -15,3 +18,11 @@ class Event(models.Model):
 class group(models.Model):
     user_group = models.OneToOneField('user_group')
 """
+
+class CustomGroup(models.Model):
+    groupname = models.CharField('groupname', max_length=200, blank=False, null=False)
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='owner', null = True, blank = True)
+    members = models.ManyToManyField(CustomUser, verbose_name='members', related_name='members', blank = True, default='')
+    #date = models.DateTimeField(null = True, blank = True, default='')
+    sports = models.CharField(max_length=50, default='')
+    friendname = models.CharField(max_length=50, default='')
