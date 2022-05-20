@@ -3,7 +3,7 @@
 
 
 {% block header %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/my_schedule.css' %}">
 {% endblock %}
 
 {% block main %}
@@ -11,34 +11,12 @@
 <div id="logo"><img src="{% static 'img/icons8-입안자-24.png' %}"><p>언제 만나</p></div>
 <div class="calender_box">
     <div class="calender">
-        <div id="">
-            
-        </div>
         <div class="header">
             <div class="year-month"></div>
-            <div class="schedule-add">
-                <a href="javascript:openPop();" class="schedule-btn">일정 추가</a>
+            <div class="select">
+                <p>운동할 수 있는 날을 선택해주세요!</a>
             </div>
-            <div class="popup_layer" id="popup_layer" style="display: none;">
-                <div class="popup_box">
-                    <div id="border">
-                        <div style="height: 10px; width: 375px; float: top;">
-                            <a href="javascript:closePop();"><img src="{% static 'img/ic_close.svg' %}" class="m_header-banner-close" width="30px" height="30px"></a>
-                          </div>
-                          <!--팝업 컨텐츠 영역-->
-                          <div class="popup_cont">
-                              <form>
-                                  {% csrf_token %}
-                                  <br>
-                                  <span>일정명</span><input type="text" style="width:185px; height:25px;" name="sche-name"><br><br>
-                                  <span>날짜</span><input type="date" style="width:180px; height:25px; padding-left:10px;" name="sche-date"><br><br>
-                                  <span>메모</span><textarea style="resize:none; width:200px; height:100px; vertical-align:middle;" name="sche-memo"></textarea><br><br>
-                                  <button type="submit" class="btn_close">추가하기</button><br><br>
-                              </form>
-                          </div>
-                    </div>
-                </div>
-            </div>
+           
         </div>
         <div class="main">
             <div class="days">
@@ -53,32 +31,6 @@
             <div class="dates"></div>
         </div>
     </div>
-</div>
-
-
-<div class="day-add">
-    <button class="day-btn"><img src="{% static 'img/icons8-추가-48.png' %}" width="30px"><span>내가 운동할 수 있는 날 추가하기</span></button>
-</div>
-
-<div class="list-area" id="list-area-1">
-    <p><img src="{% static 'img/icons8-달리는-24.png' %}" width="30px">선호 운동 리스트</p>
-    <div class="list-box" id="sports">
-        {% for s in sports %}
-            <p>{{s}}</p>
-        {% endfor %}
-    </div>
-</div>
-
-<div class="list-area" id="list-area-2">
-    <p><img src="{% static 'img/icons8-group-32.png' %}" width="30px">참여자 리스트</p>
-    <div class="list-box"></div>
-    <button class="part-btn" id="invitation-btn">초대하기</button>
-    <button class="part-btn" id="kick-btn">강퇴하기</button>
-</div>
-
-<div class="list-area" id="list-area-3">
-    <p><img src="{% static 'img/icons8-chat-room-24.png' %}" width="30px">추천</p>
-    <div class="list-box"></div>
 </div>
 
 {% endblock %}
@@ -118,6 +70,8 @@
 
         const weather_data = "{{ data }}".replace(/&quot;/g, "\"");
         var w = "{% static 'img/icons8-구름-48.png' %}";
+        console.log(w);
+        console.log(typeof(w));
         const result = JSON.parse(weather_data);
         var k = Object.keys(result);
 
@@ -176,6 +130,7 @@
                     }
                 }
             }
+            dates[i] += `<button type="button"><img src="{% static 'img/check.png' %}"></button>`;
         })
 
         document.querySelector('.dates').innerHTML = dates.join('');
@@ -202,10 +157,6 @@
     function closePop() {
         document.getElementById("popup_layer").style.display = "none";
     }
-
-
-    const sports_data = "{{ sports }}";
-    console.log(sports_data);
 
 </script>
 {% endblock %}
