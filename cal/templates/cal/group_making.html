@@ -31,14 +31,25 @@
             </div>
         </div>
         <br>
-        <div class="input-box">
+        <div class="input-box" id="invitation">
             <p>친구 초대</p>
-            <input name="friendname"  id="f1" type="text" placeholder="ID"><br>
-            <input name="friendname"  id="f2"  type="text" placeholder="ID"><br>
-            <button type="submit"><img src="{% static 'img/icons8-add-30.png' %}">ADD MORE</button>
+            <input name="friendname" class="friend" type="text" placeholder="ID"><br>
+            <input name="friendname" class="friend" type="text" placeholder="ID"><br>
         </div><br>
+        <button type="button" onclick="addMore();"><img src="{% static 'img/icons8-add-30.png' %}">ADD MORE</button><br>
         <button id="create-group" type="submit">그룹 만들기</button>
     </div>
     </form>
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function addMore(){
+        var parent = document.getElementById("invitation");
+        var add = `<input name="friendname" class="friend" type="text" placeholder="ID"><br>`
+        parent.innerHTML += add;
+    }
+
+</script>
 {% endblock %}
