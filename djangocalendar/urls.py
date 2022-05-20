@@ -22,4 +22,5 @@ urlpatterns = [
     path('', include('cal.urls')),
     path('common/', include('common.urls')),
     path('', views.index, name='index'),
+    path('', views.data_sports)
 ]

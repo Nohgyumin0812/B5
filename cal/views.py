@@ -39,10 +39,22 @@ def calendar(request):
     file_path = "./sample.json"
     with open(file_path, 'w') as outfile:
         json.dump(weather_dic, outfile, ensure_ascii=False)
+
+    ## 그룹 종목 출력 ##
     data = json.dumps(weather_dic, ensure_ascii=False)
+    sportsall = CustomGroup.objects.get(owner_id = request.user.id).sports
+    sportsall = ast.literal_eval(sportsall)
+    print(sportsall)
 
-
-    return render(request, 'cal/calendar.html', {'data': data})
+    ## 그룹 참여자 출력 ##
+    owner = CustomUser.objects.get(id = request.user.id).username
+    member = CustomGroup.objects.get(owner_id = request.user.id).friendname
+    member = ast.literal_eval(member)
+    if '' in member:
+        member.remove('')
+    membersall = [owner]+ member
+    print(membersall)
+    return render(request, 'cal/calendar.html', {'data': data, 'sportsall':sportsall})
 
 
 @login_required()
@@ -67,20 +79,3 @@ def group_making(request):
 def group_managing(request):
     return render(request, 'cal/group_managing.html')
 
-@login_required()
-def data_sports(request):
-    sportsall = CustomGroup.objects.get(owner_id = request.user.id).sports
-    sportsall = ast.literal_eval(sportsall)
-    print(sportsall)
-    return render(request, 'calendar.html', {'sports': sportsall})
-
-@login_required()
-def data_member(request):
-    owner = CustomUser.objects.get(id = request.user.id).username
-    member = CustomGroup.objects.get(owner_id = request.user.id).friendname
-    member = ast.literal_eval(member)
-    if '' in member:
-        member.remove('')
-    membersall = [owner]+ member
-    print(membersall)
-    return render(request, 'calendar.html', {'membersall': membersall})
