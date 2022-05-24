@@ -41,32 +41,28 @@ def calendar(request):
     data = json.dumps(weather_dic, ensure_ascii=False)
 
     ## 그룹 종목 출력 ##
-    sportsall = CustomGroup.objects.get(owner_id = request.user.id).sports
-    sportsall = ast.literal_eval(sportsall)
-    sports = json.dumps(sportsall, ensure_ascii=False)
-    # file_path = "./sports.json"
-    # with open(file_path, 'w') as outfile:
-    #     json.dump(sportsall, outfile, ensure_ascii=False)
+    try:
+        sportsall = CustomGroup.objects.get(owner_id = request.user.id).sports
+        sportsall = ast.literal_eval(sportsall)
+        sports = json.dumps(sportsall, ensure_ascii=False)
 
     ## 그룹 참여자 출력 ##
-    owner = CustomUser.objects.get(id = request.user.id).username
-    member = CustomGroup.objects.get(owner_id = request.user.id).friendname
-    member = ast.literal_eval(member)
-    if '' in member:
-        member.remove('')
-    membersall = [owner]+ member
-    members = json.dumps(membersall, ensure_ascii=False)
+        owner = CustomUser.objects.get(id = request.user.id).username
+        member = CustomGroup.objects.get(owner_id = request.user.id).friendname
+        member = ast.literal_eval(member)
+        if '' in member:
+            member.remove('')
+        membersall = [owner]+ member
+        members = json.dumps(membersall, ensure_ascii=False)
 
-    # file_path = "./members.json"
-    # with open(file_path, 'w') as outfile:
-    #     json.dump(membersall, outfile, ensure_ascii=False)
-
-    request.session['data'] = data
-    request.session['sports'] = sports
-    request.session['members'] = members
+        request.session['data'] = data
+        request.session['sports'] = sports
+        request.session['members'] = members
 
 
-    return render(request, 'cal/calendar.html', {'data': data, 'sportsall':sports, 'membersall':members})
+        return render(request, 'cal/calendar.html', {'data': data, 'sportsall':sports, 'membersall':members})
+    except CustomGroup.DoesNotExist:
+        return render(request, 'cal/group_making.html')
 
 
 @login_required()
