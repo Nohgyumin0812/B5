@@ -35,18 +35,18 @@ def calendar(request):
                 # weather_dic[date_data.text].append(weather.text)
                 weather_dic[date_data.text] = weather.text
 
-    file_path = "./sample.json"
-    with open(file_path, 'w') as outfile:
-        json.dump(weather_dic, outfile, ensure_ascii=False)
-
+    # file_path = "./sample.json"
+    # with open(file_path, 'w') as outfile:
+    #     json.dump(weather_dic, outfile, ensure_ascii=False)
+    data = json.dumps(weather_dic, ensure_ascii=False)
 
     ## 그룹 종목 출력 ##
-    data = json.dumps(weather_dic, ensure_ascii=False)
     sportsall = CustomGroup.objects.get(owner_id = request.user.id).sports
     sportsall = ast.literal_eval(sportsall)
-    file_path = "./sports.json"
-    with open(file_path, 'w') as outfile:
-        json.dump(sportsall, outfile, ensure_ascii=False)
+    sports = json.dumps(sportsall, ensure_ascii=False)
+    # file_path = "./sports.json"
+    # with open(file_path, 'w') as outfile:
+    #     json.dump(sportsall, outfile, ensure_ascii=False)
 
     ## 그룹 참여자 출력 ##
     owner = CustomUser.objects.get(id = request.user.id).username
@@ -56,12 +56,13 @@ def calendar(request):
         member.remove('')
     membersall = [owner]+ member
     print(membersall)
+    members = json.dumps(membersall, ensure_ascii=False)
 
-    file_path = "./members.json"
-    with open(file_path, 'w') as outfile:
-        json.dump(membersall, outfile, ensure_ascii=False)
+    # file_path = "./members.json"
+    # with open(file_path, 'w') as outfile:
+    #     json.dump(membersall, outfile, ensure_ascii=False)
 
-    return render(request, 'cal/calendar.html', {'data': data, 'sportsall':sportsall, 'membersall':membersall})
+    return render(request, 'cal/calendar.html', {'data': data, 'sportsall':sports, 'membersall':members})
 
 
 @login_required()

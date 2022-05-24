@@ -288,3 +288,25 @@ img{
     font-size:35px;
     vertical-align: middle;
 }
+
+input[type=checkbox]{
+    width:20px;
+    height:20px;
+    vertical-align: middle;
+    margin-right:7px;
+    outline: none;
+    border:solid 2px rgb(92, 92, 92);
+    color:rgb(92, 92, 92);
+}
+input[type=checkbox]{
+    accent-color: rgb(92, 92, 92);
+}
+#sports{
+    text-align: center;
+}
+#sports form{
+    margin-top:22px;
+}
+#sports label{
+    font-family: 'SuncheonB';
+}
