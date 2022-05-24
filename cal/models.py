@@ -25,4 +25,7 @@ class CustomGroup(models.Model):
     members = models.ManyToManyField(CustomUser, verbose_name='members', related_name='members', blank = True, default='')
     #date = models.DateTimeField(null = True, blank = True, default='')
     sports = models.CharField(max_length=50, default='')
-    friendname = models.CharField(max_length=100, default='')
+    friendname = models.CharField(max_length=50, default='')
+
+    def __str__(self):
+        return self.group_name

@@ -35,16 +35,18 @@ def calendar(request):
                 # weather_dic[date_data.text].append(weather.text)
                 weather_dic[date_data.text] = weather.text
 
-
     file_path = "./sample.json"
     with open(file_path, 'w') as outfile:
         json.dump(weather_dic, outfile, ensure_ascii=False)
+
 
     ## 그룹 종목 출력 ##
     data = json.dumps(weather_dic, ensure_ascii=False)
     sportsall = CustomGroup.objects.get(owner_id = request.user.id).sports
     sportsall = ast.literal_eval(sportsall)
-    print(sportsall)
+    file_path = "./sports.json"
+    with open(file_path, 'w') as outfile:
+        json.dump(sportsall, outfile, ensure_ascii=False)
 
     ## 그룹 참여자 출력 ##
     owner = CustomUser.objects.get(id = request.user.id).username
@@ -54,7 +56,12 @@ def calendar(request):
         member.remove('')
     membersall = [owner]+ member
     print(membersall)
-    return render(request, 'cal/calendar.html', {'data': data, 'sportsall':sportsall})
+
+    file_path = "./members.json"
+    with open(file_path, 'w') as outfile:
+        json.dump(membersall, outfile, ensure_ascii=False)
+
+    return render(request, 'cal/calendar.html', {'data': data, 'sportsall':sportsall, 'membersall':membersall})
 
 
 @login_required()
@@ -79,3 +86,5 @@ def group_making(request):
 def group_managing(request):
     return render(request, 'cal/group_managing.html')
 
+def my_schedule(request):
+    return render(request, 'cal/my_schedule.html')
