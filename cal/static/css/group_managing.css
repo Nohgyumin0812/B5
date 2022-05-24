@@ -12,8 +12,53 @@
 }
 #my-group p, #group-invite p{
     font-family: 'SuncheonB';
+    font-size:20px;
 }
-.icons img{
-    -webkit-filter: opacity(.5) drop-shadow(0 0 0 #94CEF2);
-    filter:opacity(.5) drop-shadow(0 0 0 #94CEF2);
+.icons{
+    filter:opacity(.2) drop-shadow(0 0 0 #019eff);
+    width:60px;
+    height:60px;
+}
+#group-outer{
+    width:1000px;
+    margin: auto;
+    margin-top:60px;
+}
+#my-group{
+    text-align: center;
+}
+#groupMake{
+    display: inline-block;
+    width:200px;
+    height:140px;
+    border:3px solid #94CEF2;
+    border-radius: 10px;
+    text-align: center;
+}
+#groupList, #my-group-inner{
+    display: inline-block;
+    width:750px;
+    height:200px;
+    text-align: center;
+}
+#groupList div{
+    display: inline-block;
+    width:200px;
+    height: 140px;
+    text-align: center;
+    border:3px solid #94CEF2;
+    border-radius: 10px;
+    background-color: white;
+}
+#my-group-inner{
+    background-color: #e7e7e7;
+    border-radius: 10px;
+}
+#groupList{
+    margin-top:27px;
+}
+.hide{
+    display: inline-block;
+    
+    z-index: 9999;
 }
