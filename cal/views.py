@@ -40,16 +40,10 @@ def calendar(request):
     #     json.dump(weather_dic, outfile, ensure_ascii=False)
     data = json.dumps(weather_dic, ensure_ascii=False)
 
-    request.session['data'] = weather_dic
-
     ## 그룹 종목 출력 ##
     sportsall = CustomGroup.objects.get(owner_id = request.user.id).sports
     sportsall = ast.literal_eval(sportsall)
-    request.session['sports'] = sportsall
-
     sports = json.dumps(sportsall, ensure_ascii=False)
-
-
     # file_path = "./sports.json"
     # with open(file_path, 'w') as outfile:
     #     json.dump(sportsall, outfile, ensure_ascii=False)
@@ -61,13 +55,17 @@ def calendar(request):
     if '' in member:
         member.remove('')
     membersall = [owner]+ member
-    request.session['members'] = membersall
-
     members = json.dumps(membersall, ensure_ascii=False)
 
     # file_path = "./members.json"
     # with open(file_path, 'w') as outfile:
     #     json.dump(membersall, outfile, ensure_ascii=False)
+
+    request.session['data'] = data
+    request.session['sports'] = sports
+    request.session['members'] = members
+
+
     return render(request, 'cal/calendar.html', {'data': data, 'sportsall':sports, 'membersall':members})
 
 
@@ -93,9 +91,7 @@ def my_schedule(request):
     data = request.session['data']
     sports = request.session['sports']
     members = request.session['members']
-    data = json.dumps(data, ensure_ascii=False)
-    sports = json.dumps(sports, ensure_ascii=False)
-    members = json.dumps(members, ensure_ascii=False)
+
     print(members)
 
     return render(request, 'cal/my_schedule.html', {'data': data, 'sportsall':sports, 'membersall':members})
