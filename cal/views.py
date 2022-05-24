@@ -40,10 +40,16 @@ def calendar(request):
     #     json.dump(weather_dic, outfile, ensure_ascii=False)
     data = json.dumps(weather_dic, ensure_ascii=False)
 
+    request.session['data'] = weather_dic
+
     ## 그룹 종목 출력 ##
     sportsall = CustomGroup.objects.get(owner_id = request.user.id).sports
     sportsall = ast.literal_eval(sportsall)
+    request.session['sports'] = sportsall
+
     sports = json.dumps(sportsall, ensure_ascii=False)
+
+
     # file_path = "./sports.json"
     # with open(file_path, 'w') as outfile:
     #     json.dump(sportsall, outfile, ensure_ascii=False)
@@ -55,13 +61,13 @@ def calendar(request):
     if '' in member:
         member.remove('')
     membersall = [owner]+ member
-    print(membersall)
+    request.session['members'] = membersall
+
     members = json.dumps(membersall, ensure_ascii=False)
 
     # file_path = "./members.json"
     # with open(file_path, 'w') as outfile:
     #     json.dump(membersall, outfile, ensure_ascii=False)
-
     return render(request, 'cal/calendar.html', {'data': data, 'sportsall':sports, 'membersall':members})
 
 
@@ -69,16 +75,12 @@ def calendar(request):
 def group_making(request):
     if request.method == 'POST':
         form = GroupForm(request.POST)
-        print(request.POST)
-        print(form)
         if form.is_valid():
             group = form.save(commit=False)
-            print('##################')
             group.owner = request.user
             group.group_name = request.POST["groupname"]
             group.sports = request.POST.getlist('sports')
             group.friendname = request.POST.getlist("friendname")
-            print(group.friendname)
             group.save()
             return redirect('cal:group_managing')
     return render(request, 'cal/group_making.html')
@@ -88,4 +90,13 @@ def group_managing(request):
     return render(request, 'cal/group_managing.html')
 
 def my_schedule(request):
-    return render(request, 'cal/my_schedule.html')
+    data = request.session['data']
+    sports = request.session['sports']
+    members = request.session['members']
+    data = json.dumps(data, ensure_ascii=False)
+    sports = json.dumps(sports, ensure_ascii=False)
+    members = json.dumps(members, ensure_ascii=False)
+    print(members)
+
+    return render(request, 'cal/my_schedule.html', {'data': data, 'sportsall':sports, 'membersall':members})
+

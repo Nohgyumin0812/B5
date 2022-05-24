@@ -26,6 +26,3 @@ class CustomGroup(models.Model):
     #date = models.DateTimeField(null = True, blank = True, default='')
     sports = models.CharField(max_length=50, default='')
     friendname = models.CharField(max_length=50, default='')
-
-    def __str__(self):
-        return self.group_name

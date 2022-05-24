@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from .forms import SignupForm
 from .models import CustomUser
-
+from cal.models import CustomGroup
 #로그인 구현
 def login(request):
     if request.method == 'POST':
@@ -37,6 +37,7 @@ def signup(request):
 
         user= CustomUser.objects.create_user(username,email, password, tel = tel, sports = sports)
         user.save()
+
         return redirect('index')
 
     return render(request, 'common/signup.html')
