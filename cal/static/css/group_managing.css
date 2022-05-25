@@ -1,0 +1,62 @@
+@font-face {
+    font-family: 'KOTRA_BOLD-Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.1/KOTRA_BOLD-Bold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SuncheonB';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202-2@1.0/SuncheonB.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+#my-group p, #group-invite p{
+    font-family: 'SuncheonB';
+    font-size:20px;
+}
+.icons{
+    filter:opacity(.2) drop-shadow(0 0 0 #019eff);
+    width:60px;
+    height:60px;
+}
+#group-outer{
+    width:1000px;
+    margin: auto;
+    margin-top:60px;
+}
+#my-group{
+    text-align: center;
+}
+#groupMake{
+    display: inline-block;
+    width:200px;
+    height:140px;
+    border:3px solid #94CEF2;
+    border-radius: 10px;
+    text-align: center;
+}
+#groupList, #my-group-inner{
+    display: inline-block;
+    width:750px;
+    height:200px;
+    text-align: center;
+}
+#groupList div{
+    display: inline-block;
+    width:200px;
+    height: 140px;
+    text-align: center;
+    border:3px solid #94CEF2;
+    border-radius: 10px;
+    background-color: white;
+}
+#my-group-inner{
+    background-color: #e7e7e7;
+    border-radius: 10px;
+}
+#groupList{
+    margin-top:27px;
+}
+.my-group:hover{
+    background-color: #9b9b9b;
+}
