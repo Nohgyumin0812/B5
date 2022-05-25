@@ -57,10 +57,7 @@
 
 
 <div class="day-add">
-    {% comment %}
     <a class="day-btn" href="{% url 'cal:my_schedule' %}"><img src="{% static 'img/icons8-추가-48.png' %}" width="30px"><span>내가 운동할 수 있는 날 추가하기</span></a>
-    {% endcomment %}
-    <button class="day-btn"><img src="{% static 'img/icons8-추가-48.png' %}" width="30px"><span>내가 운동할 수 있는 날 추가하기</span></button>
 </div>
 
 <div class="list-area" id="list-area-1">
@@ -86,7 +83,10 @@
 
 <div class="list-area" id="list-area-3">
     <p><img src="{% static 'img/icons8-chat-room-24.png' %}" width="30px">추천</p>
-    <div class="list-box"></div>
+    <div class="list-box" id="rec">
+        <p>선호하는 운동이 비슷한 다른 그룹과 함께 운동해보세요!</p><br>
+        <a href="#">함께하기</a>
+    </div>
 </div>
 
 {% endblock %}

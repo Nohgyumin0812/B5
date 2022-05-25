@@ -207,11 +207,14 @@
     top:160px;
     font-family: 'SuncheonB';
     width: 350px;
-    height: 60px;
+    height: 40px;
     background-color: #C9C9C9;
     border-radius: 20px;
     font-size: 20px;
     cursor: pointer;
+    padding-top:15px;
+    text-align: center;
+    border:3px solid #626262;
 }
 
 /* 리스트 영역들 */
@@ -309,4 +312,14 @@ input[type=checkbox]{
 }
 #sports label{
     font-family: 'SuncheonB';
+}
+#rec{
+    text-align: center;
+    font-family: 'SuncheonB';
+}
+#rec p{
+    font-size: 15px;
+    display: inline-block;
+    width:245px;
+    margin-top:35px;
 }
