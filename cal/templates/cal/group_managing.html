@@ -6,12 +6,12 @@
 {% endblock %}
 {% block main %}
 <div id="group-outer">
-    <p><img src="{% static 'img/icons8-group-32 (1).png' %}">내 그룹</p><br>
+    <p class="ptag" style="padding-top:30px; margin-bottom:0px;">내 그룹<img src="{% static 'img/icons8-group-32 (1).png' %}"></p><br>
     <div id="my-group">
         <div id="groupMake" style="margin-right:10px;"><br><a id="link" href="{% url 'cal:group_making' %}"><img class="icons" src="{% static 'img/icons8-더하다-32.png' %}"><br>그룹 만들기</a></div>
         <div id="my-group-inner">
             <div id="groupList">
-                <div style="margin-right:10px;"><br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>피카츄 그룹
+                <div class="hide" style="margin-right:10px;"><br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>피카츄 그룹
                     <!-- <div class="hide" >3명<img src="{% static 'img/icons8-축구-2-50.png' %}"></div> -->
                 </div>
                 <div style="margin-right:10px;"><br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>이브이 그룹
@@ -23,8 +23,8 @@
             </div>
         </div>
     </div>
+    <p class="ptag" style="margin-top:40px;">그룹 초대 요청<img src="{% static 'img/icons8-add-user-group-man-man-24.png' %}"></p>
     <div id="group-invite">
-        <p><img src="{% static 'img/icons8-add-user-group-man-man-24.png' %}">그룹 초대 요청</p>
         <div id="group-invite-inner">
             <div></div>
             <div></div>

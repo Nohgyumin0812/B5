@@ -77,7 +77,7 @@ def calendar(request):
         request.session['sports_date'] = sports_date
 
 
-        return render(request, 'cal/calendar.html', {'data': data, 'sportsall':sports, 'membersall':members})
+        return render(request, 'cal/calendar.html', {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date})
     except CustomGroup.DoesNotExist:
         return render(request, 'cal/group_making.html')
 

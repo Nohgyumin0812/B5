@@ -57,6 +57,15 @@
 #groupList{
     margin-top:27px;
 }
-.my-group:hover{
+.hide:hover{
     background-color: #9b9b9b;
+}
+.ptag{
+    font-family: 'KOTRA_BOLD-Bold';
+    font-size: 30px;
+}
+.ptag img{
+    width:40px;
+    height:40px;
+    vertical-align: middle;
 }

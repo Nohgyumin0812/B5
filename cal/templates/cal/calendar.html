@@ -133,57 +133,106 @@
         const firstDateIndex = dates.indexOf(1);
         const lastDateIndex = dates.lastIndexOf(TLDate);
 
+
         const m = viewMonth + 1;
+
+        var w_sport = "{{ sports_date }}".replace(/&quot;/g, "\"");
+        var weather_sports = JSON.parse(w_sport);
+        var w_k = Object.keys(weather_sports);
 
         dates.forEach((date, i) => {
             const condition = i >= firstDateIndex && i < lastDateIndex+1
                                 ? 'this'
                                 : 'other';
+
             //날씨 띄우기
             for(j=0; j<k.length; j++){
                 var tmp = m.toString() + "." + date.toString() + ".";
-                
+                var img;
                 if(tmp !== k[j]){
                     if(result[tmp] !== undefined){
-
                         if (result[tmp] === "맑음"){
-                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-태양-48.png' %}""></span></div>`;
+                            //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-태양-48.png' %}""></span></div>`;
+                            img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-태양-48.png' %}">`;
                         }
                         else if(result[tmp] === "구름많음" || result[tmp] === "구름조금"){
-                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-부분적으로-흐린-날-48.png' %}""></span></div>`;
+                            //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-부분적으로-흐린-날-48.png' %}""></span></div>`;
+                            img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-부분적으로-흐린-날-48.png' %}">`
                         }
                         else if(result[tmp] === "흐림"){
-                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-구름-48.png' %}""></span></div>`;
+                            //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-구름-48.png' %}""></span></div>`;
+                            img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-구름-48.png' %}">`
                         }
                         else if(result[tmp] === "비 또는 눈" || result[tmp] === "눈 또는 비" || result[tmp] === "가끔 비 또는 눈, 한때 비 또는 눈" || result[tmp] === "가끔 눈 또는 비, 한때 눈 또는 비"){
-                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-진눈깨비-48.png' %}""></span></div>`;
+                            //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-진눈깨비-48.png' %}""></span></div>`;
+                            img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-진눈깨비-48.png' %}">`
                         }
                         else if(result[tmp] === "안개" || result[tmp] === "연무" || result[tmp] === "박무 (엷은 안개)"){
-                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-안개-날-48.png' %}""></span></div>`;
+                            //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-안개-날-48.png' %}""></span></div>`;
+                            img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-안개-날-48.png' %}">`
                         }
                         else if(result[tmp] === "빗방울"){
-                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-젖은-48.png' %}""></span></div>`;
+                            //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-젖은-48.png' %}""></span></div>`;
+                            img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-젖은-48.png' %}">`
                         }
                         else if(result[tmp] === "눈날림"){
-                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-눈-폭풍-48.png' %}""></span></div>`;
+                            //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-눈-폭풍-48.png' %}""></span></div>`;
+                            img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-눈-폭풍-48.png' %}">`
                         }
                         else if(result[tmp] === "낙뢰"){
-                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-폭풍-48.png' %}""></span></div>`;
+                            //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-폭풍-48.png' %}""></span></div>`;
+                            img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-폭풍-48.png' %}">`
                         }
                         else if(result[tmp] === "황사"){
-                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-먼지-48.png' %}""></span></div>`;
+                            //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-먼지-48.png' %}""></span></div>`;
+                            img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-먼지-48.png' %}">`
                         }
                         else if(result[tmp].includes("비") || result[tmp] === "소나기"){
-                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-강렬한-비-48.png' %}""></span></div>`;
+                            //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-강렬한-비-48.png' %}""></span></div>`;
+                            img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-강렬한-비-48.png' %}">`
                         }
                         else if(result[tmp].includes("눈")){
-                            dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-눈-48.png' %}""></span></div>`;
+                            //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-눈-48.png' %}""></span></div>`;
+                            img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-눈-48.png' %}">`
                         }
                     } 
                     else{
-                        dates[i] = `<div class = "date"><span class = "${condition}">${date}<span id="wet" style="margin-left:20px;"></span></span></div>`;
+                        //dates[i] = `<div class = "date"><span class = "${condition}">${date}<span id="wet" style="margin-left:20px;"></span></span></div>`;
+                        img = ``;
                     }
                 }
+                if(tmp !== w_k[j]){
+                    if(weather_sports[tmp] !== undefined){
+                        var spo = ``;
+                        for(var a in weather_sports[tmp]){
+                            console.log(weather_sports[tmp][a]);
+                            //dates_s[i] = `<div class = "date"><span class = "${condition}">${d}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-태양-48.png' %}""></span></div>`;
+                            if(weather_sports[tmp][a] == 1){
+                                spo += `<img id="spo" style="width:20px; height:20px;" src = "{% static 'img/icons8-축구-2-30.png' %}">`;
+                            }
+                            else if(weather_sports[tmp][a] == 2){
+                                spo += `<img id="spo" style="width:20px; height:20px;" src = "{% static 'img/icons8-달리는-24.png' %}">`;
+                            }
+                            else if(weather_sports[tmp][a] == 3){
+                                spo += `<img id="spo" style="width:20px; height:20px;" src = "{% static 'img/icons8-농구-30.png' %}">`;
+                            }
+                            else if(weather_sports[tmp][a] == 4){
+                                spo += `<img id="spo" style="width:20px; height:20px;" src = "{% static 'img/icons8-shuttercock-32.png' %}">`;
+                            }
+                            else if(weather_sports[tmp][a] == 5){
+                                spo += `<img id="spo" style="width:20px; height:20px;" src = "{% static 'img/icons8-야구-공-30.png' %}">`;
+                            }
+                            else{
+                                spo += `<img id="spo" style="width:20px; height:20px;" src = "{% static 'img/icons8-테니스-30.png' %}">`;
+                            }
+                        }
+                        console.log(spo);
+                    }
+                    else{
+                        spo = ``;
+                    }
+                }
+                dates[i] = `<div class = "date"><span class = "${condition}">${date}${img}</span><div>${spo}</div></div>`;
             }
         })
 
@@ -200,6 +249,8 @@
                 }
             }
         }
+
+
     };
 
     renderCalender();
@@ -215,11 +266,13 @@
 
     var sports_data = "{{ sportsall }}".replace(/&quot;/g, "\"");
     var sport = JSON.parse(sports_data);
-    console.log(sport);
+
 
     for(i=0; i<sport.length; i++){
         document.getElementById(sport[i]).checked = true;
     }
+
+    
 
 </script>
 {% endblock %}
