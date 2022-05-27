@@ -10,7 +10,7 @@ from .forms import GroupForm
 from .models import CustomGroup
 from common.models import CustomUser
 from django.contrib.auth.models import Group
-
+import pandas as pd
 
 def index(request):
     return render(request, 'common/login.html')
@@ -99,9 +99,32 @@ def group_making(request):
             return redirect('cal:group_managing')
     return render(request, 'cal/group_making.html')
 
+#2015
+#00016
 
 def group_managing(request):
-    return render(request, 'cal/group_managing.html')
+    my_group = []
+    group = CustomGroup.objects.all().values()
+    user = CustomUser.objects.all().values()
+    username = CustomUser.objects.get(id=request.user.id).username
+
+    df = pd.DataFrame(group)
+    df_user = pd.DataFrame(user)
+    df_group = (pd.DataFrame(df[['groupname','owner_id', 'friendname']]))
+
+    df_user['owner_id']= df_user['id']
+    df_user = (df_user[['owner_id', 'username']])
+    df_inner_join = pd.merge(df_group, df_user, left_on = 'owner_id', right_on = 'owner_id', how = 'inner')
+    #print(df_user[df_user['id'] == df['owner_id']])
+    for i in range(df_inner_join.shape[0]):
+        df_inner_join['username'][i] = [df_inner_join['username'][i]]
+        df_inner_join['friendname'][i] = ast.literal_eval(df_inner_join['friendname'][i])+(df_inner_join['username'][i])
+        if username in df_inner_join['friendname'][i]:
+            my_group.append(df_inner_join['groupname'][i])
+    print(my_group)
+    group_json = json.dumps(my_group, ensure_ascii=False)
+
+    return render(request, 'cal/group_managing.html', {'group_json':group_json})
 
 def my_schedule(request):
     data = request.session['data']
@@ -112,3 +135,4 @@ def my_schedule(request):
     print(members)
 
     return render(request, 'cal/my_schedule.html', {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date})
+
