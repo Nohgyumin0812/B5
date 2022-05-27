@@ -16,11 +16,6 @@ class Event(models.Model):
         url = reverse('cal:event_edit', args=(self.id,))
         return f'<a href="{url}"> {self.title} </a>'
 
-"""
-class group(models.Model):
-    user_group = models.OneToOneField('user_group')
-"""
-
 class CustomGroup(models.Model):
     groupname = models.CharField('groupname', max_length=200, blank=False, null=False)
     owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='owner', null = True, blank = True)
@@ -29,7 +24,7 @@ class CustomGroup(models.Model):
     sports = models.CharField(max_length=50, default='')
     friendname = models.CharField(max_length=50, default='')
 
-
+"""
 class CustomGroup(models.Model):
     groupname = models.CharField('groupname', max_length=200, blank=False, null=False)
     slug = models.SlugField(max_length=30, unique=True, allow_unicode=True, db_index=True, default="")
@@ -57,3 +52,4 @@ class InviteStatus(models.Model):
 
     def __str__(self):
         return self.groupname
+"""
