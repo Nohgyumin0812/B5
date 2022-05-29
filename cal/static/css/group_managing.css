@@ -20,7 +20,7 @@
     height:60px;
 }
 #group-outer{
-    width:1000px;
+    width:1100px;
     margin: auto;
     margin-top:60px;
 }
@@ -37,7 +37,7 @@
 }
 #groupList, #my-group-inner{
     display: inline-block;
-    width:750px;
+    width:800px;
     height:200px;
     text-align: center;
 }
@@ -57,8 +57,8 @@
 #groupList{
     margin-top:27px;
 }
-.hide:hover{
-    background-color: #9b9b9b;
+.hide{
+    flex: left;
 }
 .ptag{
     font-family: 'KOTRA_BOLD-Bold';
@@ -68,4 +68,19 @@
     width:40px;
     height:40px;
     vertical-align: middle;
+}
+.arrow{
+    border:none;
+}
+#r-arrow{
+    display: inline-block;
+    position:absolute;
+    right:260px;
+    top:245px;
+}
+#l-arrow{
+    display: inline-block;
+    position:absolute;
+    left:480px;
+    top:245px;
 }

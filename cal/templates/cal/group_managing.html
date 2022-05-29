@@ -10,17 +10,10 @@
     <div id="my-group">
         <div id="groupMake" style="margin-right:10px;"><br><a id="link" href="{% url 'cal:group_making' %}"><img class="icons" src="{% static 'img/icons8-더하다-32.png' %}"><br>그룹 만들기</a></div>
         <div id="my-group-inner">
+            <a class="arrow" id="l-arrow" href="javascript:"><img src="{% static 'img/icons8-놀이-24.png' %}" style="transform: scaleX(-1);"></a>
             <div id="groupList">
-                <div class="hide" style="margin-right:10px;"><br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>피카츄 그룹
-                    <!-- <div class="hide" >3명<img src="{% static 'img/icons8-축구-2-50.png' %}"></div> -->
-                </div>
-                <div style="margin-right:10px;"><br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>이브이 그룹
-                    <!-- <div class="hide" style="display:none ;">3명<img src="{% static 'img/icons8-축구-2-50.png' %}"></div> -->
-                </div>
-                <div><br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>메타몽 그룹
-                    <!-- <div class="hide" style="display:none ;">3명<img src="{% static 'img/icons8-축구-2-50.png' %}"></div> -->
-                </div>
             </div>
+            <a class="arrow" id="r-arrow" href="javascript:"><img src="{% static 'img/icons8-놀이-24.png' %}"></a>
         </div>
     </div>
     <p class="ptag" style="margin-top:40px;">그룹 초대 요청<img src="{% static 'img/icons8-add-user-group-man-man-24.png' %}"></p>
@@ -33,4 +26,27 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block script %}
+<script>
+    var list = document.getElementById("groupList");
+    var group = "{{ group_json }}".replace(/&quot;/g, "\"");
+    var group_list = JSON.parse(group);
+    var group_key = Object.keys(group_list);
+    console.log(group_list);
+
+    for(i=0; i<group_key.length; i++){
+        var k = group_list[i];
+        if (i < 3){
+            list.innerHTML += `<a href="javascript:sendToCalendar(k);"><div class="hide" style="margin-right:10px;"><br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>${k} 그룹</div></a>`;
+        }
+        
+    }
+
+    function sendToCalendar(data){
+        var sendData = encodeURI(data, "UTF-8");
+        location.href = `{% url 'cal:calendar' %}?${sendData}`;
+    }
+
+</script>
 {% endblock %}
