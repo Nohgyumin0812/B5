@@ -31,9 +31,10 @@
         </div>
     </div>
 </div>
-<div id="subm2">
-    <button id="subm" type="button" onclick="submitMyDate();">저장하기</button>
-</div>
+<form id="subm2" action="{% url 'cal:my_schedule' %}" method="POST">
+    {% csrf_token %}
+    <button id="subm" type="submit" onclick="submitMyDate();">저장하기</button>
+</form>
 
 {% endblock %}
 
@@ -173,16 +174,10 @@
         myDate.push(month.toString()+"."+date.toString());
     }
     
-    //function submitMyDate(){
-    //    $.ajax({
-    //        url: 'cal/view.py',
-    //        type: 'post',
-    //        data: {'myDate': JSON.stringify(myDate)},
-    //        success: function (res){
-    //            alert("저장이 완료되었습니다!");
-    //        }
-    //    })
-    //}
+    function submitMyDate(){
+        var t = document.getElementById("subm");
+        t.value = myDate;
+    }
 
 </script>
 {% endblock %}
