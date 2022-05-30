@@ -124,7 +124,7 @@ def group_managing(request):
     print(my_group)
     group_json = json.dumps(my_group, ensure_ascii=False)
 
-    return render(request, 'cal/group_managing.html', {'group_json':group_json})
+    return render(request, 'cal/group_managing.html', {'my_group':my_group})
 
 def my_schedule(request):
     data = request.session['data']

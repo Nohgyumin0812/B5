@@ -20,12 +20,13 @@
     height:60px;
 }
 #group-outer{
-    width:1100px;
+    width:1200px;
     margin: auto;
     margin-top:60px;
 }
 #my-group{
     text-align: center;
+    height:250px;
 }
 #groupMake{
     display: inline-block;
@@ -35,11 +36,14 @@
     border-radius: 10px;
     text-align: center;
 }
-#groupList, #my-group-inner{
-    display: inline-block;
-    width:800px;
+#groupList, #my-group-inner, #group-invite, #group-invite-inner{
+    /* display: inline-block; */
+    width:900px;
     height:200px;
     text-align: center;
+}
+#my-group-inner{
+    float: right;
 }
 #groupList div{
     display: inline-block;
@@ -57,9 +61,13 @@
 #groupList{
     margin-top:27px;
 }
-.hide{
-    flex: left;
+.swiper-slide, .swiper-slide-active{
+    width:200px !important;
+    margin:0px 50px;
 }
+/* .swiper-slide:hover{
+    background-color: rgb(0,0,0,0.2);
+} */
 .ptag{
     font-family: 'KOTRA_BOLD-Bold';
     font-size: 30px;
@@ -69,18 +77,32 @@
     height:40px;
     vertical-align: middle;
 }
-.arrow{
-    border:none;
+
+.swiper-button-next:after, .swiper-button-prev:after{
+    font-size: 20px !important;
+    font-weight:bolder !important;
 }
-#r-arrow{
-    display: inline-block;
-    position:absolute;
-    right:260px;
-    top:245px;
+#group-invite{
+    width:1000px;
+    height: 200px;
+    background-color: #94CEF2;
+    border-radius: 10px;
 }
-#l-arrow{
+#bt1::after, #bt2::after{
+    color:white;
+    z-index: 10000;
+}
+#group-invite-inner div{
     display: inline-block;
-    position:absolute;
-    left:480px;
-    top:245px;
+    width:233.5px !important;
+    height: 150px !important;
+    text-align: center;
+    border-radius: 10px;
+    background-color: white;
+}
+#group-invite-inner{
+    margin-top: 27px;
+}
+.d2{
+    margin:0px 50px;
 }

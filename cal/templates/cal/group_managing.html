@@ -3,50 +3,71 @@
 
 {% block header %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/group_managing.css' %}">
+
+<script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
 {% endblock %}
+
 {% block main %}
 <div id="group-outer">
     <p class="ptag" style="padding-top:30px; margin-bottom:0px;">내 그룹<img src="{% static 'img/icons8-group-32 (1).png' %}"></p><br>
     <div id="my-group">
-        <div id="groupMake" style="margin-right:10px;"><br><a id="link" href="{% url 'cal:group_making' %}"><img class="icons" src="{% static 'img/icons8-더하다-32.png' %}"><br>그룹 만들기</a></div>
-        <div id="my-group-inner">
-            <a class="arrow" id="l-arrow" href="javascript:"><img src="{% static 'img/icons8-놀이-24.png' %}" style="transform: scaleX(-1);"></a>
-            <div id="groupList">
+        <div id="groupMake" style="margin-top:27px;"><br><a id="link" href="{% url 'cal:group_making' %}"><img class="icons" src="{% static 'img/icons8-더하다-32.png' %}"><br>그룹 만들기</a></div>
+        <div id="my-group-inner" class="swiper">
+            <!-- <a class="arrow swiper-button-prev" id="l-arrow" href="javascript:leftNext();"><img src="{% static 'img/icons8-놀이-24.png' %}" style="transform: scaleX(-1);"></a> -->
+            <div id="groupList" class="swiper-wrapper">
+                {% for data in my_group %}
+                <a href="javascript:sendToCalendar('{{data}}');" class="swiper-slide"><div><br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>{{data}} 그룹</div></a>
+                {% endfor %}
             </div>
-            <a class="arrow" id="r-arrow" href="javascript:"><img src="{% static 'img/icons8-놀이-24.png' %}"></a>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+            <!-- <a class="arrow swiper-button-next" id="r-arrow" href="javascript:rightNext();"><img src="{% static 'img/icons8-놀이-24.png' %}"></a> -->
         </div>
     </div>
     <p class="ptag" style="margin-top:40px;">그룹 초대 요청<img src="{% static 'img/icons8-add-user-group-man-man-24.png' %}"></p>
-    <div id="group-invite">
-        <div id="group-invite-inner">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+    <div id="group-invite" class="swiper">
+        <div id="group-invite-inner" class="swiper-wrapper">
+            <div class="swiper-slide d2"></div>
+            <div class="swiper-slide d2"></div>
+            <div class="swiper-slide d2"></div>
+            <div class="swiper-slide d2"></div>
         </div>
+        <div class="swiper-button-prev" id="bt1"></div>
+        <div class="swiper-button-next" id="bt2"></div>
     </div>
 </div>
 {% endblock %}
 {% block script %}
 <script>
-    var list = document.getElementById("groupList");
-    var group = "{{ group_json }}".replace(/&quot;/g, "\"");
-    var group_list = JSON.parse(group);
-    var group_key = Object.keys(group_list);
-    console.log(group_list);
+    //var list = document.getElementById("groupList");
+    //var group = "{{ group_json }}".replace(/&quot;/g, "\"");
+    //var group_list = JSON.parse(group);
+    //var group_key = Object.keys(group_list);
+    //console.log(group_list);
 
-    for(i=0; i<group_key.length; i++){
-        var k = group_list[i];
-        if (i < 3){
-            list.innerHTML += `<a href="javascript:sendToCalendar(k);"><div class="hide" style="margin-right:10px;"><br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>${k} 그룹</div></a>`;
-        }
+    //for(i=0; i<group_key.length; i++){
+    //    var k = group_list[i];
+    //    list.innerHTML += `<a href="javascript:sendToCalendar(k);"><div class="swiper-slide" style="margin-right:10px;"><br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>${k} 그룹</div></a>`;
         
-    }
+    //}
 
     function sendToCalendar(data){
         var sendData = encodeURI(data, "UTF-8");
         location.href = `{% url 'cal:calendar' %}?${sendData}`;
     }
 
+    const swiper = new Swiper( '.swiper', {
+        autoplay: false,
+        loop: true,
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        slidesPerView: 3,
+        slidesPerGroup : 3,
+      } );
+
+    
 </script>
 {% endblock %}
