@@ -1,0 +1,108 @@
+@font-face {
+    font-family: 'KOTRA_BOLD-Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.1/KOTRA_BOLD-Bold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SuncheonB';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202-2@1.0/SuncheonB.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+#my-group p, #group-invite p{
+    font-family: 'SuncheonB';
+    font-size:20px;
+}
+.icons{
+    filter:opacity(.2) drop-shadow(0 0 0 #019eff);
+    width:60px;
+    height:60px;
+}
+#group-outer{
+    width:1200px;
+    margin: auto;
+    margin-top:60px;
+}
+#my-group{
+    text-align: center;
+    height:250px;
+}
+#groupMake{
+    display: inline-block;
+    width:200px;
+    height:140px;
+    border:3px solid #94CEF2;
+    border-radius: 10px;
+    text-align: center;
+}
+#groupList, #my-group-inner, #group-invite, #group-invite-inner{
+    /* display: inline-block; */
+    width:900px;
+    height:200px;
+    text-align: center;
+}
+#my-group-inner{
+    float: right;
+}
+#groupList div{
+    display: inline-block;
+    width:200px;
+    height: 140px;
+    text-align: center;
+    border:3px solid #94CEF2;
+    border-radius: 10px;
+    background-color: white;
+}
+#my-group-inner{
+    background-color: #e7e7e7;
+    border-radius: 10px;
+}
+#groupList{
+    margin-top:27px;
+}
+.swiper-slide, .swiper-slide-active{
+    width:200px !important;
+    margin:0px 50px;
+}
+/* .swiper-slide:hover{
+    background-color: rgb(0,0,0,0.2);
+} */
+.ptag{
+    font-family: 'KOTRA_BOLD-Bold';
+    font-size: 30px;
+}
+.ptag img{
+    width:40px;
+    height:40px;
+    vertical-align: middle;
+}
+
+.swiper-button-next:after, .swiper-button-prev:after{
+    font-size: 20px !important;
+    font-weight:bolder !important;
+}
+#group-invite{
+    width:1000px;
+    height: 200px;
+    background-color: #94CEF2;
+    border-radius: 10px;
+}
+#bt1::after, #bt2::after{
+    color:white;
+    z-index: 10000;
+}
+#group-invite-inner div{
+    display: inline-block;
+    width:233.5px !important;
+    height: 150px !important;
+    text-align: center;
+    border-radius: 10px;
+    background-color: white;
+}
+#group-invite-inner{
+    margin-top: 27px;
+}
+.d2{
+    margin:0px 50px;
+}
