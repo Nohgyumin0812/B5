@@ -27,6 +27,8 @@ class CustomGroup(models.Model):
     sports = models.CharField(max_length=50, default='')
     friendname = models.CharField(max_length=50, default='')
 
+class CalendarGroup(models.Model):
+    smb = models.CharField(max_length=100, default='')
 
 """
     # title 새로 저장 시, slug 에 해당 title slugify하여 저장

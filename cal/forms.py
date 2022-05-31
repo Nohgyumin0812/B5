@@ -23,3 +23,10 @@ class GroupForm(forms.ModelForm):
   class Meta:
     model = CustomGroup
     fields = ["groupname", "sports", "friendname"]
+
+
+class CalendarForm(forms.ModelForm):
+
+  class Meta:
+    model = CalendarGroup
+    fields = ["smb"]
