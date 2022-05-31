@@ -53,21 +53,8 @@
     //}
 
     function sendToCalendar(data){
-        var sendData = encodeURI(data, "UTF-8");
+        var sendData = encodeURIComponent(data, "UTF-8");
         location.href = `{% url 'cal:calendar' %}?${sendData}`;
-        $.ajax({
-            url:'group_managing',
-            type: 'GET',
-            data: {
-                'sendData_val': sendData.value
-            },
-            datatype: 'json',
-            success: function(data){
-                console.log(data['calendar'])
-                var element = document.getElementById('div_id')
-                document.all('div_id').innerHTML=data['eng'];
-            }
-        });
     }
 
     const swiper = new Swiper( '.swiper', {

@@ -1,5 +1,6 @@
 import json
-
+from urllib import parse
+from urllib.parse import unquote, quote, quote_plus, urlencode
 import bs4
 import requests
 from django.contrib.auth.decorators import login_required
@@ -28,8 +29,7 @@ def calendar(request):
     sports_dic = {}
     indoor_sports = ['3', '4', '6']
     outdoor_sports = ['1', '2', '5']
-    print("##")
-    curr_url = str(request.build_absolute_uri())
+    curr_url = parse.unquote(str(request.build_absolute_uri()))
     curr_url = curr_url.split('/')
 
     print(curr_url)
@@ -85,7 +85,7 @@ def calendar(request):
         request.session['sports'] = sports
         request.session['members'] = members
         request.session['sports_date'] = sports_date
-
+        request.session['curr_group'] = curr_group
 
         return render(request, 'cal/calendar.html', {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date})
     except CustomGroup.DoesNotExist:
@@ -136,19 +136,24 @@ def group_managing(request):
     return render(request, 'cal/group_managing.html', {'my_group':my_group})
 
 def my_schedule(request):
+    schedule_data = []
     data = request.session['data']
     sports = request.session['sports']
     members = request.session['members']
     sports_date = request.session['sports_date']
+    curr_group = request.session['curr_group']
 
     #my_schedule 데이터 전송 확인 부분
     if request.method == 'POST':
         schedule_data = request.POST["myDates"]
         print("##")
-        schedule_data = '"' + schedule_data.replace(",", '","') + '"'
+        schedule_data = '["' + schedule_data.replace(",", '","') + '"]'
+        schedule_data = ast.literal_eval(schedule_data)
         print(schedule_data)
+    schedule_data = json.dumps(schedule_data, ensure_ascii=False)
 
-    return render(request, 'cal/my_schedule.html', {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date})
+
+    return render(request, 'cal/my_schedule.html', {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data':schedule_data, 'curr_group':curr_group})
 
 
 
