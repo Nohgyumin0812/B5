@@ -218,8 +218,4 @@ def mycalendar(request):
         print(data)
         print(sports_date)
 
-        request.session['data'] = data
-        request.session['sports'] = sports
-        request.session['sports_date'] = sports_date
-
         return render(request, 'cal/mycalendar.html',{'data': data, 'sportsall': sports, 'sports_date': sports_date})
