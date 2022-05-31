@@ -33,7 +33,8 @@
 </div>
 <form id="subm2" action="{% url 'cal:my_schedule' %}" method="POST">
     {% csrf_token %}
-    <button id="subm" type="submit" onclick="submitMyDate();">저장하기</button>
+    <input type="text" id="myDates" name="myDates" style="display:none;">
+    <button id="subm" type="submit">저장하기</button>
 </form>
 
 {% endblock %}
@@ -172,12 +173,16 @@
         but.style.backgroundColor="white";
         but.innerHTML = `<img width="20" height="20" src="{% static 'img/thumbs-up.png' %}">`;
         myDate.push(month.toString()+"."+date.toString());
+        var hide = document.getElementById("myDates");
+        hide.value = myDate;
+        console.log(hide.value);
+        console.log(typeof(hide.value));
     }
+
+
+
+
     
-    function submitMyDate(){
-        var t = document.getElementById("subm");
-        t.value = myDate;
-    }
 
 </script>
 {% endblock %}

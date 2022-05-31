@@ -133,6 +133,11 @@ def my_schedule(request):
     sports_date = request.session['sports_date']
 
     print(members)
+    
+    #my_schedule 데이터 전송 확인 부분
+    if request.method == 'POST':
+        schedule_data = request.POST["myDates"]
+        print(schedule_data)
 
     return render(request, 'cal/my_schedule.html', {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date})
 
