@@ -64,7 +64,6 @@ def calendar(request):
                     elif weather.text == weather.text == '맑음' or weather.text == '구름많음' or weather.text == '구름조금' or weather.text == '흐림':
                         sports_dic[date_data.text] = list(set(sportsall) & set(outdoor_sports))
 
-
     # file_path = "./sample.json"
     # with open(file_path, 'w') as outfile:
     #     json.dump(weather_dic, outfile, ensure_ascii=False)
@@ -142,32 +141,36 @@ def my_schedule(request):
     members = request.session['members']
     sports_date = request.session['sports_date']
     curr_group = request.session['curr_group']
-
+    my_group_id = CustomGroup.objects.get(groupname = curr_group ).id
+    print(my_group_id)
     #my_schedule 데이터 전송 확인 부분
     if request.method == 'POST':
         schedule_data = request.POST["myDates"]
-        print("##")
-        schedule_data = '["' + schedule_data.replace(",", '","') + '"]'
-        schedule_data = ast.literal_eval(schedule_data)
-        print(schedule_data)
+
         form = DayForm(request.POST)
-        print(form)
         if form.is_valid():
-            print("$$")
             Day = form.save(commit=False)
-            Day.group.groupname = curr_group.id
-            Day.dates = request.POST.getlist("schedule_data")
+            Day.group_id = CustomGroup.objects.get(groupname = curr_group ).id
+            Day.dates = schedule_data
             Day = form.save()
-            print(Day)
 
-    schedule_data = json.dumps(schedule_data, ensure_ascii=False)
+    schedule_data = DayGroup.objects.filter(group_id = my_group_id).values_list()
+    schedule_data = pd.DataFrame(schedule_data)
+    try:
+        schedule_data = schedule_data[schedule_data.iloc[:, 1] == my_group_id].iloc[:, 2]
+        schedule_data_lst = []
 
+        for i in range(schedule_data.shape[0]):
+            schedule_data_lst += schedule_data[i].split(",")
 
-    return render(request, 'cal/my_schedule.html', {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data':schedule_data, 'curr_group':curr_group})
-
-
-
-
+        schedule_data_lst = list(set(schedule_data_lst))
+        print(schedule_data_lst)
+        schedule_data_lst = json.dumps(schedule_data_lst, ensure_ascii=False)
+        return render(request, 'cral/my_schedule.html', {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data':schedule_data, 'curr_group':curr_group, 'schedule_data_lst':schedule_data_lst})
+    except:
+        schedule_data_lst = []
+        schedule_data_lst = json.dumps(schedule_data_lst, ensure_ascii=False)
+        return render(request, 'cal/my_schedule.html', {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data':schedule_data, 'curr_group':curr_group, 'schedule_data_lst':schedule_data_lst})
 
 
 def mycalendar(request):

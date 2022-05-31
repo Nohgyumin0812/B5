@@ -127,7 +127,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static').replace('\\', '/')
 # URL that your STATIC files will be accessible through the browser.
 STATIC_URL = 'static/'
 
-LOGIN_REDIRECT_URL = '/calendar'
+LOGIN_REDIRECT_URL = '/mycalendar'
 LOGOUT_REDIRECT_URL = '/'
 
 AUTH_USER_MODEL = 'common.CustomUser'

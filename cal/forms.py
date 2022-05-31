@@ -29,4 +29,4 @@ class DayForm(forms.ModelForm):
 
   class Meta:
     model = DayGroup
-    fields = ["group", "dates"]
+    fields = ["group", "myDates"]

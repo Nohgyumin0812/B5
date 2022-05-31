@@ -25,8 +25,8 @@ class CustomGroup(models.Model):
     friendname = models.CharField(max_length=50, default='')
 
 class DayGroup(models.Model):
-    group = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='group', null = True, blank = True)
-    dates = models.CharField(max_length=100, default='')
+    group = models.ForeignKey(CustomGroup, on_delete=models.CASCADE, verbose_name='group', null = True, blank = True)
+    myDates = models.CharField(max_length=100, default='')
 
 
 """
