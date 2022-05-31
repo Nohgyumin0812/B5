@@ -7,8 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 import ast
-from .forms import GroupForm
-from .models import CustomGroup
+from .forms import GroupForm, DayForm
+from .models import CustomGroup, DayGroup
 from common.models import CustomUser
 from django.contrib.auth.models import Group
 import pandas as pd
@@ -150,6 +150,16 @@ def my_schedule(request):
         schedule_data = '["' + schedule_data.replace(",", '","') + '"]'
         schedule_data = ast.literal_eval(schedule_data)
         print(schedule_data)
+        form = DayForm(request.POST)
+        print(form)
+        if form.is_valid():
+            print("$$")
+            Day = form.save(commit=False)
+            Day.group.groupname = curr_group.id
+            Day.dates = request.POST.getlist("schedule_data")
+            Day = form.save()
+            print(Day)
+
     schedule_data = json.dumps(schedule_data, ensure_ascii=False)
 
 
@@ -211,6 +221,5 @@ def mycalendar(request):
         request.session['data'] = data
         request.session['sports'] = sports
         request.session['sports_date'] = sports_date
-
 
         return render(request, 'cal/mycalendar.html',{'data': data, 'sportsall': sports, 'sports_date': sports_date})

@@ -25,8 +25,8 @@ class GroupForm(forms.ModelForm):
     fields = ["groupname", "sports", "friendname"]
 
 
-class CalendarForm(forms.ModelForm):
+class DayForm(forms.ModelForm):
 
   class Meta:
-    model = CalendarGroup
-    fields = ["smb"]
+    model = DayGroup
+    fields = ["group", "dates"]
