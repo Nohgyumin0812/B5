@@ -12,7 +12,7 @@
 <div class="calender_box">
     <div class="calender">
         <div id="">
-
+            
         </div>
         <div class="header">
             <div class="year-month"></div>
@@ -76,10 +76,12 @@
 
 <!-- <div class="list-area" id="list-area-2">
     <p><img src="{% static 'img/icons8-group-32.png' %}" width="30px">참여자 리스트</p>
-    <div class="list-box"></div>
+    <div class="list-box" id="mem-list">
+        <ul id="mem-ul"></ul>
+    </div>
     <button class="part-btn" id="invitation-btn">초대하기</button>
     <button class="part-btn" id="kick-btn">강퇴하기</button>
-</div>-->
+</div> -->
 
 <div class="list-area" id="list-area-2">
     <p><img src="{% static 'img/icons8-chat-room-24.png' %}" width="30px">추천</p>
@@ -92,7 +94,7 @@
 {% endblock %}
 
 {% block script %}
-<script>
+<script> 
     const date = new Date();
     const renderCalender = () => {
         const viewYear = date.getFullYear();
@@ -123,11 +125,11 @@
             nextDates.push(i);
         }
 
-
-        const weather_data = "{{ data2 }}".replace(/&quot;/g, "\"");
+        const weather_data = "{{ data }}".replace(/&quot;/g, "\"");
         console.log(weather_data);
-        const result = JSON.parse(weather_data);
+        var result = JSON.parse(weather_data);
         var k = Object.keys(result);
+
 
         const dates = prevDates.concat(thisDates, nextDates);
         const firstDateIndex = dates.indexOf(1);
@@ -137,6 +139,7 @@
         const m = viewMonth + 1;
 
         var w_sport = "{{ sports_date }}".replace(/&quot;/g, "\"");
+        console.log(w_sport);
         var weather_sports = JSON.parse(w_sport);
         var w_k = Object.keys(weather_sports);
 
@@ -148,9 +151,12 @@
             //날씨 띄우기
             for(j=0; j<k.length; j++){
                 var tmp = m.toString() + "." + date.toString() + ".";
+                console.log(k[j]);
                 var img;
-                if(tmp !== k[j]){
+                if(tmp === k[j]){
+                    
                     if(result[tmp] !== undefined){
+                        console.log("성공2");
                         if (result[tmp] === "맑음"){
                             //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-태양-48.png' %}""></span></div>`;
                             img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-태양-48.png' %}">`;
@@ -195,17 +201,19 @@
                             //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-눈-48.png' %}""></span></div>`;
                             img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-눈-48.png' %}">`
                         }
-                    }
+                    } 
                     else{
                         //dates[i] = `<div class = "date"><span class = "${condition}">${date}<span id="wet" style="margin-left:20px;"></span></span></div>`;
-                        img = ``;
+                        img = `<img id="wet" style="width:30px; height:30px; margin-left:5px; display:none;" src = "{% static 'img/icons8-눈-48.png' %}">`;
                     }
                 }
-                if(tmp !== w_k[j]){
+                if(tmp !== k[j]){
+                    img = ``;
+                }
+                if(tmp === w_k[j]){
                     if(weather_sports[tmp] !== undefined){
                         var spo = ``;
                         for(var a in weather_sports[tmp]){
-                            console.log(weather_sports[tmp][a]);
                             //dates_s[i] = `<div class = "date"><span class = "${condition}">${d}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-태양-48.png' %}""></span></div>`;
                             if(weather_sports[tmp][a] == 1){
                                 spo += `<img id="spo" style="width:20px; height:20px;" src = "{% static 'img/icons8-축구-2-30.png' %}">`;
@@ -226,11 +234,13 @@
                                 spo += `<img id="spo" style="width:20px; height:20px;" src = "{% static 'img/icons8-테니스-30.png' %}">`;
                             }
                         }
-                        console.log(spo);
                     }
                     else{
                         spo = ``;
                     }
+                }
+                if(tmp !== w_k[j]){
+                    spo = ``;
                 }
                 dates[i] = `<div class = "date"><span class = "${condition}">${date}${img}</span><div>${spo}</div></div>`;
             }
@@ -257,7 +267,7 @@
 
     function openPop() {
         document.getElementById("popup_layer").style.display = "block";
-
+    
     }
     function closePop() {
         document.getElementById("popup_layer").style.display = "none";
@@ -265,6 +275,7 @@
 
 
     var sports_data = "{{ sportsall }}".replace(/&quot;/g, "\"");
+    console.log(sports_data);
     var sport = JSON.parse(sports_data);
 
 
@@ -272,6 +283,8 @@
         document.getElementById(sport[i]).checked = true;
     }
 
+    
+    
 
 
 </script>
