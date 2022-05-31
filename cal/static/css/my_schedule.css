@@ -1,0 +1,171 @@
+@font-face {
+    font-family: 'KOTRA_BOLD-Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.1/KOTRA_BOLD-Bold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SuncheonB';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202-2@1.0/SuncheonB.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* calender section */
+.calender_box{
+    margin:auto;
+    top:160px;
+    width: 950px;
+    height: 700px;
+    background-color: #84D9D9;
+    border-radius: 15px;
+}
+.calender {
+    width: 917px;
+    margin: 17px;
+    font-family: 'SuncheonB';
+}
+
+.header {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    justify-content: space-between;
+    align-items: center;
+}
+/* 년,월 표시 */
+.year-month {
+    font-size: 25px;
+    font-family: 'KOTRA_BOLD-Bold';
+    color: white;
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+
+.main{
+    width: 917px;
+    background-color: white;
+}
+
+.days {
+    display: flex;
+}
+
+.day{
+    width: calc(917px/7);
+    height: 39px;
+    text-align: center;
+    border-left: 1.5px solid #84D9D9;
+    padding-top:20px;
+}
+
+.dates {
+    display: flex;
+    flex-flow: row wrap;
+    height: 530px;
+    border-top: 1px solid #84D9D9;
+}
+
+.date {
+    width: calc(871px/7);
+    text-align: left;
+    padding-top: 5px;
+    padding-left: 5px;
+    border-bottom: 1.5px solid #84D9D9;
+    border-left: 1.5px solid #84D9D9;
+}
+
+.day:nth-child(7n+1),
+.date:nth-child(7n+1){
+    color: #FF0000;
+}
+
+.day:nth-child(7n),
+.date:nth-child(7n){
+    color: #0500FF;
+}
+
+.other{
+    opacity: 0.3;
+}
+
+.today{
+    position: relative;
+}
+
+.today::before {
+    position: absolute;
+    font-family: 'SuncheonB';
+    top: 20px;
+    left: 80px;
+    display: block;
+    width: 30px;
+    height: 30px;
+    color: #84D9D9;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    content: 'TODAY';
+}
+
+
+img{
+    vertical-align: middle;
+}
+#logo{
+    width:200px;
+    height:50px;
+    text-align: center;
+    margin: auto;
+    margin-bottom: 10px;
+    margin-top: 80px;
+    right:850px;
+}
+#logo img{
+    width:45px;
+    height:45px;
+    vertical-align:middle;
+}
+#logo p{
+    font-family: 'KOTRA_BOLD-Bold';
+    display: inline;
+    height:50px;
+    font-size:35px;
+    vertical-align: middle;
+}
+
+.select{
+    float: right;
+    top:10px;
+}
+.select p{
+    font-family: 'KOTRA_BOLD-Bold';
+    color:white;
+    font-weight: 200;
+}
+.date button:hover{
+    visibility: visible;
+}
+.bt{
+    background-color: rgb(203, 203, 203);
+    border:none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#subm2{
+    margin:auto;
+    margin-top:30px;
+    padding-bottom:50px;
+    width:300px;
+    height:50px;
+}
+#subm{
+    width: 300px;
+    height:50px;
+    border:none;
+    border-radius: 10px;
+    background-color: #94CEF2;
+    color:white;
+    font-family: 'KOTRA_BOLD-Bold';
+    font-size:25px;
+    cursor: pointer;
+}
