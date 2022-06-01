@@ -1,0 +1,110 @@
+@font-face {
+    font-family: 'KOTRA_BOLD-Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.1/KOTRA_BOLD-Bold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SuncheonB';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202-2@1.0/SuncheonB.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+#neighbor-recommend p, #rival-recommend p{
+    font-family: 'SuncheonB';
+    font-size:20px;
+}
+.icons{
+    filter:opacity(.2) drop-shadow(0 0 0 #019eff);
+    width:60px;
+    height:60px;
+}
+#group-outer{
+    width:1200px;
+    margin: auto;
+    margin-top:60px;
+}
+
+#neighborList, #rivalList, #neighbor-recommend, #neighbor-recommend-inner, #rival-recommend, #rival-recommend-inner{
+    /* display: inline-block; */
+    width:900px;
+    height:200px;
+    text-align: center;
+}
+
+#neighborList, #rivalList{
+    display: inline-block;
+    width:200px;
+    height: 140px;
+    text-align: center;
+    border:3px solid #94CEF2;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.swiper-slide, .swiper-slide-active{
+    width:200px !important;
+    margin:0px 50px;
+}
+
+.ptag{
+    font-family: 'KOTRA_BOLD-Bold';
+    font-size: 30px;
+}
+.ptag img{
+    width:40px;
+    height:40px;
+    vertical-align: middle;
+}
+
+.swiper-button-next:after, .swiper-button-prev:after{
+    font-size: 20px !important;
+    font-weight:bolder !important;
+}
+#neighbor-recommend, #rival-recommend{
+    width:1000px;
+    height: 200px;
+    background-color: #94CEF2;
+    border-radius: 10px;
+}
+#bt1::after, #bt2::after{
+    color:white;
+    z-index: 10000;
+}
+#neighbor-recommend-inner div, #rival-recommend-inner div{
+    display: inline-block;
+    width:233.5px !important;
+    height: 150px !important;
+    text-align: center;
+    border-radius: 10px;
+    background-color: white;
+}
+#neighbor-recommend-inner, #rival-recommend-inner{
+    margin-top: 27px;
+}
+.d2{
+    margin:0px 50px;
+}
+
+/* 이웃그룹 추천 */
+
+#neighborList:hover, #rivalList:hover{
+    background-color: rgba(193, 193, 193, 0.712);
+}
+
+#neighborList:hover button, #rivalList:hover button{
+    display: inline-block;
+}
+
+#ivite-btn{
+    display: none;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: #FF8080;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: large;
+    color: white;
+}
