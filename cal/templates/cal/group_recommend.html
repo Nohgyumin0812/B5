@@ -1,0 +1,65 @@
+{% extends 'cal/base.html' %}
+{% load static %}
+
+{% block header %}
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'css/group_recommend.css' %}"> -->
+<link rel="stylesheet" href="{% static 'css/group_recommend.css' %}">
+
+<script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+{% endblock %}
+
+{% block main %}
+<div id="group-outer">
+    <p class="ptag" style="margin-top:40px;">내 주변 그룹<img src="{% static 'img/icons8-location.png' %}"></p>
+    <div id="neighbor-recommend" class="swiper">
+        <div id="neighbor-recommend-inner" class="swiper-wrapper">
+            <div id="neighborList" class="swiper-slide d2">
+                <!-- {% for data in neighbor_group %} -->
+                <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>
+                <!-- {{data}}그룹 -->
+                <br><button id="ivite-btn" class="invite-btn">초대하기</button>
+                <!-- {% endfor %} -->
+            </div>
+            <div class="swiper-slide d2"></div>
+            <div class="swiper-slide d2"></div>
+            <div class="swiper-slide d2"></div>
+        </div>
+        <div class="swiper-button-prev" id="bt1"></div>
+        <div class="swiper-button-next" id="bt2"></div>
+    </div>
+
+    <p class="ptag" style="margin-top:40px;">상대팀이 될 수 있는 그룹<img src="{% static 'img/icons8-head-to-head.png' %}"></p>
+    <div id="rival-recommend" class="swiper">
+        <div id="rival-recommend-inner" class="swiper-wrapper">
+            <div id="rivalList" class="swiper-slide d2">
+                <!-- {% for data in rival_group %} -->
+                <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>
+                <!-- {{data}}그룹 -->
+                <br><button id="ivite-btn" class="invite-btn">초대하기</button>
+                <!-- {% endfor %} -->
+            </div>
+            <div class="swiper-slide d2"></div>
+            <div class="swiper-slide d2"></div>
+            <div class="swiper-slide d2"></div>
+        </div>
+        <div class="swiper-button-prev" id="bt1"></div>
+        <div class="swiper-button-next" id="bt2"></div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    const swiper = new Swiper( '.swiper', {
+        autoplay: false,
+        loop: false,
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        slidesPerView: 3,
+        slidesPerGroup : 3,
+      } );
+    
+</script>
+{% endblock %}
