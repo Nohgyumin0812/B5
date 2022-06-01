@@ -103,6 +103,7 @@ def group_making(request):
             group.group_name = request.POST["groupname"]
             group.sports = request.POST.getlist('sports')
             group.friendname = request.POST.getlist("friendname")
+
             group.save()
             return redirect('cal:group_managing')
     return render(request, 'cal/group_making.html')
@@ -172,6 +173,8 @@ def my_schedule(request):
         schedule_data_lst = json.dumps(schedule_data_lst, ensure_ascii=False)
         return render(request, 'cal/my_schedule.html', {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data':schedule_data, 'curr_group':curr_group, 'schedule_data_lst':schedule_data_lst})
 
+def group_recommend(request):
+    return render(request, 'cal/group_recommend.html')
 
 def mycalendar(request):
 
