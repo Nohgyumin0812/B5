@@ -94,11 +94,28 @@
     border-radius: 10px;
     padding:10px;
 }
-#border{
+.border{
     border:dashed 2px #626262;
     border-radius: 10px;
+    height: 290px;
+}
+#border2 form{
+    margin-top:35px;
+    font-family: 'SuncheonB';
+}
+#border3 form{
+    margin-top: 30px;
+    font-family: 'SuncheonB';
 }
 /*컨텐츠 영역*/
+#invite-name{
+    width:200px;
+    height:30px;
+    padding-left:10px;
+}
+#invite-name:focus::placeholder{
+    color:transparent;
+}
 .popup_box .popup_cont {
     padding:10px;
     font-size:14px;
@@ -125,6 +142,9 @@
     font-size:15px;
     border-radius: 10px;
     cursor: pointer;
+}
+.popup_cont{
+    text-align: center;
 }
 
 .main{
@@ -253,6 +273,7 @@
 }
 
 .part-btn{
+    display: inline-block;
     width: 152px;
     height: 38px;
     background-color: #E5E5E5;
@@ -264,6 +285,7 @@
     margin-left: 12px;
     margin-top: 10px;
     cursor: pointer;
+    line-height: 38px;
 }
 
 img{

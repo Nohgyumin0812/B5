@@ -17,17 +17,17 @@
         <div class="header">
             <div class="year-month"></div>
             <div class="schedule-add">
-                <a href="javascript:openPop();" class="schedule-btn">일정 추가</a>
+                <a href="javascript:openPop(1);" class="schedule-btn">일정 추가</a>
             </div>
-            <div class="popup_layer" id="popup_layer" style="display: none;">
+            <div class="popup_layer" id="popup_layer1" style="display: none;">
                 <div class="popup_box">
-                    <div id="border">
+                    <div class="border" id="border1">
                         <div style="height: 10px; width: 375px; float: top;">
-                            <a href="javascript:closePop();"><img src="{% static 'img/ic_close.svg' %}" class="m_header-banner-close" width="30px" height="30px"></a>
+                            <a href="javascript:closePop(1);"><img src="{% static 'img/ic_close.svg' %}" class="m_header-banner-close" width="30px" height="30px"></a>
                           </div>
                           <!--팝업 컨텐츠 영역-->
                           <div class="popup_cont">
-                              <form>
+                              <form method="POST">
                                   {% csrf_token %}
                                   <br>
                                   <span>일정명</span><input type="text" style="width:185px; height:25px;" name="sche-name"><br><br>
@@ -79,8 +79,46 @@
     <div class="list-box" id="mem-list">
         <ul id="mem-ul"></ul>
     </div>
-    <button class="part-btn" id="invitation-btn">초대하기</button>
-    <button class="part-btn" id="kick-btn">강퇴하기</button>
+    <a class="part-btn" id="invitation-btn" href="javascript:openPop(2);">초대하기</a>
+    <div class="popup_layer" id="popup_layer2" style="display: none;">
+        <div class="popup_box">
+            <div class="border" id="border2">
+                <div style="height: 10px; width: 375px; float: top;">
+                    <a href="javascript:closePop(2);"><img src="{% static 'img/ic_close.svg' %}" class="m_header-banner-close" width="30px" height="30px"></a>
+                  </div>
+                  <!--팝업 컨텐츠 영역-->
+                  <div class="popup_cont">
+                      <form method="POST">
+                          {% csrf_token %}
+                          <br>
+                          <p style="font-size:18px;">초대할 ID를 입력해주세요</p>
+                          <input type="text" name="invite-name" id="invite-name" placeholder="ID"><br><br>
+                          <button type="submit" class="btn_close">초대하기</button><br><br>
+                      </form>
+                  </div>
+            </div>
+        </div>
+    </div>
+    <a class="part-btn" id="kick-btn" href="javascript:openPop(3);">강퇴하기</a>
+    <div class="popup_layer" id="popup_layer3" style="display: none;">
+        <div class="popup_box">
+            <div class="border" id="border3">
+                <div style="height: 10px; width: 375px; float: top;">
+                    <a href="javascript:closePop(3);"><img src="{% static 'img/ic_close.svg' %}" class="m_header-banner-close" width="30px" height="30px"></a>
+                  </div>
+                  <!--팝업 컨텐츠 영역-->
+                  <div class="popup_cont">
+                      <form method="POST">
+                            {% csrf_token %}
+                            <br>
+                            <p style="font-size:18px;">강퇴할 ID를 선택해주세요</p><br>
+                            <div id="kickOut"></div><br>
+                            <button type="submit" class="btn_close">강퇴하기</button><br><br>
+                      </form>
+                  </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="list-area" id="list-area-3">
@@ -267,13 +305,15 @@
 
     renderCalender();
 
-    function openPop() {
-        document.getElementById("popup_layer").style.display = "block";
-    
+    function openPop(data) {
+        document.getElementById("popup_layer"+data.toString()).style.display = "block";
     }
-    function closePop() {
-        document.getElementById("popup_layer").style.display = "none";
+
+
+    function closePop(data) {
+        document.getElementById("popup_layer"+data.toString()).style.display = "none";
     }
+
 
 
     var sports_data = "{{ sportsall }}".replace(/&quot;/g, "\"");
@@ -322,6 +362,11 @@
         }
 
         member_list.innerHTML += `<li style="font-family:'SuncheonB'; margin-bottom:10px;">${members[i]} ${color}</li>`; 
+    }
+
+    var kick = document.getElementById("kickOut");
+    for(i=0; i<m_k.length; i++){
+        kick.innerHTML += `<label style="margin-right:10px;"><input type="checkbox">${members[i]}</label>`;
     }
 
 

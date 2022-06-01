@@ -12,7 +12,7 @@
 <div id="group-outer">
     <p class="ptag" style="padding-top:30px; margin-bottom:0px;">내 그룹<img src="{% static 'img/icons8-group-32 (1).png' %}"></p><br>
     <div id="my-group">
-        <div id="groupMake" style="margin-top:27px;"><br><a id="link" href="{% url 'cal:group_making' %}"><img class="icons" src="{% static 'img/icons8-더하다-32.png' %}"><br>그룹 만들기</a></div>
+        <a id="link" href="{% url 'cal:group_making' %}"><div id="groupMake" style="margin-top:27px;"><br><img class="icons" src="{% static 'img/icons8-더하다-32.png' %}"><br>그룹 만들기</div></a>
         <div id="my-group-inner" class="swiper">
             <!-- <a class="arrow swiper-button-prev" id="l-arrow" href="javascript:leftNext();"><img src="{% static 'img/icons8-놀이-24.png' %}" style="transform: scaleX(-1);"></a> -->
             <div id="groupList" class="swiper-wrapper">
