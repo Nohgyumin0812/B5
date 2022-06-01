@@ -144,3 +144,17 @@ input[type=checkbox]{
     height:60px;
     line-height: 60px;
 }
+#g-location{
+    background-color: rgb(132, 217, 217, 0.25);
+    border-radius: 10px;
+    width:330px;
+    height:40px;
+    padding:10px;
+    margin:10px 0px;
+    border:none;
+    font-size: 20px;
+    font-family: 'SuncheonB';
+}
+#g-location option{
+    background-color: white;
+}
