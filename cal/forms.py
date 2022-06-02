@@ -31,6 +31,12 @@ class DayForm(forms.ModelForm):
     model = DayGroup
     fields = ["group", "myDates"]
 
+class DaysForm(forms.ModelForm):
+
+  class Meta:
+    model = DaysGroup
+    fields = ["days_group", "days_myDates"]
+
 class InviteForm(forms.ModelForm):
 
   class Meta:

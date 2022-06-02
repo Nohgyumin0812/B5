@@ -7,8 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 import ast
-from .forms import GroupForm, DayForm
-from .models import CustomGroup, DayGroup
+from .forms import GroupForm, DayForm, DaysForm
+from .models import CustomGroup, DayGroup, DaysGroup
 from common.models import CustomUser
 from django.contrib.auth.models import Group
 import pandas as pd
@@ -90,40 +90,27 @@ def calendar(request):
         request.session['sports_date'] = sports_date
         request.session['curr_group'] = curr_group
 
-
-
-        ##본인 가능 날짜 출력
         my_group_id = CustomGroup.objects.get(groupname=curr_group).id
+        print(my_group_id)
         schedule_data = DayGroup.objects.filter(group_id=my_group_id).values_list()
         schedule_data = pd.DataFrame(schedule_data)
-        print(schedule_data)
-
-        """
         try:
             schedule_data = schedule_data[schedule_data.iloc[:, 1] == my_group_id].iloc[:, 2]
             schedule_data_lst = []
-
             for i in range(schedule_data.shape[0]):
                 schedule_data_lst += schedule_data[i].split(",")
-
-            schedule_data_lst = list(set(schedule_data_lst))
-            print(schedule_data_lst)
-            schedule_data_lst = json.dumps(schedule_data_lst, ensure_ascii=False)
-            return render(request, 'cal/my_schedule.html',
-                          {'data': data, 'sportsall': sports, 'membersall': members, 'sports_date': sports_date,
-                           'schedule_data': schedule_data, 'curr_group': curr_group,
-                           'schedule_data_lst': schedule_data_lst})
         except:
             schedule_data_lst = []
-            schedule_data_lst = json.dumps(schedule_data_lst, ensure_ascii=False)
-            return render(request, 'cal/my_schedule.html',
-                          {'data': data, 'sportsall': sports, 'membersall': members, 'sports_date': sports_date,
-                           'schedule_data': schedule_data, 'curr_group': curr_group,
-                           'schedule_data_lst': schedule_data_lst})
-"""
-        return render(request, 'cal/calendar.html', {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date})
+
+        schedule_data_lst = list(set(schedule_data_lst))
+        print(schedule_data_lst)
+        schedule_data_lst = json.dumps(schedule_data_lst, ensure_ascii= False)
+
+        context = {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data_lst':schedule_data_lst}
+        return render(request, 'cal/calendar.html', context)
     except CustomGroup.DoesNotExist:
         return render(request, 'cal/group_making.html')
+
 
 
 
@@ -204,17 +191,17 @@ def my_schedule(request):
 
         schedule_data_lst = list(set(schedule_data_lst))
         schedule_data_lst = json.dumps(schedule_data_lst, ensure_ascii=False)
-        request.session['schedule_data_lst'] = schedule_data_lst
         curr_group = json.dumps(curr_group, ensure_ascii=False)
-        print(request.session['schedule_data_lst'])
-        return render(request, 'cal/my_schedule.html', {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data':schedule_data, 'curr_group':curr_group, 'schedule_data_lst':schedule_data_lst})
+        context = {'data': data, 'sportsall':sports, 'membersall':members,
+                   'sports_date':sports_date, 'schedule_data':schedule_data, 'curr_group':curr_group, 'schedule_data_lst':schedule_data_lst}
+        return render(request, 'cal/my_schedule.html', context )
     except:
         schedule_data_lst = []
-        request.session['schedule_data_lst'] = ""
-        curr_group = json.dumps(curr_group, ensure_ascii=False)
-        print(request.session['schedule_data_lst'])
         schedule_data_lst = json.dumps(schedule_data_lst, ensure_ascii=False)
-        return render(request, 'cal/my_schedule.html', {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data':schedule_data, 'curr_group':curr_group, 'schedule_data_lst':schedule_data_lst})
+        curr_group = json.dumps(curr_group, ensure_ascii=False)
+        context = {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data':schedule_data,
+                   'curr_group':curr_group, 'schedule_data_lst':schedule_data_lst}
+        return render(request, 'cal/my_schedule.html', context)
 
 def group_recommend(request):
     curr_group = request.session['curr_group']
@@ -244,7 +231,6 @@ def mycalendar(request):
 
     ## 날씨 크롤링 ##
     for day_data in day_datas:
-        print(1)
         date_data = day_data.find('span', {'class': 'date'})
         print(date_data)
         weather_inner = day_data.find_all('span', {'class': 'weather_inner'})
@@ -277,5 +263,5 @@ def mycalendar(request):
         print(sports)
         print(data)
         print(sports_date)
-
-        return render(request, 'cal/mycalendar.html',{'data': data, 'sportsall': sports, 'sports_date': sports_date})
+        context = {'data': data, 'sportsall': sports, 'sports_date': sports_date}
+        return render(request, 'cal/mycalendar.html', context)
