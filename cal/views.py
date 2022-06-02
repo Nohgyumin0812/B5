@@ -36,6 +36,8 @@ def calendar(request):
     if curr_url[4] == '':
         return render(request, 'cal/mycalendar.html')
 
+
+
     curr_group = (curr_url[4]).replace('?', '')
     print(curr_group)
     try:
@@ -48,9 +50,11 @@ def calendar(request):
         for day_data in day_datas:
             date_data = day_data.find('span', {'class': 'date'})
             weather_inner = day_data.find_all('span', {'class': 'weather_inner'})
+            print(weather_inner)
             for weathers in weather_inner:
                 timeslot = weathers.find('span', {'class': 'timeslot'})
                 weather = weathers.find('i', {'class': 'ico'})
+
                 if timeslot.text == '오전':
                     #weather_dic[date_data.text] = []
                     # weather_dic[date_data.text].append(weather.text)
@@ -86,9 +90,42 @@ def calendar(request):
         request.session['sports_date'] = sports_date
         request.session['curr_group'] = curr_group
 
+
+
+        ##본인 가능 날짜 출력
+        my_group_id = CustomGroup.objects.get(groupname=curr_group).id
+        schedule_data = DayGroup.objects.filter(group_id=my_group_id).values_list()
+        schedule_data = pd.DataFrame(schedule_data)
+        print(schedule_data)
+
+        """
+        try:
+            schedule_data = schedule_data[schedule_data.iloc[:, 1] == my_group_id].iloc[:, 2]
+            schedule_data_lst = []
+
+            for i in range(schedule_data.shape[0]):
+                schedule_data_lst += schedule_data[i].split(",")
+
+            schedule_data_lst = list(set(schedule_data_lst))
+            print(schedule_data_lst)
+            schedule_data_lst = json.dumps(schedule_data_lst, ensure_ascii=False)
+            return render(request, 'cal/my_schedule.html',
+                          {'data': data, 'sportsall': sports, 'membersall': members, 'sports_date': sports_date,
+                           'schedule_data': schedule_data, 'curr_group': curr_group,
+                           'schedule_data_lst': schedule_data_lst})
+        except:
+            schedule_data_lst = []
+            schedule_data_lst = json.dumps(schedule_data_lst, ensure_ascii=False)
+            return render(request, 'cal/my_schedule.html',
+                          {'data': data, 'sportsall': sports, 'membersall': members, 'sports_date': sports_date,
+                           'schedule_data': schedule_data, 'curr_group': curr_group,
+                           'schedule_data_lst': schedule_data_lst})
+"""
         return render(request, 'cal/calendar.html', {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date})
     except CustomGroup.DoesNotExist:
         return render(request, 'cal/group_making.html')
+
+
 
 
 @login_required()
@@ -111,6 +148,7 @@ def group_making(request):
 #2015
 #00016
 
+@login_required()
 def group_managing(request):
     my_group = []
     group = CustomGroup.objects.all().values()
@@ -165,16 +203,27 @@ def my_schedule(request):
             schedule_data_lst += schedule_data[i].split(",")
 
         schedule_data_lst = list(set(schedule_data_lst))
-        print(schedule_data_lst)
         schedule_data_lst = json.dumps(schedule_data_lst, ensure_ascii=False)
-        return render(request, 'cral/my_schedule.html', {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data':schedule_data, 'curr_group':curr_group, 'schedule_data_lst':schedule_data_lst})
+        request.session['schedule_data_lst'] = schedule_data_lst
+        curr_group = json.dumps(curr_group, ensure_ascii=False)
+        print(request.session['schedule_data_lst'])
+        return render(request, 'cal/my_schedule.html', {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data':schedule_data, 'curr_group':curr_group, 'schedule_data_lst':schedule_data_lst})
     except:
         schedule_data_lst = []
+        request.session['schedule_data_lst'] = ""
+        curr_group = json.dumps(curr_group, ensure_ascii=False)
+        print(request.session['schedule_data_lst'])
         schedule_data_lst = json.dumps(schedule_data_lst, ensure_ascii=False)
         return render(request, 'cal/my_schedule.html', {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data':schedule_data, 'curr_group':curr_group, 'schedule_data_lst':schedule_data_lst})
 
 def group_recommend(request):
+    curr_group = request.session['curr_group']
+
     return render(request, 'cal/group_recommend.html')
+
+def invite(request):
+
+    return render(request, 'cal/calendar.html')
 
 def mycalendar(request):
 
@@ -188,34 +237,39 @@ def mycalendar(request):
     sports_dic = {}
     indoor_sports = ['3', '4', '6']
     outdoor_sports = ['1', '2', '5']
-
-
     ## 그룹 종목 출력 ##
     sportsall = CustomUser.objects.get(id= request.user.id).sports
     sportsall = ast.literal_eval(sportsall)
     sports = json.dumps(sportsall, ensure_ascii=False)
+
     ## 날씨 크롤링 ##
     for day_data in day_datas:
+        print(1)
         date_data = day_data.find('span', {'class': 'date'})
+        print(date_data)
         weather_inner = day_data.find_all('span', {'class': 'weather_inner'})
-        for weathers in weather_inner:
-            timeslot = weathers.find('span', {'class': 'timeslot'})
-            weather = weathers.find('i', {'class': 'ico'})
-            if timeslot.text == '오전':
-                    #weather_dic[date_data.text] = []
+        print(weather_inner)
+        for day_data in day_datas:
+            date_data = day_data.find('span', {'class': 'date'})
+            weather_inner = day_data.find_all('span', {'class': 'weather_inner'})
+            print(weather_inner)
+            for weathers in weather_inner:
+                timeslot = weathers.find('span', {'class': 'timeslot'})
+                weather = weathers.find('i', {'class': 'ico'})
+
+                if timeslot.text == '오전':
+                    # weather_dic[date_data.text] = []
                     # weather_dic[date_data.text].append(weather.text)
-                weather_dic[date_data.text] = weather.text
+                    weather_dic[date_data.text] = weather.text
 
-                if weather.text == '흐리고 비'or weather.text == '비 또는 눈' or weather.text ==  '눈 또는 비' or weather.text == '가끔 비 또는 눈' \
-                        or weather.text == '한때 비 또는 눈' or weather.text == '가끔 눈 또는 비' or weather.text == '한때 눈 또는 비' or \
-                        weather.text == '안개' or weather.text == '연무' or weather.text == '박무 (엷은 안개)' or weather.text == '빗방울' \
-                        or weather.text == '눈날림' or weather.text == '낙뢰' or weather.text == '황사' or weather.text == '비' or weather.text == '눈':
-                    sports_dic[date_data.text] = list(set(sportsall) & set(indoor_sports))
-                elif weather.text == weather.text == '맑음' or weather.text == '구름많음' or weather.text == '구름조금' or weather.text == '흐림':
-                    sports_dic[date_data.text] = list(set(sportsall) & set(outdoor_sports))
+                    if weather.text == '흐리고 비' or weather.text == '비 또는 눈' or weather.text == '눈 또는 비' or weather.text == '가끔 비 또는 눈' \
+                            or weather.text == '한때 비 또는 눈' or weather.text == '가끔 눈 또는 비' or weather.text == '한때 눈 또는 비' or \
+                            weather.text == '안개' or weather.text == '연무' or weather.text == '박무 (엷은 안개)' or weather.text == '빗방울' \
+                            or weather.text == '눈날림' or weather.text == '낙뢰' or weather.text == '황사' or weather.text == '비' or weather.text == '눈':
+                        sports_dic[date_data.text] = list(set(sportsall) & set(indoor_sports))
+                    elif weather.text == weather.text == '맑음' or weather.text == '구름많음' or weather.text == '구름조금' or weather.text == '흐림':
+                        sports_dic[date_data.text] = list(set(sportsall) & set(outdoor_sports))
 
-
-            # with open(file_path, 'w') as outfile:
             #     json.dump(weather_dic, outfile, ensure_ascii=False)
         data = json.dumps(weather_dic, ensure_ascii=False)
         sports_date = json.dumps(sports_dic, ensure_ascii=False)

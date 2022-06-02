@@ -28,24 +28,9 @@ class DayGroup(models.Model):
     group = models.ForeignKey(CustomGroup, on_delete=models.CASCADE, verbose_name='group', null = True, blank = True)
     myDates = models.CharField(max_length=100, default='')
 
+class InviteGroup(models.Model):
+    invite_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='owner', null = True, blank = True)
+    group = models.ForeignKey(CustomGroup, on_delete=models.CASCADE, verbose_name='group', null = True, blank = True)
+    invite_status = models.CharField(max_length=50, default='', blank = True)
 
-"""
-    # title 새로 저장 시, slug 에 해당 title slugify하여 저장
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.slug = slugify(self.groupname, allow_unicode=True)
-        super(CustomGroup, self).save(*args, **kwargs)
 
-    def __str__(self):
-        return self.groupname
-
-class InviteStatus(models.Model):
-    group = models.ForeignKey(CustomGroup, on_delete = models.CASCADE, related_name = 'invites')
-    invited = models.ManyToManyField(CustomUser, related_name = 'invited', blank = True)
-    accepted = models.ManyToManyField(CustomUser, related_name='accepted', blank=True)
-    rejected = models.ManyToManyField(CustomUser, related_name='rejected', blank=True)
-
-    def __str__(self):
-        return self.group.groupname
-
-"""

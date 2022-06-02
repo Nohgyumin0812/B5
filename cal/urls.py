@@ -11,4 +11,5 @@ urlpatterns = [
     path('group_managing/', views.group_managing, name='group_managing'),
     path('calendar/my_schedule/', views.my_schedule, name='my_schedule'),
     path('group_recommend/', views.group_recommend, name='group_recommend'),
+
 ]
