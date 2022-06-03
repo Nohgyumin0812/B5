@@ -27,11 +27,9 @@ class CustomGroup(models.Model):
 class DayGroup(models.Model):
     group = models.ForeignKey(CustomGroup, on_delete=models.CASCADE, verbose_name='group', null = True, blank = True)
     myDates = models.CharField(max_length=100, default='')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='owner', null = True, blank = True)
 
 
-class DaysGroup(models.Model):
-    days_group = models.ForeignKey(CustomGroup, on_delete=models.CASCADE, verbose_name='group', null = True, blank = True)
-    days_myDates = models.CharField(max_length=100, default='')
 
 class InviteGroup(models.Model):
     invite_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='owner', null = True, blank = True)

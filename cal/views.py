@@ -7,14 +7,15 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 import ast
-from .forms import GroupForm, DayForm, DaysForm
-from .models import CustomGroup, DayGroup, DaysGroup
+from .forms import GroupForm, DayForm, InviteForm
+from .models import CustomGroup, DayGroup, InviteGroup
 from common.models import CustomUser
 from django.contrib.auth.models import Group
 import pandas as pd
 
 def index(request):
     return render(request, 'common/login.html')
+
 
 @login_required()
 def calendar(request):
@@ -32,14 +33,13 @@ def calendar(request):
     curr_url = parse.unquote(str(request.build_absolute_uri()))
     curr_url = curr_url.split('/')
 
-    print(curr_url)
+
     if curr_url[4] == '':
         return render(request, 'cal/mycalendar.html')
 
 
 
     curr_group = (curr_url[4]).replace('?', '')
-    print(curr_group)
     try:
         ## 그룹 종목 출력 ##
         sportsall = CustomGroup.objects.get(groupname=curr_group).sports
@@ -50,7 +50,6 @@ def calendar(request):
         for day_data in day_datas:
             date_data = day_data.find('span', {'class': 'date'})
             weather_inner = day_data.find_all('span', {'class': 'weather_inner'})
-            print(weather_inner)
             for weathers in weather_inner:
                 timeslot = weathers.find('span', {'class': 'timeslot'})
                 weather = weathers.find('i', {'class': 'ico'})
@@ -89,31 +88,48 @@ def calendar(request):
         request.session['members'] = members
         request.session['sports_date'] = sports_date
         request.session['curr_group'] = curr_group
-
         my_group_id = CustomGroup.objects.get(groupname=curr_group).id
-        print(my_group_id)
+
+
+        ##날짜 출력##
+        my_id = CustomUser.objects.get(id=request.user.id).username
         schedule_data = DayGroup.objects.filter(group_id=my_group_id).values_list()
+
         schedule_data = pd.DataFrame(schedule_data)
+
         try:
-            schedule_data = schedule_data[schedule_data.iloc[:, 1] == my_group_id].iloc[:, 2]
+
+            schedule_data = schedule_data.iloc[:,]
             schedule_data_lst = []
             for i in range(schedule_data.shape[0]):
+                print("#########")
+
+                schedule_data.iloc[:, 3][i] = CustomUser.objects.get(id = str(int(schedule_data.iloc[:, 3][i])))
+                print("#########")
+
                 schedule_data_lst += schedule_data[i].split(",")
         except:
             schedule_data_lst = []
-
+        print(schedule_data)
         schedule_data_lst = list(set(schedule_data_lst))
         print(schedule_data_lst)
         schedule_data_lst = json.dumps(schedule_data_lst, ensure_ascii= False)
+
+        """invite_name = request.POST("invite-name")
+        form = InviteForm(request.POST)
+        print(form)
+        if form.is_valid():
+            Invite = form.save(commit=False)
+            Invite.invite_user = request.POST('invite-name')
+            Invite.group = curr_group
+            Invite.invite_status = 1
+            print("#################################")"""
+
 
         context = {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data_lst':schedule_data_lst}
         return render(request, 'cal/calendar.html', context)
     except CustomGroup.DoesNotExist:
         return render(request, 'cal/group_making.html')
-
-
-
-
 
 @login_required()
 def group_making(request):
@@ -144,21 +160,24 @@ def group_managing(request):
 
     df = pd.DataFrame(group)
     df_user = pd.DataFrame(user)
-    df_group = (pd.DataFrame(df[['groupname','owner_id', 'friendname']]))
+    try:
+        df_group = (pd.DataFrame(df[['groupname','owner_id', 'friendname']]))
 
-    df_user['owner_id']= df_user['id']
-    df_user = (df_user[['owner_id', 'username']])
-    df_inner_join = pd.merge(df_group, df_user, left_on = 'owner_id', right_on = 'owner_id', how = 'inner')
-    #print(df_user[df_user['id'] == df['owner_id']])
-    for i in range(df_inner_join.shape[0]):
-        df_inner_join['username'][i] = [df_inner_join['username'][i]]
-        df_inner_join['friendname'][i] = ast.literal_eval(df_inner_join['friendname'][i])+(df_inner_join['username'][i])
-        if username in df_inner_join['friendname'][i]:
-            my_group.append(df_inner_join['groupname'][i])
-    print(my_group)
-    group_json = json.dumps(my_group, ensure_ascii=False)
+        df_user['owner_id']= df_user['id']
+        df_user = (df_user[['owner_id', 'username']])
+        df_inner_join = pd.merge(df_group, df_user, left_on = 'owner_id', right_on = 'owner_id', how = 'inner')
+        #print(df_user[df_user['id'] == df['owner_id']])
+        for i in range(df_inner_join.shape[0]):
+            df_inner_join['username'][i] = [df_inner_join['username'][i]]
+            df_inner_join['friendname'][i] = ast.literal_eval(df_inner_join['friendname'][i])+(df_inner_join['username'][i])
+            if username in df_inner_join['friendname'][i]:
+                my_group.append(df_inner_join['groupname'][i])
+        print(my_group)
+        group_json = json.dumps(my_group, ensure_ascii=False)
 
-    return render(request, 'cal/group_managing.html', {'my_group':my_group})
+        return render(request, 'cal/group_managing.html', {'my_group':my_group})
+    except:
+        return render(request, 'cal/group_managing.html', {'my_group':my_group})
 
 def my_schedule(request):
     schedule_data = []
@@ -169,6 +188,7 @@ def my_schedule(request):
     curr_group = request.session['curr_group']
     my_group_id = CustomGroup.objects.get(groupname = curr_group ).id
     print(my_group_id)
+
     #my_schedule 데이터 전송 확인 부분
     if request.method == 'POST':
         schedule_data = request.POST["myDates"]
@@ -178,6 +198,7 @@ def my_schedule(request):
             Day = form.save(commit=False)
             Day.group_id = CustomGroup.objects.get(groupname = curr_group ).id
             Day.dates = schedule_data
+            Day.user_id = request.user.id
             Day = form.save()
 
     schedule_data = DayGroup.objects.filter(group_id = my_group_id).values_list()
@@ -193,14 +214,14 @@ def my_schedule(request):
         schedule_data_lst = json.dumps(schedule_data_lst, ensure_ascii=False)
         curr_group = json.dumps(curr_group, ensure_ascii=False)
         context = {'data': data, 'sportsall':sports, 'membersall':members,
-                   'sports_date':sports_date, 'schedule_data':schedule_data, 'curr_group':curr_group, 'schedule_data_lst':schedule_data_lst}
+                   'sports_date':sports_date, 'curr_group':curr_group}
         return render(request, 'cal/my_schedule.html', context )
     except:
         schedule_data_lst = []
         schedule_data_lst = json.dumps(schedule_data_lst, ensure_ascii=False)
         curr_group = json.dumps(curr_group, ensure_ascii=False)
-        context = {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data':schedule_data,
-                   'curr_group':curr_group, 'schedule_data_lst':schedule_data_lst}
+        context = {'data': data, 'sportsall':sports, 'membersall':members,
+                   'sports_date':sports_date,'curr_group':curr_group}
         return render(request, 'cal/my_schedule.html', context)
 
 def group_recommend(request):
@@ -208,9 +229,7 @@ def group_recommend(request):
 
     return render(request, 'cal/group_recommend.html')
 
-def invite(request):
 
-    return render(request, 'cal/calendar.html')
 
 def mycalendar(request):
 
