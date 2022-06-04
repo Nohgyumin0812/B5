@@ -58,8 +58,7 @@ def calendar(request):
                     #weather_dic[date_data.text] = []
                     # weather_dic[date_data.text].append(weather.text)
                     weather_dic[date_data.text] = weather.text
-
-                    if weather.text == '흐리고 비'or weather.text == '비 또는 눈' or weather.text ==  '눈 또는 비' or weather.text == '가끔 비 또는 눈' \
+                    if weather.text == '흐리고 비' or weather.text == '흐리고 가끔 비' or weather.text == '비 또는 눈' or weather.text ==  '눈 또는 비' or weather.text == '가끔 비 또는 눈' \
                             or weather.text == '한때 비 또는 눈' or weather.text == '가끔 눈 또는 비' or weather.text == '한때 눈 또는 비' or \
                             weather.text == '안개' or weather.text == '연무' or weather.text == '박무 (엷은 안개)' or weather.text == '빗방울' \
                             or weather.text == '눈날림' or weather.text == '낙뢰' or weather.text == '황사' or weather.text == '비' or weather.text == '눈':
@@ -92,29 +91,33 @@ def calendar(request):
 
 
         ##날짜 출력##
-        my_id = CustomUser.objects.get(id=request.user.id).username
-        schedule_data = DayGroup.objects.filter(group_id=my_group_id).values_list()
-
-        schedule_data = pd.DataFrame(schedule_data)
-
         try:
-
-            schedule_data = schedule_data.iloc[:,]
-            schedule_data_lst = []
+            my_id = CustomUser.objects.get(id=request.user.id).username
+            schedule_data = DayGroup.objects.filter(group_id=my_group_id).values_list()
+            schedule_data = pd.DataFrame(schedule_data)
+            schedule_data.columns = ["id", "group_id", "myDates", "username"]
             for i in range(schedule_data.shape[0]):
-                print("#########")
-
                 schedule_data.iloc[:, 3][i] = CustomUser.objects.get(id = str(int(schedule_data.iloc[:, 3][i])))
-                print("#########")
+                schedule_data.iloc[:,3][i] = str(schedule_data.iloc[:, 3][i])
+                schedule_data['myDates'][i] = ast.literal_eval(str([schedule_data['myDates'][i]]).replace(' ',''))
 
-                schedule_data_lst += schedule_data[i].split(",")
+            schedule_data_lst = schedule_data.iloc[:, 2:].groupby('username').sum()
+            for i in range(schedule_data_lst.shape[0]):
+                schedule_data_lst['myDates'][i] = str(schedule_data_lst['myDates'][i]).replace(' ','').replace("','", ',').replace("'", '')
+                schedule_data_lst['myDates'][i] = ast.literal_eval(schedule_data_lst['myDates'][i])
+                schedule_data_lst['myDates'][i] = list(set(schedule_data_lst['myDates'][i]))
+
+            for i in range(schedule_data_lst['myDates'].shape[0]):
+                for j in range(len(schedule_data_lst['myDates'][i])):
+                    if len(str(schedule_data_lst['myDates'][i][j])) ==3:
+                        schedule_data_lst['myDates'][i][j] = str(schedule_data_lst['myDates'][i][j])[:1] + ".0" + str(schedule_data_lst['myDates'][i][j])[-1] + "."
+                    else:
+                        schedule_data_lst['myDates'][i][j] = str(schedule_data_lst['myDates'][i][j]) + "."
+            schedule_data_dic = pd.DataFrame(schedule_data_lst['myDates']).to_dict()['myDates']
+            schedule_data_dic = json.dumps(schedule_data_dic, ensure_ascii= False)
         except:
-            schedule_data_lst = []
-        print(schedule_data)
-        schedule_data_lst = list(set(schedule_data_lst))
-        print(schedule_data_lst)
-        schedule_data_lst = json.dumps(schedule_data_lst, ensure_ascii= False)
-
+            schedule_data_dic = []
+        print(schedule_data_dic)
         """invite_name = request.POST("invite-name")
         form = InviteForm(request.POST)
         print(form)
@@ -125,8 +128,7 @@ def calendar(request):
             Invite.invite_status = 1
             print("#################################")"""
 
-
-        context = {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data_lst':schedule_data_lst}
+        context = {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data_dic':schedule_data_dic}
         return render(request, 'cal/calendar.html', context)
     except CustomGroup.DoesNotExist:
         return render(request, 'cal/group_making.html')
@@ -187,7 +189,6 @@ def my_schedule(request):
     sports_date = request.session['sports_date']
     curr_group = request.session['curr_group']
     my_group_id = CustomGroup.objects.get(groupname = curr_group ).id
-    print(my_group_id)
 
     #my_schedule 데이터 전송 확인 부분
     if request.method == 'POST':
@@ -197,7 +198,7 @@ def my_schedule(request):
         if form.is_valid():
             Day = form.save(commit=False)
             Day.group_id = CustomGroup.objects.get(groupname = curr_group ).id
-            Day.dates = schedule_data
+            Day.dates = str(schedule_data)
             Day.user_id = request.user.id
             Day = form.save()
 
