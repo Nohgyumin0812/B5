@@ -19,8 +19,15 @@ def index(request):
 
 @login_required()
 def calendar(request):
+    curr_url = parse.unquote(str(request.build_absolute_uri()))
+    curr_url = curr_url.split('/')
 
-    loc = '09230740'
+    if curr_url[4] == '':
+        return render(request, 'cal/mycalendar.html')
+
+    curr_group = (curr_url[4]).replace('?', '')
+
+    loc = CustomGroup.objects.filter(groupname = curr_group).values()[0]['location_code']
     url = 'https://weather.naver.com/today/%s' % (loc)
     raw = requests.get(url)
     html = bs4.BeautifulSoup(raw.text, 'html.parser')
@@ -30,16 +37,7 @@ def calendar(request):
     sports_dic = {}
     indoor_sports = ['3', '4', '6']
     outdoor_sports = ['1', '2', '5']
-    curr_url = parse.unquote(str(request.build_absolute_uri()))
-    curr_url = curr_url.split('/')
 
-
-    if curr_url[4] == '':
-        return render(request, 'cal/mycalendar.html')
-
-
-
-    curr_group = (curr_url[4]).replace('?', '')
     try:
         ## 그룹 종목 출력 ##
         sportsall = CustomGroup.objects.get(groupname=curr_group).sports
@@ -58,13 +56,15 @@ def calendar(request):
                     #weather_dic[date_data.text] = []
                     # weather_dic[date_data.text].append(weather.text)
                     weather_dic[date_data.text] = weather.text
-                    if weather.text == '흐리고 비' or weather.text == '흐리고 가끔 비' or weather.text == '비 또는 눈' or weather.text ==  '눈 또는 비' or weather.text == '가끔 비 또는 눈' \
+                    if '비' in weather.text or weather.text == '흐리고 비' or weather.text == '흐리고 한때 비' or weather.text == '흐리고 가끔 비' or weather.text == '비 또는 눈' or weather.text ==  '눈 또는 비' or weather.text == '가끔 비 또는 눈' \
                             or weather.text == '한때 비 또는 눈' or weather.text == '가끔 눈 또는 비' or weather.text == '한때 눈 또는 비' or \
                             weather.text == '안개' or weather.text == '연무' or weather.text == '박무 (엷은 안개)' or weather.text == '빗방울' \
                             or weather.text == '눈날림' or weather.text == '낙뢰' or weather.text == '황사' or weather.text == '비' or weather.text == '눈':
                         sports_dic[date_data.text] = list(set(sportsall) & set(indoor_sports))
                     elif weather.text == weather.text == '맑음' or weather.text == '구름많음' or weather.text == '구름조금' or weather.text == '흐림':
                         sports_dic[date_data.text] = list(set(sportsall) & set(outdoor_sports))
+                    else:
+                        sports_dic[date_data.text] = "날씨없음"
 
     # file_path = "./sample.json"
     # with open(file_path, 'w') as outfile:
@@ -117,16 +117,26 @@ def calendar(request):
             schedule_data_dic = json.dumps(schedule_data_dic, ensure_ascii= False)
         except:
             schedule_data_dic = []
-        print(schedule_data_dic)
-        """invite_name = request.POST("invite-name")
-        form = InviteForm(request.POST)
-        print(form)
-        if form.is_valid():
-            Invite = form.save(commit=False)
-            Invite.invite_user = request.POST('invite-name')
-            Invite.group = curr_group
-            Invite.invite_status = 1
-            print("#################################")"""
+
+        if request.method == "POST":
+            if 'invite-name' in request.POST:
+                print(request.POST)
+                form = InviteForm(request.POST)
+                print(form)
+                if form.is_valid():
+                    Invite = form.save(commit=False)
+                    new_member = str(request.POST['invite-name']).replace("'", '')
+                    print(new_member)
+                    Invite.invite_user = new_member
+                    Invite.group = curr_group
+                    Invite.invite_status = 1
+                    Invite = form.save()
+                    print("#################################")
+            if "kickOut" in request.POST:
+                print(request.POST)
+
+            if "sche-name" in request.POST:
+                print(request.POST)
 
         context = {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data_dic':schedule_data_dic}
         return render(request, 'cal/calendar.html', context)
@@ -136,6 +146,8 @@ def calendar(request):
 @login_required()
 def group_making(request):
     if request.method == 'POST':
+        print(request.POST)
+
         form = GroupForm(request.POST)
         print(form)
         if form.is_valid():
@@ -145,7 +157,47 @@ def group_making(request):
             group.group_name = request.POST["groupname"]
             group.sports = request.POST.getlist('sports')
             group.friendname = request.POST.getlist("friendname")
-
+            group.location = request.POST['g-location']
+            if group.location == '이문동':
+                group.location_code = '09230110'
+                group.x = '127.062465'
+                group.y = '37.598851'
+            elif group.location == '회기동':
+                group.location_code = '09230108'
+                group.x = '127.051971'
+                group.y = '37.591447'
+            elif group.location == '휘경동':
+                group.location_code = '09230108'
+                group.x = '127.061228'
+                group.y = '37.589592'
+            elif group.location == '청량리동':
+                group.location_code = '09230108'
+                group.x = '127.044621'
+                group.y = '37.586643'
+            elif group.location == '전농동':
+                group.location_code = '09230108'
+                group.x = '127.053848'
+                group.y = '37.579797'
+            elif group.location == '제기동':
+                group.location_code = '09230108'
+                group.x = '127.03796'
+                group.y = '37.584134'
+            elif group.location == '용두동':
+                group.location_code = '09230108'
+                group.x = '127.034621'
+                group.y = '37.576328'
+            elif group.location == '신설동':
+                group.location_code = '09230108'
+                group.x = '127.026023'
+                group.y = '37.575204'
+            elif group.location == '답십리동':
+                group.location_code = '09230108'
+                group.x = '127.056757'
+                group.y = '37.569883'
+            elif group.location == '장안동':
+                group.location_code = '09230108'
+                group.x = '37.570749'
+                group.y = '127.068233'
             group.save()
             return redirect('cal:group_managing')
     return render(request, 'cal/group_making.html')
@@ -162,6 +214,20 @@ def group_managing(request):
 
     df = pd.DataFrame(group)
     df_user = pd.DataFrame(user)
+
+    ##그룹 요청##
+
+    courses = InviteGroup.objects.filter(invite_user=request.user.username, invite_status =1).values()
+    invite_member = []
+    for i in range(len(courses)):
+        invite_member.append(courses[i]['group'])
+    invite_member_dic = {}
+    invite_member_dic['개인초대'] = invite_member
+    print(invite_member_dic)
+
+    invite_group = json.dumps(invite_member_dic, ensure_ascii=False)
+
+    ##그룹 관리##
     try:
         df_group = (pd.DataFrame(df[['groupname','owner_id', 'friendname']]))
 
@@ -174,12 +240,12 @@ def group_managing(request):
             df_inner_join['friendname'][i] = ast.literal_eval(df_inner_join['friendname'][i])+(df_inner_join['username'][i])
             if username in df_inner_join['friendname'][i]:
                 my_group.append(df_inner_join['groupname'][i])
-        print(my_group)
         group_json = json.dumps(my_group, ensure_ascii=False)
 
-        return render(request, 'cal/group_managing.html', {'my_group':my_group})
+
+        return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group})
     except:
-        return render(request, 'cal/group_managing.html', {'my_group':my_group})
+        return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group})
 
 def my_schedule(request):
     schedule_data = []
@@ -226,15 +292,47 @@ def my_schedule(request):
         return render(request, 'cal/my_schedule.html', context)
 
 def group_recommend(request):
+    ##내 주변 그룹##
     curr_group = request.session['curr_group']
+    group_x = CustomGroup.objects.filter(groupname=curr_group).values()[0]['x']
+    group_y = CustomGroup.objects.filter(groupname=curr_group).values()[0]['y']
 
-    return render(request, 'cal/group_recommend.html')
+    df_group = pd.DataFrame(CustomGroup.objects.all().values())
+
+    indexNames = df_group[df_group['groupname']==curr_group].index
+    df_group.drop(indexNames, inplace = True)
+
+    df_group['x'] = df_group['x'].astype(float)
+    df_group['y'] = df_group['y'].astype(float)
+    df_group['distance'] = (df_group['x'] - float(group_x))**2 + (df_group['y']- float(group_y))**2
+
+    df_group = df_group.sort_values(by = 'distance', ascending= True)
+    place_group = df_group[['location', 'groupname']].to_dict('records')
+
+    ##상대팀이 될 수 있는 그룹##
+    group_sports = ast.literal_eval(CustomGroup.objects.filter(groupname=curr_group).values()[0]['sports'])
+    sports_group = df_group[['groupname', 'sports']]
+
+    sports_group = sports_group.reset_index(drop = True)
+    sports_group['common'] = 0
+    for i in range(sports_group.shape[0]):
+        sports_group['common'][i] = len(set(ast.literal_eval(sports_group['sports'][i])) & set(group_sports))
+    sports_group = sports_group.sort_values(by = 'common', ascending = False)
+    sports_group = sports_group.to_dict('records')
 
 
+    place_group = json.dumps(place_group, ensure_ascii= False)
+    sports_group = json.dumps(sports_group, ensure_ascii = False)
+
+    print(place_group) # distance: 내 그룹과 상대 그룹 간의 거리
+    print(sports_group) # common: 겹치는 운동종목 수
+
+    context = {'place_group': place_group,'sports_group':sports_group}
+    return render(request, 'cal/group_recommend.html', context)
 
 def mycalendar(request):
-
-    loc = '09230740'
+    loc = CustomUser.objects.filter(id= request.user.id).values()[0]['location_code']
+    print(loc)
     url = 'https://weather.naver.com/today/%s' % (loc)
     raw = requests.get(url)
     html = bs4.BeautifulSoup(raw.text, 'html.parser')
@@ -252,13 +350,10 @@ def mycalendar(request):
     ## 날씨 크롤링 ##
     for day_data in day_datas:
         date_data = day_data.find('span', {'class': 'date'})
-        print(date_data)
         weather_inner = day_data.find_all('span', {'class': 'weather_inner'})
-        print(weather_inner)
         for day_data in day_datas:
             date_data = day_data.find('span', {'class': 'date'})
             weather_inner = day_data.find_all('span', {'class': 'weather_inner'})
-            print(weather_inner)
             for weathers in weather_inner:
                 timeslot = weathers.find('span', {'class': 'timeslot'})
                 weather = weathers.find('i', {'class': 'ico'})
@@ -267,20 +362,20 @@ def mycalendar(request):
                     # weather_dic[date_data.text] = []
                     # weather_dic[date_data.text].append(weather.text)
                     weather_dic[date_data.text] = weather.text
-
-                    if weather.text == '흐리고 비' or weather.text == '비 또는 눈' or weather.text == '눈 또는 비' or weather.text == '가끔 비 또는 눈' \
+                    if '비' in weather.text or weather.text == '흐리고 비' or weather.text == '흐리고 한때 비' or weather.text == '흐리고 가끔 비' or weather.text == '비 또는 눈' or weather.text ==  '눈 또는 비' or weather.text == '가끔 비 또는 눈' \
                             or weather.text == '한때 비 또는 눈' or weather.text == '가끔 눈 또는 비' or weather.text == '한때 눈 또는 비' or \
                             weather.text == '안개' or weather.text == '연무' or weather.text == '박무 (엷은 안개)' or weather.text == '빗방울' \
                             or weather.text == '눈날림' or weather.text == '낙뢰' or weather.text == '황사' or weather.text == '비' or weather.text == '눈':
                         sports_dic[date_data.text] = list(set(sportsall) & set(indoor_sports))
+                        print(sports_dic[date_data.text])
                     elif weather.text == weather.text == '맑음' or weather.text == '구름많음' or weather.text == '구름조금' or weather.text == '흐림':
                         sports_dic[date_data.text] = list(set(sportsall) & set(outdoor_sports))
-
+                    else:
+                        sports_dic[date_data.text] = "날씨없음"
             #     json.dump(weather_dic, outfile, ensure_ascii=False)
         data = json.dumps(weather_dic, ensure_ascii=False)
         sports_date = json.dumps(sports_dic, ensure_ascii=False)
 
-        print(sports)
         print(data)
         print(sports_date)
         context = {'data': data, 'sportsall': sports, 'sports_date': sports_date}

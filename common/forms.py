@@ -10,4 +10,4 @@ class SignupForm(UserCreationForm):
 
   class Meta:
     model =CustomUser
-    fields = ['username', 'password1', 'password2', 'email', 'tel', 'sports']
+    fields = ['username', 'location', 'password1', 'password2', 'email', 'tel', 'sports']

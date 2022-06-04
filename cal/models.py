@@ -23,6 +23,10 @@ class CustomGroup(models.Model):
     members = models.ManyToManyField(CustomUser, verbose_name='members', related_name='members', blank = True, default='')
     sports = models.CharField(max_length=50, default='')
     friendname = models.CharField(max_length=50, default='', blank = True)
+    location =models.CharField(max_length=50, default='', blank = True)
+    location_code = models.CharField(max_length=50, default='', blank = True)
+    x = models.CharField(max_length=50, default='', blank = True)
+    y = models.CharField(max_length=50, default='', blank = True)
 
 class DayGroup(models.Model):
     group = models.ForeignKey(CustomGroup, on_delete=models.CASCADE, verbose_name='group', null = True, blank = True)
@@ -32,8 +36,8 @@ class DayGroup(models.Model):
 
 
 class InviteGroup(models.Model):
-    invite_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='owner', null = True, blank = True)
-    group = models.ForeignKey(CustomGroup, on_delete=models.CASCADE, verbose_name='group', null = True, blank = True)
+    invite_user = models.CharField(max_length=50, default='', blank = True)
+    group = models.CharField(max_length=50, default='', blank = True)
     invite_status = models.CharField(max_length=50, default='', blank = True)
 
 
