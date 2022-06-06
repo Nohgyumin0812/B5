@@ -3,7 +3,7 @@ from urllib import parse
 from urllib.parse import unquote, quote, quote_plus, urlencode
 import bs4
 import requests
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 import ast
@@ -16,7 +16,6 @@ import pandas as pd
 def index(request):
     return render(request, 'common/login.html')
 
-
 @login_required()
 def calendar(request):
     curr_url = parse.unquote(str(request.build_absolute_uri()))
@@ -26,6 +25,14 @@ def calendar(request):
         return render(request, 'cal/mycalendar.html')
 
     curr_group = (curr_url[4]).replace('?', '')
+
+    ##함께하기 방장만 가능##
+    my_id = CustomUser.objects.filter(id=request.user.id).values()[0]['id']
+    owner_id = CustomGroup.objects.filter(groupname = curr_group).values()[0]['owner_id']
+    my_id = json.dumps(my_id,ensure_ascii=False )
+    owner_id = json.dumps(owner_id,ensure_ascii=False )
+    print(my_id)
+    print(owner_id)
 
     loc = CustomGroup.objects.filter(groupname = curr_group).values()[0]['location_code']
     url = 'https://weather.naver.com/today/%s' % (loc)
@@ -117,6 +124,10 @@ def calendar(request):
             schedule_data_dic = json.dumps(schedule_data_dic, ensure_ascii= False)
         except:
             schedule_data_dic = []
+        print(schedule_data_dic)
+
+
+
 
         if request.method == "POST":
             if 'invite-name' in request.POST:
@@ -138,7 +149,8 @@ def calendar(request):
             if "sche-name" in request.POST:
                 print(request.POST)
 
-        context = {'data': data, 'sportsall':sports, 'membersall':members, 'sports_date':sports_date, 'schedule_data_dic':schedule_data_dic}
+        context = {'data': data, 'sportsall':sports, 'membersall':members,
+                   'sports_date':sports_date, 'schedule_data_dic':schedule_data_dic, 'my_id':my_id, 'owner_id':owner_id}
         return render(request, 'cal/calendar.html', context)
     except CustomGroup.DoesNotExist:
         return render(request, 'cal/group_making.html')
@@ -320,12 +332,11 @@ def group_recommend(request):
     sports_group = sports_group.sort_values(by = 'common', ascending = False)
     sports_group = sports_group.to_dict('records')
 
-
     place_group = json.dumps(place_group, ensure_ascii= False)
     sports_group = json.dumps(sports_group, ensure_ascii = False)
 
-    print(place_group) # distance: 내 그룹과 상대 그룹 간의 거리
-    print(sports_group) # common: 겹치는 운동종목 수
+    #(place_group) # distance: 내 그룹과 상대 그룹 간의 거리
+    #print(sports_group) # common: 겹치는 운동종목 수
 
     context = {'place_group': place_group,'sports_group':sports_group}
     return render(request, 'cal/group_recommend.html', context)
