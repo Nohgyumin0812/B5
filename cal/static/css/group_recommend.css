@@ -40,6 +40,11 @@
     border:3px solid #94CEF2;
     border-radius: 10px;
     background-color: white;
+    
+}
+
+#neighborList p, #rivalList p{
+    font-family: 'SuncheonB';
 }
 
 .swiper-slide, .swiper-slide-active{
@@ -63,7 +68,7 @@
 }
 #neighbor-recommend, #rival-recommend{
     width:1000px;
-    height: 200px;
+    height: 300px;
     background-color: #94CEF2;
     border-radius: 10px;
 }
@@ -74,7 +79,7 @@
 #neighbor-recommend-inner div, #rival-recommend-inner div{
     display: inline-block;
     width:233.5px !important;
-    height: 150px !important;
+    height: 250px !important;
     text-align: center;
     border-radius: 10px;
     background-color: white;
@@ -88,16 +93,16 @@
 
 /* 이웃그룹 추천 */
 
-#neighborList:hover, #rivalList:hover{
+/* #neighborList:hover, #rivalList:hover{
     background-color: rgba(193, 193, 193, 0.712);
-}
+    /* filter: brightness(80%);
+} */
 
 #neighborList:hover button, #rivalList:hover button{
     display: inline-block;
 }
 
-#ivite-btn{
-    display: none;
+#invite-btn{
     padding: 5px 10px;
     border: none;
     border-radius: 10px;
@@ -107,4 +112,8 @@
     font-weight: bold;
     font-size: large;
     color: white;
+}
+
+#invite-btn:hover{
+    filter: brightness(80%);
 }
