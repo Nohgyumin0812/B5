@@ -157,6 +157,8 @@ def calendar(request):
                     df_recommend['rank_point'][i] = '완전추천'
                 elif df_recommend['rank_point'][i] == rank_point[1]:
                     df_recommend['rank_point'][i] = '추천'
+                else:
+                    df_recommend['rank_point'][i] = ''
 
             recommend = df_recommend[['date', 'rank_point']].to_dict('records')
             recommend = json.dumps(recommend, ensure_ascii=False)
