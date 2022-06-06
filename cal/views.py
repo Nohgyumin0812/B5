@@ -120,11 +120,10 @@ def calendar(request):
                         schedule_data_lst['myDates'][i][j] = str(schedule_data_lst['myDates'][i][j])[:1] + ".0" + str(schedule_data_lst['myDates'][i][j])[-1] + "."
                     else:
                         schedule_data_lst['myDates'][i][j] = str(schedule_data_lst['myDates'][i][j]) + "."
-            schedule_data_dic = pd.DataFrame(schedule_data_lst['myDates']).to_dict()['myDates']
-            schedule_data_dic = json.dumps(schedule_data_dic, ensure_ascii= False)
+            schedule_data_dic_2 = pd.DataFrame(schedule_data_lst['myDates']).to_dict()['myDates']
+            schedule_data_dic = json.dumps(schedule_data_dic_2, ensure_ascii= False)
         except:
             schedule_data_dic = []
-        print(schedule_data_dic)
 
 
 
@@ -149,8 +148,46 @@ def calendar(request):
             if "sche-name" in request.POST:
                 print(request.POST)
 
+        ## 일정 추천 ##
+        schedule_data_dic_2 = pd.DataFrame(schedule_data_dic_2.items(), columns = ['name', 'date'])
+        print(schedule_data_dic_2)
+        for i in range(schedule_data_dic_2.shape[0]):
+            schedule_data_dic_2['date'][i] = str(schedule_data_dic_2['date'][i]).replace('[', '').replace(']', '').replace("'", '').replace(' ', '')
+
+        schedule_data_dic_2 = pd.concat([pd.Series(row['name'], row['date'].split(','))
+                                         for _, row in schedule_data_dic_2.iterrows()]).reset_index()
+
+        schedule_data_dic_2.iloc[:, 1] = 1
+        schedule_data_dic_2 = schedule_data_dic_2.groupby('index').sum().reset_index()
+        schedule_data_dic_2.columns = ['date', 'member']
+        sports_df = pd.DataFrame(sports_dic.items(), columns = ['date', 'sports'])
+        for i in range(sports_df.shape[0]):
+            sports_df['sports'][i] = len(sports_df['sports'][i])
+
+        df_recommend = pd.merge(sports_df, schedule_data_dic_2, left_on = 'date', right_on = 'date', how = 'inner')
+
+        sports_percent = 0.5 #모델링 crud 필요
+        member_percent = 0.5 #모델링 crud 필요
+
+        df_recommend['point'] = sports_percent * df_recommend['sports'] + member_percent * df_recommend['member']
+        df_recommend['rank_point'] = df_recommend['point'].rank(method = 'min')
+        rank_point = list(set(list(df_recommend['rank_point'])))
+        rank_point.sort(reverse=True)
+        print(rank_point)
+
+        for i in range(df_recommend['rank_point'].shape[0]):
+            if df_recommend['rank_point'][i] == rank_point[0]:
+                df_recommend['rank_point'][i] = '완전추천'
+            elif df_recommend['rank_point'][i] == rank_point[1]:
+                df_recommend['rank_point'][i] = '추천'
+
+        recommend = df_recommend[['date', 'rank_point']].to_dict('records')
+        recommend = json.dumps(recommend, ensure_ascii=False)
+        print(recommend)
         context = {'data': data, 'sportsall':sports, 'membersall':members,
-                   'sports_date':sports_date, 'schedule_data_dic':schedule_data_dic, 'my_id':my_id, 'owner_id':owner_id}
+                   'sports_date':sports_date, 'schedule_data_dic':schedule_data_dic,
+                   'my_id':my_id, 'owner_id':owner_id, 'recommend':recommend}
+
         return render(request, 'cal/calendar.html', context)
     except CustomGroup.DoesNotExist:
         return render(request, 'cal/group_making.html')
