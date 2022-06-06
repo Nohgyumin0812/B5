@@ -15,11 +15,15 @@
     <div id="neighbor-recommend" class="swiper">
         <div id="neighbor-recommend-inner" class="swiper-wrapper">
             <div id="neighborList" class="swiper-slide d2">
-                <!-- {% for data in neighbor_group %} -->
-                <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>
-                <!-- {{data}}그룹 -->
-                <br><button id="ivite-btn" class="invite-btn">초대하기</button>
-                <!-- {% endfor %} -->
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for data in place_group %}
+                    <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>
+                    <p>{{data.groupname}}그룹</p>
+                    <p>{{data.location}}</p>
+                    <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
+                    <!-- {% endfor %} -->
+                </form>
             </div>
             <div class="swiper-slide d2"></div>
             <div class="swiper-slide d2"></div>
@@ -33,11 +37,15 @@
     <div id="rival-recommend" class="swiper">
         <div id="rival-recommend-inner" class="swiper-wrapper">
             <div id="rivalList" class="swiper-slide d2">
-                <!-- {% for data in rival_group %} -->
-                <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>
-                <!-- {{data}}그룹 -->
-                <br><button id="ivite-btn" class="invite-btn">초대하기</button>
-                <!-- {% endfor %} -->
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for data in sports_group %}
+                    <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>
+                    <p>{{data.groupname}}그룹</p>
+                    <p>{{data.sports}}</p>
+                    <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
+                    <!-- {% endfor %} -->
+                </form>
             </div>
             <div class="swiper-slide d2"></div>
             <div class="swiper-slide d2"></div>
@@ -61,5 +69,14 @@
         slidesPerGroup : 3,
       } );
     
+      var neighbors_data = "{{ place_group }}".replace(/&quot;/g, "\"");
+      console.log(neighbors_data);
+      var neighbors_data = JSON.parse(neighbors_data);
+      var n_k = Object.keys(neighbors);
+      console.log(neighbors);
+      var neighbors_list = document.getElementById("neighborList");
+      for(i=0; i<n_k.length; i++){
+          
+      }
 </script>
 {% endblock %}
