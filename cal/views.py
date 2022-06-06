@@ -25,7 +25,7 @@ def calendar(request):
         return render(request, 'cal/mycalendar.html')
 
     curr_group = (curr_url[4]).replace('?', '')
-
+    curr_group_id = CustomGroup.objects.filter(groupname = curr_group).values()[0]['id']
     ##함께하기 방장만 가능##
     my_id = CustomUser.objects.filter(id=request.user.id).values()[0]['id']
     owner_id = CustomGroup.objects.filter(groupname = curr_group).values()[0]['owner_id']
@@ -33,6 +33,39 @@ def calendar(request):
     owner_id = json.dumps(owner_id,ensure_ascii=False )
     print(my_id)
     print(owner_id)
+
+    if request.method == "POST":
+        if my_id == owner_id:
+            if 'invite-name' in request.POST:
+                print(request.POST)
+                form = InviteForm(request.POST)
+                print(form)
+                if form.is_valid():
+                    Invite = form.save(commit=False)
+                    new_member = str(request.POST['invite-name']).replace("'", '')
+                    print(new_member)
+                    Invite.invite_user = new_member
+                    Invite.group = curr_group
+                    Invite.invite_status = 1
+                    Invite = form.save()
+                    print("#################################")
+
+            if "sche-name" in request.POST:
+                print(request.POST)
+
+        ##강퇴기능은 값 받아와야 함, 리스트에서 값 받아오면 수정
+            if "kickOut" in request.POST:
+                #멤버 삭제
+                item = CustomGroup.objects.get(groupname=curr_group)
+                kickOut_member = '' ##이 부분에 member 받아오기
+                new_friendname = ast.literal_eval(item.friendname)
+                #new_friendname.remove('kickOut_member')
+                #item.friendname = new_friendname
+                item.save()
+                #가능 날짜 삭제
+                kickOut_member_id = CustomUser.objects.filter(username = '').values()[0]['id']
+                item_Day = DayGroup.objects.filter(group_id = curr_group_id,user_id = kickOut_member_id )
+                item_Day.delete()
 
     loc = CustomGroup.objects.filter(groupname = curr_group).values()[0]['location_code']
     url = 'https://weather.naver.com/today/%s' % (loc)
@@ -168,25 +201,7 @@ def calendar(request):
             schedule_data_dic = []
             recommend = []
 
-        if request.method == "POST":
-            if 'invite-name' in request.POST:
-                print(request.POST)
-                form = InviteForm(request.POST)
-                print(form)
-                if form.is_valid():
-                    Invite = form.save(commit=False)
-                    new_member = str(request.POST['invite-name']).replace("'", '')
-                    print(new_member)
-                    Invite.invite_user = new_member
-                    Invite.group = curr_group
-                    Invite.invite_status = 1
-                    Invite = form.save()
-                    print("#################################")
-            if "kickOut" in request.POST:
-                print(request.POST)
 
-            if "sche-name" in request.POST:
-                print(request.POST)
 
         context = {'data': data, 'sportsall':sports, 'membersall':members,
                    'sports_date':sports_date, 'schedule_data_dic':schedule_data_dic,
@@ -294,7 +309,7 @@ def group_managing(request):
             if username in df_inner_join['friendname'][i]:
                 my_group.append(df_inner_join['groupname'][i])
         group_json = json.dumps(my_group, ensure_ascii=False)
-
+        print(group_json)
 
         return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group})
     except:
