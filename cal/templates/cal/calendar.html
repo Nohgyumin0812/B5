@@ -234,6 +234,7 @@
         var indi_tmp = "{{ schedule_data_dic }}".replace(/&quot;/g, "\"");
         var individual = JSON.parse(indi_tmp);
         var s_k = Object.keys(individual);
+        console.log(individual);
 
 
         dates.forEach((date, i) => {
@@ -329,8 +330,6 @@
                     if(individual[s_k[l]].includes(tmp) === true){
                         sche += color_list[s_k[l]];
                     }
-                    
-
                 }
             }
             else{
@@ -388,19 +387,23 @@
     var cur_url = window.location.href;
     var group = cur_url.split('?');
     group = decodeURIComponent(group[1], "UTF-8");
-    function groupName(){
-        window.location.href = `{% url 'cal:group_recommend' %}?${group}`;
-    }
 
-    //현재 유저 !== 그룹 소유자 이면 추천 탭 표시x
+
     var reco_div = document.getElementById("list-area-3");
     var myID = "{{ my_name }}".replace(/&quot;/g, "\"");
     var ownerID = "{{ owner_name }}".replace(/&quot;/g, "\"");
-    console.log(myID);
-    console.log(ownerID);
-    if(myID !== ownerID){
-        reco_div.style.display = "none";
+
+    //그룹 방장명 !== 현재 유저명 이면 추천페이지 이동 불가
+    function groupName(){
+        if(myID !== ownerID){
+            alert("그룹 방장에게만 권한이 있습니다!");
+        }
+        else{
+            window.location.href = `{% url 'cal:group_recommend' %}?${group}`;
+        }
     }
+
+
 
 
 </script>
