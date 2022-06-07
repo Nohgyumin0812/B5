@@ -29,10 +29,14 @@ def calendar(request):
     ##함께하기 방장만 가능##
     my_id = CustomUser.objects.filter(id=request.user.id).values()[0]['id']
     owner_id = CustomGroup.objects.filter(groupname = curr_group).values()[0]['owner_id']
-    my_id = json.dumps(my_id,ensure_ascii=False )
-    owner_id = json.dumps(owner_id,ensure_ascii=False )
-    print(my_id)
-    print(owner_id)
+
+    my_name = CustomUser.objects.filter(id=request.user.id).values()[0]['username']
+    owner_name = CustomUser.objects.filter(id = owner_id).values()[0]['username']
+
+    my_name = json.dumps(my_name,ensure_ascii=False )
+    owner_name = json.dumps(owner_name,ensure_ascii=False )
+    print(my_name)
+    print(owner_name)
 
     if request.method == "POST":
         if my_id == owner_id:
