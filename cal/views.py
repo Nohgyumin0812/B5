@@ -142,19 +142,22 @@ def calendar(request):
         try:
             my_id = CustomUser.objects.get(id=request.user.id).username
             schedule_data = DayGroup.objects.filter(group_id=my_group_id).values_list()
+            print("##############")
             schedule_data = pd.DataFrame(schedule_data)
+
             schedule_data.columns = ["id", "group_id", "myDates", "username"]
             for i in range(schedule_data.shape[0]):
-                schedule_data.iloc[:, 3][i] = CustomUser.objects.get(id = str(int(schedule_data.iloc[:, 3][i])))
+                schedule_data.iloc[:, 3][i] = CustomUser.objects.get(id = str(schedule_data.iloc[:, 3][i]))
                 schedule_data.iloc[:,3][i] = str(schedule_data.iloc[:, 3][i])
                 schedule_data['myDates'][i] = ast.literal_eval(str([schedule_data['myDates'][i]]).replace(' ',''))
 
             schedule_data_lst = schedule_data.iloc[:, 2:].groupby('username').sum()
+
+
             for i in range(schedule_data_lst.shape[0]):
-                schedule_data_lst['myDates'][i] = str(schedule_data_lst['myDates'][i]).replace(' ','').replace("','", ',').replace("'", '')
+                schedule_data_lst['myDates'][i] = str(schedule_data_lst['myDates'][i]).replace(' ','').replace("','", ",").replace(',', "','")
                 schedule_data_lst['myDates'][i] = ast.literal_eval(schedule_data_lst['myDates'][i])
                 schedule_data_lst['myDates'][i] = list(set(schedule_data_lst['myDates'][i]))
-
             for i in range(schedule_data_lst['myDates'].shape[0]):
                 for j in range(len(schedule_data_lst['myDates'][i])):
                     if len(str(schedule_data_lst['myDates'][i][j])) ==3:
@@ -163,10 +166,9 @@ def calendar(request):
                         schedule_data_lst['myDates'][i][j] = str(schedule_data_lst['myDates'][i][j]) + "."
             schedule_data_dic_2 = pd.DataFrame(schedule_data_lst['myDates']).to_dict()['myDates']
             schedule_data_dic = json.dumps(schedule_data_dic_2, ensure_ascii= False)
-
+            print(schedule_data_dic)
             ## 일정 추천 ##
             schedule_data_dic_2 = pd.DataFrame(schedule_data_dic_2.items(), columns=['name', 'date'])
-            print(schedule_data_dic_2)
             for i in range(schedule_data_dic_2.shape[0]):
                 schedule_data_dic_2['date'][i] = str(schedule_data_dic_2['date'][i]).replace('[', '').replace(']',
                                                                                                               '').replace(
@@ -299,7 +301,6 @@ def group_managing(request):
         invite_member.append(courses[i]['group'])
     invite_member_dic = {}
     invite_member_dic['개인초대'] = invite_member
-    print(invite_member_dic)
 
     invite_group = json.dumps(invite_member_dic, ensure_ascii=False)
 
@@ -317,6 +318,7 @@ def group_managing(request):
             if username in df_inner_join['friendname'][i]:
                 my_group.append(df_inner_join['groupname'][i])
         group_json = json.dumps(my_group, ensure_ascii=False)
+        print("########")
         print(group_json)
 
         return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group})
