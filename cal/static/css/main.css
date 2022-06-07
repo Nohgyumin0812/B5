@@ -345,3 +345,27 @@ input[type=checkbox]{
     width:245px;
     margin-top:35px;
 }
+#reco_d1{
+    margin-left:10px;
+    font-size: 14px;
+    background-color: rgb(255, 188, 188);
+    color:white;
+    display: inline-block;
+    width:60px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 10px;
+}
+#reco_d2{
+    margin-left:10px;
+    font-size: 14px;
+    background-color: rgb(255, 188, 243);
+    color:white;
+    display: inline-block;
+    width:60px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 10px;
+}

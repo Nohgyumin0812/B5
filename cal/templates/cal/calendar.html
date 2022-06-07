@@ -236,6 +236,10 @@
         var s_k = Object.keys(individual);
         console.log(individual);
 
+        //추천 일정 데이터 처리
+        var reco_data = "{{ recommend }}".replace(/&quot;/g, "\"");
+        var r_data = JSON.parse(reco_data);
+        console.log(r_data);
 
         dates.forEach((date, i) => {
             const condition = i >= firstDateIndex && i <= lastDateIndex
@@ -331,13 +335,29 @@
                         sche += color_list[s_k[l]];
                     }
                 }
+
+                //추천 일정 디스플레이
+                var reco_date=``;
+                for(h=0; h<r_data.length; h++){
+                    var datas = r_data[h];
+                    if(datas["date"].includes(tmp) === true){
+                        if(datas["rank_point"] === "완전추천"){
+                            reco_date = `<span id="reco_d1">${datas["rank_point"]}</span>`;
+                        }
+                        else{
+                            reco_date = `<span id="reco_d2">${datas["rank_point"]}</span>`;
+                        }
+                    }
+                }
+
             }
             else{
                 img=``;
                 spo=``;
                 sche='';
+                reco_date=``;
             }
-            dates[i] = `<div class = "date"><span class = "${condition}">${date}${img}</span><div>${spo}</div><div>${sche}</div></div>`;
+            dates[i] = `<div class = "date"><span class = "${condition}">${date}${img}</span><div>${spo} ${reco_date}</div><div>${sche}</div></div>`;
         })
 
         document.querySelector('.dates').innerHTML = dates.join('');
