@@ -406,7 +406,6 @@
     group = decodeURIComponent(group[1], "UTF-8");
     console.log(group);
     function groupName(){
-
         window.location.href = `{% url 'cal:group_recommend' %}?${group}`;
     }
 
