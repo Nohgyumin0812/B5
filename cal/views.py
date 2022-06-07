@@ -58,18 +58,22 @@ def calendar(request):
                 print(request.POST)
 
         ##강퇴기능은 값 받아와야 함, 리스트에서 값 받아오면 수정
-            if "kickOut" in request.POST:
+            if "kickList[]" in request.POST:
                 #멤버 삭제
+                print("@@@@@@@@@@@@")
+                print(request.POST)
                 item = CustomGroup.objects.get(groupname=curr_group)
-                kickOut_member = '' ##이 부분에 member 받아오기
+                kickOut_member = request.POST['kickList[]']
                 new_friendname = ast.literal_eval(item.friendname)
-                #new_friendname.remove('kickOut_member')
-                #item.friendname = new_friendname
+                new_friendname.remove(kickOut_member)
+                item.friendname = new_friendname
                 item.save()
                 #가능 날짜 삭제
-                kickOut_member_id = CustomUser.objects.filter(username = '').values()[0]['id']
+                kickOut_member_id = CustomUser.objects.filter(username = kickOut_member).values()[0]['id']
                 item_Day = DayGroup.objects.filter(group_id = curr_group_id,user_id = kickOut_member_id )
                 item_Day.delete()
+                for item_day in item_Day:
+                    item_day.save()
 
     loc = CustomGroup.objects.filter(groupname = curr_group).values()[0]['location_code']
     url = 'https://weather.naver.com/today/%s' % (loc)
