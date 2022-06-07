@@ -209,7 +209,7 @@ def calendar(request):
 
         context = {'data': data, 'sportsall':sports, 'membersall':members,
                    'sports_date':sports_date, 'schedule_data_dic':schedule_data_dic,
-                   'my_id':my_id, 'owner_id':owner_id, 'recommend':recommend}
+                   'my_name':my_name, 'owner_name':owner_name, 'recommend':recommend}
 
         return render(request, 'cal/calendar.html', context)
     except CustomGroup.DoesNotExist:
