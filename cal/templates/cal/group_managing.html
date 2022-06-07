@@ -14,7 +14,6 @@
     <div id="my-group">
         <a id="link" href="{% url 'cal:group_making' %}"><div id="groupMake" style="margin-top:27px;"><br><img class="icons" src="{% static 'img/icons8-더하다-32.png' %}"><br>그룹 만들기</div></a>
         <div id="my-group-inner" class="swiper">
-            <!-- <a class="arrow swiper-button-prev" id="l-arrow" href="javascript:leftNext();"><img src="{% static 'img/icons8-놀이-24.png' %}" style="transform: scaleX(-1);"></a> -->
             <div id="groupList" class="swiper-wrapper">
                 {% for data in my_group %}
                 <a href="javascript:sendToCalendar('{{data}}');" class="swiper-slide"><div><br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>{{data}} 그룹</div></a>
@@ -22,16 +21,15 @@
             </div>
             <div class="swiper-button-prev"></div>
             <div class="swiper-button-next"></div>
-            <!-- <a class="arrow swiper-button-next" id="r-arrow" href="javascript:rightNext();"><img src="{% static 'img/icons8-놀이-24.png' %}"></a> -->
         </div>
     </div>
     <p class="ptag" style="margin-top:40px;">그룹 초대 요청<img src="{% static 'img/icons8-add-user-group-man-man-24.png' %}"></p>
     <div id="group-invite" class="swiper">
         <div id="group-invite-inner" class="swiper-wrapper">
+            <!-- <div class="swiper-slide d2"></div>
             <div class="swiper-slide d2"></div>
             <div class="swiper-slide d2"></div>
-            <div class="swiper-slide d2"></div>
-            <div class="swiper-slide d2"></div>
+            <div class="swiper-slide d2"></div> -->
         </div>
         <div class="swiper-button-prev" id="bt1"></div>
         <div class="swiper-button-next" id="bt2"></div>
@@ -69,5 +67,13 @@
       } );
 
     
+    var invitation_list = "{{ invite_group }}".replace(/&quot;/g, "\"");
+    var invitation = JSON.parse(invitation_list);
+    console.log(invitation["개인초대"][0]);
+    for(i=0; i<invitation["개인초대"].length; i++){
+        var inner = document.getElementById("group-invite-inner");
+        inner.innerHTML += `<div class="swiper-slide d2"><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}" style="padding-top:10px;"><br>${invitation["개인초대"][i]} 그룹<br><button id="accept" type="submit">수락하기</button></div>`;
+    }
+    console.log(invitation);
 </script>
 {% endblock %}

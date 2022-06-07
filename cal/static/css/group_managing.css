@@ -106,3 +106,15 @@
 .d2{
     margin:0px 50px;
 }
+#accept{
+    padding: 5px 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: #FF8080;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 15px;
+    color: white;
+    margin-top:5px;
+}
