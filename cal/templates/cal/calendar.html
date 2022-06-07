@@ -125,7 +125,7 @@
     <p><img src="{% static 'img/icons8-chat-room-24.png' %}" width="30px">추천</p>
     <div class="list-box" id="rec">
         <p>선호하는 운동이 비슷한 다른 그룹과 함께 운동해보세요!</p><br>
-        <a href="{% url 'cal:group_recommend' %}">함께하기</a>
+        <a href="javascript:groupName();">함께하기</a>
     </div>
 </div>
 
@@ -133,6 +133,55 @@
 
 {% block script %}
 <script> 
+
+
+    var members_data = "{{ membersall }}".replace(/&quot;/g, "\"");
+    var members = JSON.parse(members_data);
+    var m_k = Object.keys(members);
+    var member_list = document.getElementById("mem-ul");
+    var color;
+    var color_list = {};
+    
+    for(i=0; i<m_k.length; i++){
+        switch(i){
+            case 0:
+                color = `<div style="display:inline-block; width:15px; height:15px; background-color:#FF0000; opacity:0.6; border-radius:10px;" id="${members[i]}"></div>`;
+                color_list[members[i]] = `<div style="display:inline-block; width:13px; height:13px; background-color:#FF0000; opacity:0.6; border-radius:10px; margin-right:5px;"></div>`;
+                break;
+            case 1:
+                color = `<div style="display:inline-block; width:15px; height:15px; background-color:#FF7A00; opacity:0.6; border-radius:10px;" id="${members[i]}"></div>`;
+                color_list[members[i]] = `<div style="display:inline-block; width:13px; height:13px; background-color:#FF7A00; opacity:0.6; border-radius:10px; margin-right:5px;"></div>`;
+                break;
+            case 2:
+                color = `<div style="display:inline-block; width:15px; height:15px; background-color:#FFF500; opacity:0.6; border-radius:10px;" id="${members[i]}"></div>`;
+                color_list[members[i]] = `<div style="display:inline-block; width:13px; height:13px; background-color:#FFF500; opacity:0.6; border-radius:10px; margin-right:5px;"></div>`;
+                break;
+            case 3:
+                color = `<div style="display:inline-block; width:15px; height:15px; background-color:#24FF00; opacity:0.6; border-radius:10px;" id="${members[i]}"></div>`;
+                color_list[members[i]] = `<div style="display:inline-block; width:13px; height:13px; background-color:#24FF00; opacity:0.6; border-radius:10px; margin-right:5px;"></div>`;
+                break;
+            case 4:
+                color = `<div style="display:inline-block; width:15px; height:15px; background-color:#00E0FF; opacity:0.6; border-radius:10px;" id="${members[i]}"></div>`;
+                color_list[members[i]] = `<div style="display:inline-block; width:13px; height:13px; background-color:#00E0FF; opacity:0.6; border-radius:10px; margin-right:5px;"></div>`;
+                break;
+            case 5:
+                color = `<div style="display:inline-block; width:15px; height:15px; background-color:#0500FF; opacity:0.6; border-radius:10px;" id="${members[i]}"></div>`;
+                color_list[members[i]] = `<div style="display:inline-block; width:13px; height:13px; background-color:#0500FF; opacity:0.6; border-radius:10px; margin-right:5px;"></div>`;
+                break;
+            case 6:
+                color = `<div style="display:inline-block; width:15px; height:15px; background-color:#BD00FF; opacity:0.6; border-radius:10px;" id="${members[i]}"></div>`;
+                color_list[members[i]] = `<div style="display:inline-block; width:13px; height:13px; background-color:#BD00FF; opacity:0.6; border-radius:10px; margin-right:5px;"></div>`;
+                break;
+            case 7:
+                color = `<div style="display:inline-block; width:15px; height:15px; background-color:#FF00E5; opacity:0.6; border-radius:10px;" id="${members[i]}"></div>`;
+                color_list[members[i]] = `<div style="display:inline-block; width:13px; height:13px; background-color:#FF00E5; opacity:0.6; border-radius:10px; margin-right:5px;"></div>`;
+                break;
+        }
+
+        member_list.innerHTML += `<li style="font-family:'SuncheonB'; margin-bottom:10px;">${members[i]} ${color}</li>`;
+    }
+
+
     const date = new Date();
     const renderCalender = () => {
         const viewYear = date.getFullYear();
@@ -164,7 +213,6 @@
         }
 
         const weather_data = "{{ data }}".replace(/&quot;/g, "\"");
-        console.log(weather_data);
         var result = JSON.parse(weather_data);
         var k = Object.keys(result);
 
@@ -176,10 +224,20 @@
 
         const m = viewMonth + 1;
 
+
+
+    
+
+
+
         var w_sport = "{{ sports_date }}".replace(/&quot;/g, "\"");
-        console.log(w_sport);
         var weather_sports = JSON.parse(w_sport);
         var w_k = Object.keys(weather_sports);
+
+        var indi_tmp = "{{ schedule_data_dic }}".replace(/&quot;/g, "\"");
+        var individual = JSON.parse(indi_tmp);
+        var s_k = Object.keys(individual);
+        console.log(individual);
 
         dates.forEach((date, i) => {
             const condition = i >= firstDateIndex && i <= lastDateIndex
@@ -187,14 +245,14 @@
                                 : 'other';
             if(condition == "this"){
                 //날씨 띄우기
+                var tmp;
+                if(date<10){
+                    tmp = m.toString() + "." + "0"+ date.toString() + ".";
+                }
+                else{
+                    tmp = m.toString() + "." + date.toString() + ".";
+                }
                 for(j=0; j<k.length; j++){
-                    var tmp;
-                    if(date<10){
-                        tmp = m.toString() + "." + "0"+ date.toString() + ".";
-                    }
-                    else{
-                        tmp = m.toString() + "." + date.toString() + ".";
-                    }
                     var img;
                     if(tmp !== k[j]){
                         if(result[tmp] !== undefined){
@@ -278,12 +336,22 @@
                         }
                     }
                 }
+                var sche=``;
+                for(l=0; l<s_k.length; l++){
+                    if(individual[s_k[l]].includes(tmp) === true){
+                        console.log(s_k[l]);
+                        sche += color_list[s_k[l]];
+                    }
+                    
+
+                }
             }
             else{
                 img=``;
                 spo=``;
+                sche='';
             }
-            dates[i] = `<div class = "date"><span class = "${condition}">${date}${img}</span><div>${spo}</div></div>`;
+            dates[i] = `<div class = "date"><span class = "${condition}">${date}${img}</span><div>${spo}</div><div>${sche}</div></div>`;
         })
 
         document.querySelector('.dates').innerHTML = dates.join('');
@@ -317,7 +385,6 @@
 
 
     var sports_data = "{{ sportsall }}".replace(/&quot;/g, "\"");
-    console.log(sports_data);
     var sport = JSON.parse(sports_data);
 
 
@@ -326,47 +393,21 @@
     }
 
     
-    var members_data = "{{ membersall }}".replace(/&quot;/g, "\"");
-    console.log(members_data);
-    var members = JSON.parse(members_data);
-    var m_k = Object.keys(members);
-    console.log(members);
-    var member_list = document.getElementById("mem-ul");
-    var color;
-    for(i=0; i<m_k.length; i++){
-        switch(i){
-            case 0:
-                color = `<div style="display:inline-block; width:15px; height:15px; background-color:#FF0000; opacity:0.6; border-radius:10px;"></div>`;
-                break;
-            case 1:
-                color = `<div style="display:inline-block; width:15px; height:15px; background-color:#FF7A00; opacity:0.6; border-radius:10px;"></div>`;
-                break;
-            case 2:
-                color = `<div style="display:inline-block; width:15px; height:15px; background-color:#FFF500; opacity:0.6; border-radius:10px;"></div>`;
-                break;
-            case 3:
-                color = `<div style="display:inline-block; width:15px; height:15px; background-color:#24FF00; opacity:0.6; border-radius:10px;"></div>`;
-                break;
-            case 4:
-                color = `<div style="display:inline-block; width:15px; height:15px; background-color:#00E0FF; opacity:0.6; border-radius:10px;"></div>`;
-                break;
-            case 5:
-                color = `<div style="display:inline-block; width:15px; height:15px; background-color:#0500FF; opacity:0.6; border-radius:10px;"></div>`;
-                break;
-            case 6:
-                color = `<div style="display:inline-block; width:15px; height:15px; background-color:#BD00FF; opacity:0.6; border-radius:10px;"></div>`;
-                break;
-            case 7:
-                color = `<div style="display:inline-block; width:15px; height:15px; background-color:#FF00E5; opacity:0.6; border-radius:10px;"></div>`;
-                break;
-        }
-
-        member_list.innerHTML += `<li style="font-family:'SuncheonB'; margin-bottom:10px;">${members[i]} ${color}</li>`; 
-    }
+    
 
     var kick = document.getElementById("kickOut");
     for(i=0; i<m_k.length; i++){
-        kick.innerHTML += `<label style="margin-right:10px;"><input type="checkbox" name ="kickOut">${members[i]}</label>`;
+        kick.innerHTML += `<label style="margin-right:10px;"><input type="checkbox" name="kickList[]" value="${members[i]}">${members[i]}</label>`;
+    }
+
+
+    var cur_url = window.location.href;
+    var group = cur_url.split('?');
+    group = decodeURIComponent(group[1], "UTF-8");
+    console.log(group);
+    function groupName(){
+
+        window.location.href = `{% url 'cal:group_recommend' %}?${group}`;
     }
 
 

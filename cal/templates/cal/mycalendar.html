@@ -127,6 +127,7 @@
 
         const weather_data = "{{ data }}".replace(/&quot;/g, "\"");
         var result = JSON.parse(weather_data);
+        console.log(result);
         var k = Object.keys(result);
 
 
@@ -158,8 +159,9 @@
                 //날씨 띄우기
                 for(j=0; j<k.length; j++){
                     var img;
-                    if(tmp === k[j]){
+                    if(k.includes(tmp) === true){
                         if(result[tmp] !== undefined){
+                            //console.log("성공");
                             if (result[tmp] === "맑음"){
                                 //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-태양-48.png' %}""></span></div>`;
                                 img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-태양-48.png' %}">`;
@@ -204,16 +206,17 @@
                                 //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-눈-48.png' %}""></span></div>`;
                                 img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-눈-48.png' %}">`
                             }
-                        }
-                        else{
-                            //dates[i] = `<div class = "date"><span class = "${condition}">${date}<span id="wet" style="margin-left:20px;"></span></span></div>`;
-                            img = `<img id="wet" style="width:30px; height:30px; margin-left:5px; display:none;" src = "{% static 'img/icons8-눈-48.png' %}">`;
+                            else{
+                                img=``;
+                            }
                         }
                     }
-                    if(tmp !== k[j]){
-                        img = ``;
+                    else{
+                        img=``;
                     }
-                    if(tmp === w_k[j]){
+                    
+
+                    if(w_k.includes(tmp) === true){
                         if(weather_sports[tmp] !== undefined){
                             var spo = ``;
                             for(var a in weather_sports[tmp]){
@@ -238,12 +241,9 @@
                                 }
                             }
                         }
-                        //else{
-                        //    spo = ``;
-                        //}
                     }
-                    if(tmp !== w_k[j]){
-                        spo = ``;
+                    else{
+                        spo=``;
                     }
                 }
             }

@@ -34,7 +34,11 @@
 <form id="subm2" action="{% url 'cal:my_schedule' %}" method="POST">
     {% csrf_token %}
     <input type="text" id="myDates" name="myDates" style="display:none;">
-    <button id="subm" type="submit">저장하기</button>
+    <div id="bt-manage">
+        <button id="subm" type="submit">저장하기</button>
+        <button id="subm" type="button" onclick="relocate();">완료하기</button>
+    </div>
+    
 </form>
 
 {% endblock %}
@@ -191,7 +195,12 @@
         console.log(typeof(hide.value));
     }
 
-
+    function relocate(){
+        var loc = "{{ curr_group }}".replace(/&quot;/g, "\"");
+        var loc_p = JSON.parse(loc);
+        console.log(loc_p);
+        window.location.href = `{% url 'cal:calendar' %}?${loc_p}`;
+    }
 
 
     

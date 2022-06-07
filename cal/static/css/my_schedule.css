@@ -154,8 +154,6 @@ img{
 #subm2{
     margin:auto;
     margin-top:30px;
-    padding-bottom:50px;
-    width:300px;
     height:50px;
 }
 #subm{
@@ -168,4 +166,8 @@ img{
     font-family: 'KOTRA_BOLD-Bold';
     font-size:25px;
     cursor: pointer;
+}
+#bt-manage{
+    display: block;
+    text-align: center;
 }

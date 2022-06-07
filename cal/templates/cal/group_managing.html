@@ -54,7 +54,7 @@
 
     function sendToCalendar(data){
         var sendData = encodeURIComponent(data, "UTF-8");
-        location.href = `{% url 'cal:calendar' %}?${sendData}`;
+        location.href = `{% url 'cal:calendar' %}?${encodeURIComponent(sendData, "UTF-8")}`;
     }
 
     const swiper = new Swiper( '.swiper', {
