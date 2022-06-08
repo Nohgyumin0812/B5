@@ -1,8 +1,8 @@
 <!-- 
     작성자 : 최고운, 정혜원
 
-    최고운 - 날씨 출력, 운동 아이콘 출력, 참여자 리스트 출력, 멤버 별 일정 디스플레이,
-            추천 일정 디스플레이, 각종 팝업창 제작, 초대하기, 강퇴하기, 추천페이지 권한 부여
+    최고운 - 날씨 출력, 운동 아이콘 출력, 참여자 리스트 출력, 멤버 별 일정 디스플레이, 선호 운동 종목 출력, 추천페이지 이동 구현,
+            추천 일정 디스플레이, 일정 추가, 초대하기, 강퇴하기, 추천페이지 이동 권한 부여
     정혜원 - 
  -->
 
@@ -16,15 +16,16 @@
 {% endblock %}
 
 {% block main %}
-
+<!-- 로고 -->
 <div id="logo"><img src="{% static 'img/icons8-입안자-24.png' %}"><p>언제 만나</p></div>
+<!-- 달력 구현 -->
 <div class="calender_box">
     <div class="calender">
         <div id="">
-            
         </div>
         <div class="header">
             <div class="year-month"></div>
+            <!-- 일정 추가 팝업창 구현 -->
             <div class="schedule-add">
                 <a href="javascript:openPop(1);" class="schedule-btn">일정 추가</a>
             </div>
@@ -34,7 +35,7 @@
                         <div style="height: 10px; width: 375px; float: top;">
                             <a href="javascript:closePop(1);"><img src="{% static 'img/ic_close.svg' %}" class="m_header-banner-close" width="30px" height="30px"></a>
                           </div>
-                          <!--팝업 컨텐츠 영역-->
+                          <!--일정 추가 팝업 컨텐츠 영역-->
                           <div class="popup_cont">
                               <form method="POST">
                                   {% csrf_token %}
@@ -64,11 +65,11 @@
     </div>
 </div>
 
-
+<!-- 멤버별 가능한 일정 선택 페이지 이동 버튼 -->
 <div class="day-add">
     <a class="day-btn" href="{% url 'cal:my_schedule' %}"><img src="{% static 'img/icons8-추가-48.png' %}" width="30px"><span>내가 운동할 수 있는 날 추가하기</span></a>
 </div>
-
+<!-- 선호 운동 종목 출력 -->
 <div class="list-area" id="list-area-1">
     <p><img src="{% static 'img/icons8-달리는-24.png' %}" width="30px">선호 운동 리스트</p>
     <div class="list-box" id="sports">
@@ -84,10 +85,13 @@
 </div>
 
 <div class="list-area" id="list-area-2">
+    <!-- 참여자 리스트 디스플레이 -->
     <p><img src="{% static 'img/icons8-group-32.png' %}" width="30px">참여자 리스트</p>
     <div class="list-box" id="mem-list">
         <ul id="mem-ul"></ul>
     </div>
+
+    <!-- 초대하기 팝업창 구현 -->
     <a class="part-btn" id="invitation-btn" href="javascript:openPop(2);">초대하기</a>
     <div class="popup_layer" id="popup_layer2" style="display: none;">
         <div class="popup_box">
@@ -95,7 +99,7 @@
                 <div style="height: 10px; width: 375px; float: top;">
                     <a href="javascript:closePop(2);"><img src="{% static 'img/ic_close.svg' %}" class="m_header-banner-close" width="30px" height="30px"></a>
                   </div>
-                  <!--팝업 컨텐츠 영역-->
+                  <!--초대하기 팝업 컨텐츠 영역-->
                   <div class="popup_cont">
                       <form method="POST">
                           {% csrf_token %}
@@ -108,6 +112,8 @@
             </div>
         </div>
     </div>
+
+    <!-- 강퇴하기 팝업창 구현 -->
     <a class="part-btn" id="kick-btn" href="javascript:openPop(3);">강퇴하기</a>
     <div class="popup_layer" id="popup_layer3" style="display: none;">
         <div class="popup_box">
@@ -115,7 +121,7 @@
                 <div style="height: 10px; width: 375px; float: top;">
                     <a href="javascript:closePop(3);"><img src="{% static 'img/ic_close.svg' %}" class="m_header-banner-close" width="30px" height="30px"></a>
                   </div>
-                  <!--팝업 컨텐츠 영역-->
+                  <!--강퇴하기 팝업 컨텐츠 영역-->
                   <div class="popup_cont">
                       <form method="POST">
                             {% csrf_token %}
@@ -129,7 +135,7 @@
         </div>
     </div>
 </div>
-
+<!-- 추천 페이지 이동 탭 -->
 <div class="list-area" id="list-area-3">
     <p><img src="{% static 'img/icons8-chat-room-24.png' %}" width="30px">추천</p>
     <div class="list-box" id="rec">
@@ -143,7 +149,7 @@
 {% block script %}
 <script> 
 
-    //멤버 별 색깔 부여
+    //그룹 멤버 데이터 처리
     var members_data = "{{ membersall }}".replace(/&quot;/g, "\"");
     var members = JSON.parse(members_data);
     var m_k = Object.keys(members);
@@ -151,37 +157,38 @@
     var color;
     var color_list = {};
     
+    //멤버 별 색깔 부여
     for(i=0; i<m_k.length; i++){
         switch(i){
-            case 0:
+            case 0: //빨강
                 color = `<div style="display:inline-block; width:15px; height:15px; background-color:#FF0000; opacity:0.6; border-radius:10px;" id="${members[i]}"></div>`;
                 color_list[members[i]] = `<div style="display:inline-block; width:13px; height:13px; background-color:#FF0000; opacity:0.6; border-radius:10px; margin-right:5px;"></div>`;
                 break;
-            case 1:
+            case 1: //주황
                 color = `<div style="display:inline-block; width:15px; height:15px; background-color:#FF7A00; opacity:0.6; border-radius:10px;" id="${members[i]}"></div>`;
                 color_list[members[i]] = `<div style="display:inline-block; width:13px; height:13px; background-color:#FF7A00; opacity:0.6; border-radius:10px; margin-right:5px;"></div>`;
                 break;
-            case 2:
+            case 2: //노랑
                 color = `<div style="display:inline-block; width:15px; height:15px; background-color:#FFF500; opacity:0.6; border-radius:10px;" id="${members[i]}"></div>`;
                 color_list[members[i]] = `<div style="display:inline-block; width:13px; height:13px; background-color:#FFF500; opacity:0.6; border-radius:10px; margin-right:5px;"></div>`;
                 break;
-            case 3:
+            case 3: //초록
                 color = `<div style="display:inline-block; width:15px; height:15px; background-color:#24FF00; opacity:0.6; border-radius:10px;" id="${members[i]}"></div>`;
                 color_list[members[i]] = `<div style="display:inline-block; width:13px; height:13px; background-color:#24FF00; opacity:0.6; border-radius:10px; margin-right:5px;"></div>`;
                 break;
-            case 4:
+            case 4: //파랑
                 color = `<div style="display:inline-block; width:15px; height:15px; background-color:#00E0FF; opacity:0.6; border-radius:10px;" id="${members[i]}"></div>`;
                 color_list[members[i]] = `<div style="display:inline-block; width:13px; height:13px; background-color:#00E0FF; opacity:0.6; border-radius:10px; margin-right:5px;"></div>`;
                 break;
-            case 5:
+            case 5: //남색
                 color = `<div style="display:inline-block; width:15px; height:15px; background-color:#0500FF; opacity:0.6; border-radius:10px;" id="${members[i]}"></div>`;
                 color_list[members[i]] = `<div style="display:inline-block; width:13px; height:13px; background-color:#0500FF; opacity:0.6; border-radius:10px; margin-right:5px;"></div>`;
                 break;
-            case 6:
+            case 6: //보라색
                 color = `<div style="display:inline-block; width:15px; height:15px; background-color:#BD00FF; opacity:0.6; border-radius:10px;" id="${members[i]}"></div>`;
                 color_list[members[i]] = `<div style="display:inline-block; width:13px; height:13px; background-color:#BD00FF; opacity:0.6; border-radius:10px; margin-right:5px;"></div>`;
                 break;
-            case 7:
+            case 7: //핑크색
                 color = `<div style="display:inline-block; width:15px; height:15px; background-color:#FF00E5; opacity:0.6; border-radius:10px;" id="${members[i]}"></div>`;
                 color_list[members[i]] = `<div style="display:inline-block; width:13px; height:13px; background-color:#FF00E5; opacity:0.6; border-radius:10px; margin-right:5px;"></div>`;
                 break;
@@ -221,10 +228,6 @@
             nextDates.push(i);
         }
 
-        const weather_data = "{{ data }}".replace(/&quot;/g, "\"");
-        var result = JSON.parse(weather_data);
-        var k = Object.keys(result);
-
 
         const dates = prevDates.concat(thisDates, nextDates);
         const firstDateIndex = dates.indexOf(1);
@@ -233,6 +236,11 @@
 
         const m = viewMonth + 1;
 
+
+        //날씨 데이터 처리
+        const weather_data = "{{ data }}".replace(/&quot;/g, "\"");
+        var result = JSON.parse(weather_data);
+        var k = Object.keys(result);
 
         //운동 데이터 처리
         var w_sport = "{{ sports_date }}".replace(/&quot;/g, "\"");
@@ -250,6 +258,7 @@
         var r_data = JSON.parse(reco_data);
         console.log(r_data);
 
+        //달력 컨텐츠 출력
         dates.forEach((date, i) => {
             const condition = i >= firstDateIndex && i <= lastDateIndex
                                 ? 'this'
@@ -405,7 +414,7 @@
     var group = cur_url.split('?');
     group = decodeURIComponent(group[1], "UTF-8");
 
-
+    //현재 접속중인 유저명, 그룹 방장명 데이터 수신
     var reco_div = document.getElementById("list-area-3");
     var myID = "{{ my_name }}".replace(/&quot;/g, "\"");
     var ownerID = "{{ owner_name }}".replace(/&quot;/g, "\"");
@@ -421,8 +430,8 @@
     }
 
 
-    //팝업 함수
-
+    //팝업창 열기
+    //그룹 방장명 !== 현재 유저명 이면 일정추가, 초대하기, 강퇴하기 불가
     function openPop(data) {
         if(myID !== ownerID){
             alert("그룹 방장에게만 권한이 있습니다!");
@@ -431,13 +440,10 @@
             document.getElementById("popup_layer"+data.toString()).style.display = "block";
         }
     }
-
+    //팝업창 닫기
     function closePop(data) {
         document.getElementById("popup_layer"+data.toString()).style.display = "none";
     }
-
-
-
 
 </script>
 {% endblock %}

@@ -1,3 +1,9 @@
+<!-- 
+    작성자 : 최고운
+
+    최고운 - html/css 작성, 로그인 폼 제작
+ -->
+
 {% extends 'cal/base.html' %}
 {% load static %}
 
@@ -6,21 +12,28 @@
 {% endblock %}
 
 {% block main %}
-
+<!-- 로그인 폼 구현 -->
 <div id="login">
     
     <form action="{% url 'common:login' %}" method="POST">
     {% csrf_token %}
+    <!-- 로고 -->
         <div id="logo"><img src="{% static 'img/icons8-입안자-24.png' %}"><p>언제 만나</p></div>
 
+        <!-- ID입력 -->
         <div class="input-box">
             <input id="username" type="text" name="username" placeholder="ID">
         </div>
 
+        <!-- 비밀번호 입력 -->
         <div class="input-box">
             <input id="password" type="password" name="password" placeholder="PASSWORD">
         </div>
+
+        <!-- 로그인 버튼 -->
         <button type="submit">LOGIN</button><br>
+
+        <!-- 회원가입 링크 연결 -->
         <a id="ment" href="{% url 'common:signup' %}">아직 회원이 아니신가요?</a>
     </form>
 </div>

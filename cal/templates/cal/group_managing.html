@@ -1,21 +1,30 @@
+<!-- 
+    작성자 : 최고운
+
+    최고운 - html/css 작성, 내 그룹 디스플레이, 초대 요청 디스플레이, get 방식 데이터 전송
+ -->
+
 {% extends 'cal/base.html' %}
 {% load static %}
 
 {% block header %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/group_managing.css' %}">
 
+<!-- swiper 라이브러리 -->
 <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
 {% endblock %}
 
 {% block main %}
 <div id="group-outer">
+    <!-- 내 그룹 디스플레이 -->
     <p class="ptag" style="padding-top:30px; margin-bottom:0px;">내 그룹<img src="{% static 'img/icons8-group-32 (1).png' %}"></p><br>
     <div id="my-group">
         <a id="link" href="{% url 'cal:group_making' %}"><div id="groupMake" style="margin-top:27px;"><br><img class="icons" src="{% static 'img/icons8-더하다-32.png' %}"><br>그룹 만들기</div></a>
         <div id="my-group-inner" class="swiper">
             <div id="groupList" class="swiper-wrapper">
                 {% for data in my_group %}
+                <!-- get방식으로 calendar페이지로 데이터 전송 및 그룹별 캘린더 페이지 이동 -->
                 <a href="javascript:sendToCalendar('{{data}}');" class="swiper-slide"><div><br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>{{data}} 그룹</div></a>
                 {% endfor %}
             </div>
@@ -23,15 +32,12 @@
             <div class="swiper-button-next"></div>
         </div>
     </div>
+    <!-- 그룹 초대 요청 내역 디스플레이 -->
     <p class="ptag" style="margin-top:40px;">그룹 초대 요청<img src="{% static 'img/icons8-add-user-group-man-man-24.png' %}"></p>
     <div id="group-invite" class="swiper">
         <form method="POST">
             <div id="group-invite-inner" class="swiper-wrapper">
                 {% csrf_token %}
-                <!-- <div class="swiper-slide d2"></div>
-                <div class="swiper-slide d2"></div>
-                <div class="swiper-slide d2"></div>
-                <div class="swiper-slide d2"></div> -->
             </div>
         </form>
         <div class="swiper-button-prev" id="bt1"></div>
@@ -39,25 +45,16 @@
     </div>
 </div>
 {% endblock %}
+
 {% block script %}
 <script>
-    //var list = document.getElementById("groupList");
-    //var group = "{{ group_json }}".replace(/&quot;/g, "\"");
-    //var group_list = JSON.parse(group);
-    //var group_key = Object.keys(group_list);
-    //console.log(group_list);
-
-    //for(i=0; i<group_key.length; i++){
-    //    var k = group_list[i];
-    //    list.innerHTML += `<a href="javascript:sendToCalendar(k);"><div class="swiper-slide" style="margin-right:10px;"><br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>${k} 그룹</div></a>`;
-        
-    //}
-
+    //get 방식으로 데이터 전송
     function sendToCalendar(data){
         var sendData = encodeURIComponent(data, "UTF-8");
         location.href = `{% url 'cal:calendar' %}?${sendData}`;
     }
 
+    //내 그룹 부분, 그룹 초대 요청 부분 슬라이드 방식으로 구현 -> swiper 라이브러리 사용
     const swiper = new Swiper( '.swiper', {
         autoplay: false,
         loop: false,
@@ -69,7 +66,7 @@
         slidesPerGroup : 3,
       } );
 
-    
+    //초대 요청 내역 디스플레이
     var invitation_list = "{{ invite_group }}".replace(/&quot;/g, "\"");
     var invitation = JSON.parse(invitation_list);
     console.log(invitation["개인초대"][0]);
@@ -77,6 +74,5 @@
         var inner = document.getElementById("group-invite-inner");
         inner.innerHTML += `<div class="swiper-slide d2"><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}" style="padding-top:10px;"><br>${invitation["개인초대"][i]} 그룹<br><input type="text" value="${invitation["개인초대"][i]}" style="display:none;"><button id="accept" type="submit">수락하기</button></div>`;
     }
-    console.log(invitation);
 </script>
 {% endblock %}
