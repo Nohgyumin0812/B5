@@ -334,7 +334,8 @@ def group_managing(request):
         group_json = json.dumps(my_group, ensure_ascii=False)
 
         if request.method == "POST":
-            invite_group_name = request.POST['gname']
+            invite_group_name = request.POST.get('gname')
+            print(request.POST)
             Invite_item = InviteGroup.objects.get(group=invite_group_name, invite_user=username, invite_status=1)
             Invite_item.invite_status = 0
             Invite_item.save()
@@ -349,6 +350,7 @@ def group_managing(request):
             group_item.friendname = ast.literal_eval(group_item.friendname)
             print(group_item.friendname)
             group_item.save()
+            return redirect('cal:group_managing')
         return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group})
     except:
         return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group})
