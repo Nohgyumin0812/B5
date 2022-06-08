@@ -22,7 +22,7 @@ class GroupForm(forms.ModelForm):
 
   class Meta:
     model = CustomGroup
-    fields = ["groupname", "sports", "friendname", "location", "location_code", "x", "y"]
+    fields = ["groupname", "sports", "friendname", "location", "location_code", "x", "y", "dateFirst", "sportFirst"]
 
 
 class DayForm(forms.ModelForm):

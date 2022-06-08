@@ -186,9 +186,12 @@ def calendar(request):
 
             df_recommend = pd.merge(sports_df, schedule_data_dic_2, left_on='date', right_on='date', how='inner')
 
-            sports_percent = 0.5  # 모델링 crud 필요
-            member_percent = 0.5  # 모델링 crud 필요
+            sports_percent = int(CustomGroup.objects.filter(groupname = curr_group).values()[0]['dateFirst'])
 
+            member_percent = int(CustomGroup.objects.filter(groupname = curr_group).values()[0]['sportFirst'])
+
+            print(sports_percent)
+            print(member_percent)
             df_recommend['point'] = sports_percent * df_recommend['sports'] + member_percent * df_recommend['member']
             df_recommend['rank_point'] = df_recommend['point'].rank(method='min')
             rank_point = list(set(list(df_recommend['rank_point'])))
@@ -276,6 +279,10 @@ def group_making(request):
                 group.location_code = '09230108'
                 group.x = '37.570749'
                 group.y = '127.068233'
+
+            group.dateFirst = request.POST['dateFirst']
+            group.sportFirst = request.POST['sportFirst']
+
             group.save()
             return redirect('cal:group_managing')
     return render(request, 'cal/group_making.html')
