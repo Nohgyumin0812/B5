@@ -74,7 +74,7 @@
     console.log(invitation["개인초대"][0]);
     for(i=0; i<invitation["개인초대"].length; i++){
         var inner = document.getElementById("group-invite-inner");
-        inner.innerHTML += `<div class="swiper-slide d2"><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}" style="padding-top:10px;"><br>${invitation["개인초대"][i]} 그룹<br><button id="accept" type="submit">수락하기</button></div>`;
+        inner.innerHTML += `<div class="swiper-slide d2"><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}" style="padding-top:10px;"><br>${invitation["개인초대"][i]} 그룹<br><input type="text" value="${invitation["개인초대"][i]}" style="display:none;"><button id="accept" type="submit">수락하기</button></div>`;
     }
     console.log(invitation);
 </script>
