@@ -387,17 +387,6 @@
 
     renderCalender();
 
-    //팝업 함수
-    function openPop(data) {
-        document.getElementById("popup_layer"+data.toString()).style.display = "block";
-    }
-
-
-    function closePop(data) {
-        document.getElementById("popup_layer"+data.toString()).style.display = "none";
-    }
-
-
     //선호 운동 종목 디스플레이
     var sports_data = "{{ sportsall }}".replace(/&quot;/g, "\"");
     var sport = JSON.parse(sports_data);
@@ -429,6 +418,22 @@
         else{
             window.location.href = `{% url 'cal:group_recommend' %}?${group}`;
         }
+    }
+
+
+    //팝업 함수
+
+    function openPop(data) {
+        if(myID !== ownerID){
+            alert("그룹 방장에게만 권한이 있습니다!");
+        }
+        else{
+            document.getElementById("popup_layer"+data.toString()).style.display = "block";
+        }
+    }
+
+    function closePop(data) {
+        document.getElementById("popup_layer"+data.toString()).style.display = "none";
     }
 
 
