@@ -14,20 +14,14 @@
     <p class="ptag" style="margin-top:40px; padding-top:30px;">내 주변 그룹<img src="{% static 'img/icons8-location.png' %}"></p>
     <div id="neighbor-recommend" class="swiper">
         <div id="neighbor-recommend-inner" class="swiper-wrapper">
-            <div id="neighborList" class="swiper-slide d2">
-                <form method="POST">
-                    {% csrf_token %}
-                    {% for data in place_group %}
-                    <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>
-                    <p>{{data.groupname}}그룹</p>
-                    <p>{{data.location}}</p>
-                    <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
-                    <!-- {% endfor %} -->
-                </form>
-            </div>
-            <div class="swiper-slide d2"></div>
-            <div class="swiper-slide d2"></div>
-            <div class="swiper-slide d2"></div>
+            <!-- <div id="neighborList" class="swiper-slide d2">
+                {% csrf_token %}
+                {% for data in place_group %}
+                <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>
+                <p>{{data.groupname}}그룹</p>
+                <p>{{data.location}}</p>
+                <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
+            </div> -->
         </div>
         <div class="swiper-button-prev" id="bt1"></div>
         <div class="swiper-button-next" id="bt2"></div>
@@ -36,20 +30,14 @@
     <p class="ptag" style="margin-top:40px;">상대팀이 될 수 있는 그룹<img src="{% static 'img/icons8-head-to-head.png' %}"></p>
     <div id="rival-recommend" class="swiper">
         <div id="rival-recommend-inner" class="swiper-wrapper">
-            <div id="rivalList" class="swiper-slide d2">
-                <form method="POST">
-                    {% csrf_token %}
-                    {% for data in sports_group %}
-                    <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>
-                    <p>{{data.groupname}}그룹</p>
-                    <p>{{data.sports}}</p>
-                    <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
-                    <!-- {% endfor %} -->
-                </form>
-            </div>
-            <div class="swiper-slide d2"></div>
-            <div class="swiper-slide d2"></div>
-            <div class="swiper-slide d2"></div>
+            <!-- <div id="rivalList" class="swiper-slide d2">
+                {% csrf_token %}
+                {% for data in sports_group %}
+                <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>
+                <p>{{data.groupname}}그룹</p>
+                <p>{{data.sports}}</p>
+                <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
+            </div> -->
         </div>
         <div class="swiper-button-prev" id="bt1"></div>
         <div class="swiper-button-next" id="bt2"></div>
@@ -70,13 +58,33 @@
       } );
     
       var neighbors_data = "{{ place_group }}".replace(/&quot;/g, "\"");
-      console.log(neighbors_data);
       var neighbors_data = JSON.parse(neighbors_data);
       var n_k = Object.keys(neighbors);
       console.log(neighbors);
-      var neighbors_list = document.getElementById("neighborList");
       for(i=0; i<n_k.length; i++){
-          
+          var neighbors_list = document.getElementById("neighbor-recommend-inner");
+          neighbors_list.innerHTML += `<div id="neighborList" class="swiper-slide d2">
+                <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}">
+                <br><p>${neighbors_data[i]['groupname']}그룹</p>
+                <p>${neighbors_data[i]['location']}</p>
+                <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
+            </div>`
       }
+      console.log(neighbors_data);
+
+      var rivals_data = "{{ sports_group }}".replace(/&quot;/g, "\"");
+      var rivals_data = JSON.parse(rivals_data);
+      var r_k = Object.keys(rivals);
+      console.log(rivals);
+      for(i=0; i<r_k.length; i++){
+          var rivals_list = document.getElementById("rival-recommend-inner");
+          rivals_list.innerHTML += `<div id="rivalList" class="swiper-slide d2">
+                <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}">
+                <br><p>${rivals_data[i]['groupname']}그룹</p>
+                <p>${rivals_data[i]['sports']}</p>
+                <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
+            </div>`
+      }
+      console.log(rivals_data);
 </script>
 {% endblock %}

@@ -27,6 +27,8 @@ class CustomGroup(models.Model):
     location_code = models.CharField(max_length=50, default='', blank = True)
     x = models.CharField(max_length=50, default='', blank = True)
     y = models.CharField(max_length=50, default='', blank = True)
+    dateFirst = models.CharField(max_length=50, default='', blank = True)
+    sportFirst = models.CharField(max_length=50, default='', blank = True)
 
 class DayGroup(models.Model):
     group = models.ForeignKey(CustomGroup, on_delete=models.CASCADE, verbose_name='group', null = True, blank = True)
