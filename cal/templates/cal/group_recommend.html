@@ -14,14 +14,6 @@
     <p class="ptag" style="margin-top:40px; padding-top:30px;">내 주변 그룹<img src="{% static 'img/icons8-location.png' %}"></p>
     <div id="neighbor-recommend" class="swiper">
         <div id="neighbor-recommend-inner" class="swiper-wrapper">
-            <!-- <div id="neighborList" class="swiper-slide d2">
-                {% csrf_token %}
-                {% for data in place_group %}
-                <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>
-                <p>{{data.groupname}}그룹</p>
-                <p>{{data.location}}</p>
-                <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
-            </div> -->
         </div>
         <div class="swiper-button-prev" id="bt1"></div>
         <div class="swiper-button-next" id="bt2"></div>
@@ -30,14 +22,6 @@
     <p class="ptag" style="margin-top:40px;">상대팀이 될 수 있는 그룹<img src="{% static 'img/icons8-head-to-head.png' %}"></p>
     <div id="rival-recommend" class="swiper">
         <div id="rival-recommend-inner" class="swiper-wrapper">
-            <!-- <div id="rivalList" class="swiper-slide d2">
-                {% csrf_token %}
-                {% for data in sports_group %}
-                <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>
-                <p>{{data.groupname}}그룹</p>
-                <p>{{data.sports}}</p>
-                <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
-            </div> -->
         </div>
         <div class="swiper-button-prev" id="bt1"></div>
         <div class="swiper-button-next" id="bt2"></div>
