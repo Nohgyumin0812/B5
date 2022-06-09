@@ -41,36 +41,37 @@
         slidesPerGroup : 3,
       } );
     
-      var neighbors_data = "{{ place_group }}".replace(/&quot;/g, "\"");
-      var neighbors_data = JSON.parse(neighbors_data);
+    var neighbors_data = "{{ place_group }}".replace(/&quot;/g, "\"");
+    var neighbors_data = JSON.parse(neighbors_data);
     //   var n_k = Object.keys(neighbors);
     //   console.log(neighbors);]
     console.log(neighbors_data["groupname"][0]);
-      for(i=0; i<neighbors_data["groupname"].length; i++){
-          var neighbors_list = document.getElementById("neighbor-recommend-inner");
-          neighbors_list.innerHTML += `<div id="neighborList" class="swiper-slide d2">
-                <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}">
-                <br><p>${neighbors_data['groupname'][i]}그룹</p>
-                <p>${neighbors_data['location'][i]}</p>
-                <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
-            </div>`
-            console.log(neighbors_data["groupname"][i]);
-      }
+    for(i=0; i<neighbors_data["groupname"].length; i++){
+        var neighbors_list = document.getElementById("neighbor-recommend-inner");
+        neighbors_list.innerHTML += `<div id="neighborList" class="swiper-slide d2">
+            <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}">
+            <br><p>${neighbors_data['groupname'][i]}그룹</p>
+            <p>${neighbors_data['location'][i]}</p>
+            <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
+        </div>`
+        console.log(neighbors_data["groupname"][i]);
+        console.log(neighbors_data["location"][i]);
+    }
       
 
-      var rivals_data = "{{ sports_group }}".replace(/&quot;/g, "\"");
-      var rivals_data = JSON.parse(rivals_data);
-      var r_k = Object.keys(rivals);
-      console.log(rivals);
-      for(i=0; i<r_k.length; i++){
-          var rivals_list = document.getElementById("rival-recommend-inner");
-          rivals_list.innerHTML += `<div id="rivalList" class="swiper-slide d2">
-                <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}">
-                <br><p>${rivals_data[i]['groupname']}그룹</p>
-                <p>${rivals_data[i]['sports']}</p>
-                <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
-            </div>`
-      }
-      console.log(rivals_data);
+    var rivals_data = "{{ sports_group }}".replace(/&quot;/g, "\"");
+    var rivals_data = JSON.parse(rivals_data);
+    var r_k = Object.keys(rivals);
+    console.log(rivals);
+    for(i=0; i<r_k.length; i++){
+        var rivals_list = document.getElementById("rival-recommend-inner");
+        rivals_list.innerHTML += `<div id="rivalList" class="swiper-slide d2">
+            <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}">
+            <br><p>${rivals_data[i]['groupname']}그룹</p>
+            <p>${rivals_data[i]['sports']}</p>
+            <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
+        </div>`
+    }
+    console.log(rivals_data);
 </script>
 {% endblock %}
