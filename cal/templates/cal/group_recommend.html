@@ -43,19 +43,18 @@
     
     var neighbors_data = "{{ place_group }}".replace(/&quot;/g, "\"");
     var neighbors_data = JSON.parse(neighbors_data);
-    //   var n_k = Object.keys(neighbors);
-    //   console.log(neighbors);]
-    console.log(neighbors_data["groupname"][0]);
-    for(i=0; i<neighbors_data["groupname"].length; i++){
+    var n_k = Object.keys(neighbors);
+    console.log(neighbors);
+    for(i=0; i<n_k.length; i++){
         var neighbors_list = document.getElementById("neighbor-recommend-inner");
         neighbors_list.innerHTML += `<div id="neighborList" class="swiper-slide d2">
             <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}">
-            <br><p>${neighbors_data['groupname'][i]}그룹</p>
-            <p>${neighbors_data['location'][i]}</p>
+            <br><p>${neighbors_data[i]["groupname"]}그룹</p>
+            <p>${neighbors_data[i]["location"]}</p>
             <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
         </div>`
-        console.log(neighbors_data["groupname"][i]);
-        console.log(neighbors_data["location"][i]);
+        console.log(neighbors_data[i]["groupname"]);
+        console.log(neighbors_data[i]["location"]);
     }
       
 
