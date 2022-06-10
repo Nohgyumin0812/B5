@@ -1,66 +1,79 @@
+<!-- 
+    작성자 : 최고운
+
+    최고운 - html/css 작성, 그룹 멤버 작성란 추가 기능, 일정중시/운동중시 가중치 입력
+ -->
+
 {% extends 'cal/base.html' %}
 {% load static %}
 
 {% block header %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/group_making.css' %}">
 {% endblock %}
-{% block main %}
 
+{% block main %}
 <div id="make-group">
     <form action="{% url 'cal:group_making' %}" method="POST" enctype= "multipart/form-data">
         {% csrf_token %}
+        <!-- 로고 -->
         <div id="logo"><img src="{% static 'img/icons8-입안자-24.png' %}"><p>언제 만나</p></div>
 
-    <div id="outer">
-        <div class="input-box">
-            <p>그룹 이름을 알려주세요.</p>
-            <input name="groupname" id = "groupname" type="text" placeholder="그룹 이름 입력">
-        </div>
-        <br><br>
-        <div class="input-box">
-            <p>그룹의 위치를 알려주세요.</p>
-            <select name = "g-location" id="g-location">
-                <option selected disabled>LOCATION</option>
-                <option>이문동</option>
-                <option>회기동</option>
-                <option>휘경동</option>
-                <option>청량리동</option>
-                <option>전농동</option>
-                <option>제기동</option>
-                <option>용두동</option>
-                <option>신설동</option>
-                <option>답십리동</option>
-                <option>장안동</option>
-            </select>
-        </div>
-        <br><br>
-        <div id="check">
-            <p>그룹의 운동을 선택해주세요.</p>
-            <div id="inner-check">
-                <br>
-                <label><input type="checkbox" name = "sports" value="1"><img src="{% static 'img/icons8-축구-2-30.png' %}">축구</label>
-                <label><input type="checkbox" name = "sports" value="2"><img src="{% static 'img/icons8-달리는-24.png' %}">조깅</label>
-                <label><input type="checkbox" name = "sports" value="3"><img src="{% static 'img/icons8-농구-30.png' %}">농구</label><br><br>
-                <label><input type="checkbox" name = "sports" value="4"><img src="{% static 'img/icons8-shuttercock-32.png' %}">배드민턴</label>
-                <label><input type="checkbox" name = "sports" value="5"><img src="{% static 'img/icons8-야구-공-30.png' %}">야구</label>
-                <label><input type="checkbox" name = "sports" value="6"><img src="{% static 'img/icons8-테니스-30.png' %}">테니스</label>
-                <br><br>
+        <div id="outer">
+            <!-- 그룹명 입력 -->
+            <div class="input-box">
+                <p>그룹 이름을 알려주세요.</p>
+                <input name="groupname" id = "groupname" type="text" placeholder="그룹 이름 입력">
             </div>
+            <br><br>
+            <!-- 그룹 위치 정보 입력 -->
+            <div class="input-box">
+                <p>그룹의 위치를 알려주세요.</p>
+                <select name = "g-location" id="g-location">
+                    <option selected disabled>LOCATION</option>
+                    <option>이문동</option>
+                    <option>회기동</option>
+                    <option>휘경동</option>
+                    <option>청량리동</option>
+                    <option>전농동</option>
+                    <option>제기동</option>
+                    <option>용두동</option>
+                    <option>신설동</option>
+                    <option>답십리동</option>
+                    <option>장안동</option>
+                </select>
+            </div>
+            <br><br>
+            <!-- 그룹 선호 운동 종목 선택 -->
+            <div id="check">
+                <p>그룹의 운동을 선택해주세요.</p>
+                <div id="inner-check">
+                    <br>
+                    <label><input type="checkbox" name = "sports" value="1"><img src="{% static 'img/icons8-축구-2-30.png' %}">축구</label>
+                    <label><input type="checkbox" name = "sports" value="2"><img src="{% static 'img/icons8-달리는-24.png' %}">조깅</label>
+                    <label><input type="checkbox" name = "sports" value="3"><img src="{% static 'img/icons8-농구-30.png' %}">농구</label><br><br>
+                    <label><input type="checkbox" name = "sports" value="4"><img src="{% static 'img/icons8-shuttercock-32.png' %}">배드민턴</label>
+                    <label><input type="checkbox" name = "sports" value="5"><img src="{% static 'img/icons8-야구-공-30.png' %}">야구</label>
+                    <label><input type="checkbox" name = "sports" value="6"><img src="{% static 'img/icons8-테니스-30.png' %}">테니스</label>
+                    <br><br>
+                </div>
+            </div>
+            <br>
+            <!-- 운동 중시 / 일정 중시 가중치 선택 -->
+            <div class="input-box">
+                <p>일정 추천 시 부여할 가중치 비율을 선택해주세요.</p><br>
+                일정 중시 <input type="number" id="dateFirst" name = "dateFirst" value="5" min="0" max="10" style="margin-right:30px;" oninput="numChange1();">
+                운동 중시 <input type="number" id="sportFirst" name = "sportFirst" value="5" min="0" max="10" oninput="numChange2();">
+            </div>
+            <br><br>
+            <!-- 그룹 멤버 추가 -->
+            <div class="input-box" id="invitation">
+                <p>친구 초대</p>
+                <input name="friendname" class="friendname" type="text" placeholder="ID"><br>
+            </div><br>
+            <button type="button" onclick="addMore();"><img src="{% static 'img/icons8-add-30.png' %}">ADD MORE</button><br>
+            <!-- 그룹 생성 -->
+            <button id="create-group" type="submit">그룹 만들기</button>
         </div>
-        <br>
-        <div class="input-box">
-            <p>일정 추천 시 부여할 가중치 비율을 선택해주세요.</p><br>
-            일정 중시 <input type="number" id="dateFirst" name = "dateFirst" value="5" min="0" max="10" style="margin-right:30px;" oninput="numChange1();">
-            운동 중시 <input type="number" id="sportFirst" name = "sportFirst" value="5" min="0" max="10" oninput="numChange2();">
-        </div>
-        <br><br>
-        <div class="input-box" id="invitation">
-            <p>친구 초대</p>
-            <input name="friendname" class="friendname" type="text" placeholder="ID"><br>
-        </div><br>
-        <button type="button" onclick="addMore();"><img src="{% static 'img/icons8-add-30.png' %}">ADD MORE</button><br>
-        <button id="create-group" type="submit">그룹 만들기</button>
-    </div>
     </form>
 </div>
 {% endblock %}
@@ -74,7 +87,8 @@
         parent.innerHTML += add;
     }
 
-    //가중치 부여
+    //일정 중시/운동 중시 가중치 부여
+    //어느 쪽을 수정하든 항상 두 입력값의 합이 10이 나오도록 구현
     function numChange1(){
         var dF = document.getElementById("dateFirst");
         var dfVal = parseInt(dF.value);

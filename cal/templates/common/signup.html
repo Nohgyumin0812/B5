@@ -1,3 +1,9 @@
+<!-- 
+    작성자 : 최고운
+
+    최고운 - html/css 작성, 회원가입 폼 제작
+ -->
+
 {% extends 'cal/base.html' %}
 {% load static %}
 
@@ -6,50 +12,48 @@
 {% endblock %}
 
 {% block main %}
-
-{% if error %}
-{{ error }}
-<br>
-<br>
-{% endif %}
-
+<!-- 회원가입 폼 구현 -->
 <div id="signup">
     <form action="{% url 'common:signup' %}" method="POST">
         {% csrf_token %}
         <div id="logo"><img src="{% static 'img/icons8-입안자-24.png' %}"><p>언제 만나</p></div>
 
-    <div id="outer">
-        <div class="input-box" style="display:block; float:left; margin-right:3px;">
-            <input name="username" id="username" type="text" placeholder="ID">
-            <select name = "location" id="location">
-                <option selected disabled >LOCATION</option>
-                <option>이문동</option>
-                <option>회기동</option>
-                <option>휘경동</option>
-                <option>청량리동</option>
-                <option>전농동</option>
-                <option>제기동</option>
-                <option>용두동</option>
-                <option>신설동</option>
-                <option>답십리동</option>
-                <option>장안동</option>
-            </select>
+        <div id="outer">
+            <div class="input-box" style="display:block; float:left; margin-right:3px;">
+                <!-- ID입력 -->
+                <input name="username" id="username" type="text" placeholder="ID">
+                <!-- 위치 정보 입력 -->
+                <select name = "location" id="location">
+                    <option selected disabled >LOCATION</option>
+                    <option>이문동</option>
+                    <option>회기동</option>
+                    <option>휘경동</option>
+                    <option>청량리동</option>
+                    <option>전농동</option>
+                    <option>제기동</option>
+                    <option>용두동</option>
+                    <option>신설동</option>
+                    <option>답십리동</option>
+                    <option>장안동</option>
+                </select>
+            </div>
+
+            <!-- 비밀번호 입력 -->
+            <div class="input-box">
+                <input name="password1" id="password1" type="password" placeholder="PASSWORD" style="margin-right:10px;">
+                <input name="password2" id="password2" type="password" placeholder="CONFIRM PASSWORD">
+            </div>
+
+            <!-- 이메일, 전화번호 입력 -->
+            <div class="input-box">
+                <input name="email" id="email" type="email" placeholder="ADDRESS" style="margin-right:10px;">
+                <input name="tel" id="tel"  type="tel" placeholder="PHONE NUMBER">
+            </div>
         </div>
 
-        <div class="input-box">
-            <input name="password1" id="password1" type="password" placeholder="PASSWORD" style="margin-right:10px;">
-            <input name="password2" id="password2" type="password" placeholder="CONFIRM PASSWORD">
-        </div>
-
-        <div class="input-box">
-            <input name="email" id="email" type="email" placeholder="ADDRESS" style="margin-right:10px;">
-            <input name="tel" id="tel"  type="tel" placeholder="PHONE NUMBER">
-        </div>
-    </div>
-
+        <!-- 선호 운동 종목 선택 -->
         <div id="check">
             <div>CHECK YOUR SPORTS!</div><br>
-
             <label><input type="checkbox" name = "sports[]" value="1"><img src="{% static 'img/icons8-축구-2-30.png' %}">축구</label>
             <label><input type="checkbox" name = "sports[]" value="2"><img src="{% static 'img/icons8-달리는-24.png' %}">조깅</label>
             <label><input type="checkbox" name = "sports[]" value="3"><img src="{% static 'img/icons8-농구-30.png' %}">농구</label><br><br>
@@ -58,6 +62,7 @@
             <label><input type="checkbox" name = "sports[]" value="6"><img src="{% static 'img/icons8-테니스-30.png' %}">테니스</label>
         </div>
 
+        <!-- 회원가입 완료 버튼 -->
         <button type="submit">JOIN</button>
     </form>
 </div>

@@ -1,3 +1,10 @@
+<!-- 
+    작성자 : 최고운, 정혜원
+
+    최고운 - 날씨 출력, 운동 아이콘 출력, 일정 추가, 선호 운동 종목 출력
+    정혜원 - 
+ -->
+
 {% extends 'cal/base.html' %}
 {% load static %}
 
@@ -7,15 +14,16 @@
 {% endblock %}
 
 {% block main %}
-
+<!-- 로고 -->
 <div id="logo"><img src="{% static 'img/icons8-입안자-24.png' %}"><p>언제 만나</p></div>
+<!-- 달력 구현 -->
 <div class="calender_box">
     <div class="calender">
         <div id="">
-            
         </div>
         <div class="header">
             <div class="year-month"></div>
+            <!-- 일정 추가 팝업창 구현 -->
             <div class="schedule-add">
                 <a href="javascript:openPop();" class="schedule-btn">일정 추가</a>
             </div>
@@ -25,7 +33,7 @@
                         <div style="height: 10px; width: 375px; float: top;">
                             <a href="javascript:closePop();"><img src="{% static 'img/ic_close.svg' %}" class="m_header-banner-close" width="30px" height="30px"></a>
                           </div>
-                          <!--팝업 컨텐츠 영역-->
+                          <!--일정 추가 팝업 컨텐츠 영역-->
                           <div class="popup_cont">
                               <form>
                                   {% csrf_token %}
@@ -55,11 +63,7 @@
     </div>
 </div>
 
-
-<!-- <div class="day-add">
-    <a class="day-btn" href="{% url 'cal:my_schedule' %}"><img src="{% static 'img/icons8-추가-48.png' %}" width="30px"><span>내가 운동할 수 있는 날 추가하기</span></a>
-</div> -->
-
+<!-- 선호 운동 종목 출력 -->
 <div class="list-area" id="list-area-1">
     <p><img src="{% static 'img/icons8-달리는-24.png' %}" width="30px">선호 운동 리스트</p>
     <div class="list-box" id="sports">
@@ -73,28 +77,11 @@
         </form>
     </div>
 </div>
-
-<!-- <div class="list-area" id="list-area-2">
-    <p><img src="{% static 'img/icons8-group-32.png' %}" width="30px">참여자 리스트</p>
-    <div class="list-box" id="mem-list">
-        <ul id="mem-ul"></ul>
-    </div>
-    <button class="part-btn" id="invitation-btn">초대하기</button>
-    <button class="part-btn" id="kick-btn">강퇴하기</button>
-</div> -->
-
-<!-- <div class="list-area" id="list-area-2">
-    <p><img src="{% static 'img/icons8-chat-room-24.png' %}" width="30px">추천</p>
-    <div class="list-box" id="rec">
-        <p>선호하는 운동이 비슷한 다른 그룹과 함께 운동해보세요!</p><br>
-        <a href="{% url 'cal:group_recommend' %}">함께하기</a>
-    </div>
-</div> -->
-
 {% endblock %}
 
 {% block script %}
 <script> 
+    //달력 제작 부분
     const date = new Date();
     const renderCalender = () => {
         const viewYear = date.getFullYear();
@@ -125,11 +112,6 @@
             nextDates.push(i);
         }
 
-        const weather_data = "{{ data }}".replace(/&quot;/g, "\"");
-        var result = JSON.parse(weather_data);
-        console.log(result);
-        var k = Object.keys(result);
-
 
         const dates = prevDates.concat(thisDates, nextDates);
 
@@ -137,13 +119,20 @@
         const firstDateIndex = dates.indexOf(1);
         const lastDateIndex = dates.lastIndexOf(TLDate);
 
-
-
         const m = viewMonth + 1;
+
+        //날씨 데이터 처리
+        const weather_data = "{{ data }}".replace(/&quot;/g, "\"");
+        var result = JSON.parse(weather_data);
+        console.log(result);
+        var k = Object.keys(result);
+
+        //운동 데이터 처리
         var w_sport = "{{ sports_date }}".replace(/&quot;/g, "\"");
         var weather_sports = JSON.parse(w_sport);
         var w_k = Object.keys(weather_sports);
 
+        //달력 컨텐츠 출력
         dates.forEach((date, i) => {
             const condition = i >= firstDateIndex && i < lastDateIndex+1
                                 ? 'this'
@@ -156,54 +145,42 @@
                 else{
                     tmp = m.toString() + "." + date.toString() + ".";
                 }
-                //날씨 띄우기
+                //날씨 출력
                 for(j=0; j<k.length; j++){
                     var img;
                     if(k.includes(tmp) === true){
                         if(result[tmp] !== undefined){
-                            //console.log("성공");
                             if (result[tmp] === "맑음"){
-                                //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-태양-48.png' %}""></span></div>`;
                                 img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-태양-48.png' %}">`;
                             }
                             else if(result[tmp] === "구름많음" || result[tmp] === "구름조금"){
-                                //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-부분적으로-흐린-날-48.png' %}""></span></div>`;
                                 img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-부분적으로-흐린-날-48.png' %}">`
                             }
                             else if(result[tmp] === "흐림"){
-                                //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-구름-48.png' %}""></span></div>`;
                                 img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-구름-48.png' %}">`
                             }
                             else if(result[tmp] === "비 또는 눈" || result[tmp] === "눈 또는 비" || result[tmp] === "가끔 비 또는 눈, 한때 비 또는 눈" || result[tmp] === "가끔 눈 또는 비, 한때 눈 또는 비"){
-                                //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-진눈깨비-48.png' %}""></span></div>`;
                                 img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-진눈깨비-48.png' %}">`
                             }
                             else if(result[tmp] === "안개" || result[tmp] === "연무" || result[tmp] === "박무 (엷은 안개)"){
-                                //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-안개-날-48.png' %}""></span></div>`;
                                 img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-안개-날-48.png' %}">`
                             }
                             else if(result[tmp] === "빗방울"){
-                                //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-젖은-48.png' %}""></span></div>`;
                                 img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-젖은-48.png' %}">`
                             }
                             else if(result[tmp] === "눈날림"){
-                                //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-눈-폭풍-48.png' %}""></span></div>`;
                                 img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-눈-폭풍-48.png' %}">`
                             }
                             else if(result[tmp] === "낙뢰"){
-                                //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-폭풍-48.png' %}""></span></div>`;
                                 img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-폭풍-48.png' %}">`
                             }
                             else if(result[tmp] === "황사"){
-                                //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-먼지-48.png' %}""></span></div>`;
                                 img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-먼지-48.png' %}">`
                             }
                             else if(result[tmp].includes("비") || result[tmp] === "소나기"){
-                                //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-강렬한-비-48.png' %}""></span></div>`;
                                 img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-강렬한-비-48.png' %}">`
                             }
                             else if(result[tmp].includes("눈")){
-                                //dates[i] = `<div class = "date"><span class = "${condition}">${date}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-눈-48.png' %}""></span></div>`;
                                 img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-눈-48.png' %}">`
                             }
                             else{
@@ -215,12 +192,11 @@
                         img=``;
                     }
                     
-
+                    //운동 아이콘 출력
                     if(w_k.includes(tmp) === true){
                         if(weather_sports[tmp] !== undefined){
                             var spo = ``;
                             for(var a in weather_sports[tmp]){
-                                //dates_s[i] = `<div class = "date"><span class = "${condition}">${d}<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-태양-48.png' %}""></span></div>`;
                                 if(weather_sports[tmp][a] == 1){
                                     spo += `<img id="spo" style="width:20px; height:20px;" src = "{% static 'img/icons8-축구-2-30.png' %}">`;
                                 }
@@ -258,7 +234,7 @@
         document.querySelector('.dates').innerHTML = dates.join('');
 
 
-
+        //오늘 날짜에 TODAY 출력
         const today = new Date();
         if (viewMonth === today.getMonth() && viewYear === today.getFullYear()) {
             for (let date of document.querySelectorAll('.this')) {
@@ -274,20 +250,23 @@
 
     renderCalender();
 
+    //일정 추가 팝업창 열기
     function openPop() {
         document.getElementById("popup_layer").style.display = "block";
     
     }
+
+    //일정 추가 팝업창 닫기
     function closePop() {
         document.getElementById("popup_layer").style.display = "none";
     }
 
-
+    //선호 운동 종목 데이터 처리
     var sports_data = "{{ sportsall }}".replace(/&quot;/g, "\"");
     console.log(sports_data);
     var sport = JSON.parse(sports_data);
 
-
+    //선호 운동 종목 수정 불가 처리
     for(i=0; i<sport.length; i++){
         document.getElementById(sport[i]).checked = true;
     }

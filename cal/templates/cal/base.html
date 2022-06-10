@@ -1,3 +1,9 @@
+<!-- 
+    작성자 : 최고운
+
+    최고운 - html/css 작성, 상단바 제작
+ -->
+
 {% load static %}
 
 <!doctype html>
@@ -10,20 +16,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>언제 만나</title>
     <link rel="stylesheet" type="text/css" href="{% static './css/base.css' %}">
-
-
-
-    <!-- Bootstrap CSS
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-      crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg"
-      crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="{% static 'cal/css/styles.css' %}">
-    <title>Django Calendar App</title>-->
   </head>
+  
   <body>
     <div id="body-wrapper">
+      <!-- 상단 바 -->
       <header>
+        <!-- 아이콘 -->
           <a id="navbar-brand" href="{% url 'cal:mycalendar' %}">
               <div>
                   <img src="{% static 'img/icons8-농구-30.png' %}">
@@ -31,24 +30,16 @@
                   <img src="{% static 'img/icons8-축구-2-30.png' %}">
               </div>
           </a>
+          <!-- 로그인 상태 -->
           <div id="navbar-nav">
               <ul>
                   {% if user.is_authenticated %}
-                  {% comment %}
-                  <!-- <li><a class="nav-link" href="{% url 'cal:logout' %}">LOGOUT</a></li>
-                  <li><a class="nav-link" href="{% url 'cal:mypage' %}">MY PAGE</a></li> -->
-                  {% endcomment %}
                   <li><a class="nav-link" href="{% url 'common:logout' %}">LOGOUT</a></li>
                   <li><a class="nav-link" href="{% url 'cal:group_managing' %}">MY PAGE</a></li>
-
 
                   {% else %}
                   <li><a class="nav-link" href="{% url 'common:login' %}">LOGIN</a></li>
                   <li><a class="nav-link" href="{% url 'common:signup' %}">JOIN</a></li>
-
-                  <!-- <li><a class="nav-link" href="#">LOGIN</a></li>
-                  <li><a class="nav-link" href="#">JOIN</a></li> -->
-
 
                   {% endif %}
               </ul>

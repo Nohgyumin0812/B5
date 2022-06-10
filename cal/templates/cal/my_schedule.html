@@ -1,3 +1,10 @@
+<!-- 
+    작성자 : 최고운, 정혜원
+
+    최고운 - 날씨 출력, 사용자의 가능한 날짜 입력 받기, 저장하기 버튼 구현, 완료하기 버튼 구현 
+    정혜원 - 
+ -->
+
 {% extends 'cal/base.html' %}
 {% load static %}
 
@@ -7,16 +14,19 @@
 {% endblock %}
 
 {% block main %}
-
+<!-- 로고 -->
 <div id="logo"><img src="{% static 'img/icons8-입안자-24.png' %}"><p>언제 만나</p></div>
+<!-- 달력 구현 -->
 <div class="calender_box">
     <div class="calender">
+        <!-- 안내 문구 -->
         <div class="header">
             <div class="year-month"></div>
             <div class="select">
                 <p>운동할 수 있는 날을 선택해주세요!</a>
             </div>
         </div>
+
         <div class="main">
             <div class="days">
                 <div class="day">SUN</div>
@@ -31,11 +41,15 @@
         </div>
     </div>
 </div>
+<!-- 서버로 데이터 전송 -->
 <form id="subm2" action="{% url 'cal:my_schedule' %}" method="POST">
     {% csrf_token %}
+    <!-- 사용자 입력 데이터를 담을 input form -->
     <input type="text" id="myDates" name="myDates" style="display:none;">
     <div id="bt-manage">
+        <!-- 저장하기 버튼 -->
         <button id="subm" type="submit">저장하기</button>
+        <!-- 완료하기 버튼 -->
         <button id="subm" type="button" onclick="relocate();">완료하기</button>
     </div>
     
@@ -44,7 +58,8 @@
 {% endblock %}
 
 {% block script %}
-<script> 
+<script>
+    //달력 구현
     const date = new Date();
     const renderCalender = () => {
         const viewYear = date.getFullYear();
@@ -75,12 +90,6 @@
             nextDates.push(i);
         }
 
-
-        const weather_data = "{{ data }}".replace(/&quot;/g, "\"");
-        var w = "{% static 'img/icons8-구름-48.png' %}";
-        const result = JSON.parse(weather_data);
-        var k = Object.keys(result);
-
         const dates = prevDates.concat(thisDates, nextDates);
         const firstDateIndex = dates.indexOf(1);
         const lastDateIndex = dates.lastIndexOf(TLDate);
@@ -88,13 +97,19 @@
 
         const m = viewMonth + 1;
 
+        //날씨 데이터 처리
+        const weather_data = "{{ data }}".replace(/&quot;/g, "\"");
+        var w = "{% static 'img/icons8-구름-48.png' %}";
+        const result = JSON.parse(weather_data);
+        var k = Object.keys(result);
 
+        //달력 컨텐츠 출력
         dates.forEach((date, i) => {
             const condition = i >= firstDateIndex && i < lastDateIndex+1
                                 ? 'this'
                                 : 'other';
             if(condition == "this"){
-                //날씨 띄우기
+                //날씨 출력
                 for(j=0; j<k.length; j++){
                     if(date<10){
                         tmp = m.toString() + "." + "0"+ date.toString() + ".";
@@ -157,7 +172,7 @@
         document.querySelector('.dates').innerHTML = dates.join('');
 
 
-
+        //오늘 날짜에 TODAY 출력
         const today = new Date();
         if (viewMonth === today.getMonth() && viewYear === today.getFullYear()) {
             for (let date of document.querySelectorAll('.this')) {
@@ -173,15 +188,7 @@
 
     renderCalender();
 
-    function openPop() {
-        document.getElementById("popup_layer").style.display = "block";
-    
-    }
-    function closePop() {
-        document.getElementById("popup_layer").style.display = "none";
-    }
-
-
+    //사용자 선택 날짜 배열 데이터로 변환, input form의 value 값으로 저장
     var myDate = Array();
     var month = date.getMonth()+1;
     function submitDate(date){
@@ -194,6 +201,8 @@
         console.log(hide.value);
     }
 
+    //현재 속한 그룹의 달력페이지로 이동
+    //현재 그룹명 get방식으로 전송
     function relocate(){
         var loc = "{{ curr_group }}".replace(/&quot;/g, "\"");
         var loc_p = JSON.parse(loc);
