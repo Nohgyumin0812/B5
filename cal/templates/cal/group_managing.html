@@ -23,10 +23,6 @@
         <a id="link" href="{% url 'cal:group_making' %}"><div id="groupMake" style="margin-top:40px;"><br><img class="icons" src="{% static 'img/icons8-더하다-32.png' %}"><br>그룹 만들기</div></a>
         <div id="my-group-inner" class="swiper">
             <div id="groupList" class="swiper-wrapper">
-                <!-- {% for data in my_group %} -->
-                <!-- get방식으로 calendar페이지로 데이터 전송 및 그룹별 캘린더 페이지 이동 -->
-                <!-- <a href="javascript:sendToCalendar('{{data}}');" class="swiper-slide"><div><br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>{{data}} 그룹</div></a>
-                {% endfor %} -->
             </div>
             <div class="swiper-button-prev"></div>
             <div class="swiper-button-next"></div>
@@ -69,6 +65,7 @@
         return arr
     }
 
+    //그룹 별 선호 종목 데이터
     function iconConductor(s){
         var sicons =``;
         for(k=0; k<s.length; k++){
@@ -119,6 +116,8 @@
         console.log(sp);
         var sp_icon = iconConductor(sp);
 
+        //get방식으로 calendar페이지로 데이터 전송 및 그룹별 캘린더 페이지 이동
+        //그룹 별 인원 및 선호 종목 디스플레이
         document.getElementById("groupList").innerHTML += `<a href="javascript:sendToCalendar('${mg_data[j]}');" class="swiper-slide"><div><img style="margin-top:13px;" class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>${mg_data[j]} 그룹<br>${t}명<br><span>${sp_icon}</span></div></a>`;
     }
 
