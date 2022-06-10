@@ -37,3 +37,9 @@ class InviteForm(forms.ModelForm):
   class Meta:
     model = InviteGroup
     fields = ["invite_user", "group", "invite_status"]
+
+class ScheForm(forms.ModelForm):
+
+  class Meta:
+    model = ScheGroup
+    fields = ['sche_name', 'sche_date', 'sche_memo', 'group_id']

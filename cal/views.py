@@ -7,8 +7,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 import ast
-from .forms import GroupForm, DayForm, InviteForm
-from .models import CustomGroup, DayGroup, InviteGroup
+from .forms import GroupForm, DayForm, InviteForm, ScheForm
+from .models import CustomGroup, DayGroup, InviteGroup, ScheGroup
 from common.models import CustomUser
 from django.contrib.auth.models import Group
 import pandas as pd
@@ -43,9 +43,7 @@ def calendar(request):
     if request.method == "POST":
         if my_id == owner_id:
             if 'invite-name' in request.POST:
-                print(request.POST)
                 form = InviteForm(request.POST)
-                print(form)
                 if form.is_valid():
                     Invite = form.save(commit=False)
                     new_member = str(request.POST['invite-name']).replace("'", '')
@@ -54,10 +52,19 @@ def calendar(request):
                     Invite.group = curr_group
                     Invite.invite_status = 1
                     Invite = form.save()
-                    print("#################################")
+                    print("#####################")
 
             if "sche-name" in request.POST:
                 print(request.POST)
+                form = ScheForm(request.POST)
+                if form.is_valid():
+                    Sche = form.save(commit = False)
+                    Sche.sche_name = request.POST['sche-name']
+                    Sche.sche_date = request.POST['sche-date']
+                    Sche.sche_memo = request.POST['sche-memo']
+                    Sche.group_id = curr_group_id
+                Sche = form.save()
+                print("######")
 
         ##강퇴기능은 값 받아와야 함, 리스트에서 값 받아오면 수정
             if "kickList[]" in request.POST:
@@ -76,6 +83,12 @@ def calendar(request):
                 item_Day.delete()
                 for item_day in item_Day:
                     item_day.save()
+    ## 일정 추가 ##
+    sche_data = ScheGroup.objects.filter(group_id = curr_group_id).values()
+    sche_data = pd.DataFrame(sche_data).drop(['id', 'group_id'], axis = 1).set_index('sche_date').T.to_dict('list')
+    sche_data = json.dumps(sche_data, ensure_ascii= False)
+    print(sche_data)
+
 
     loc = CustomGroup.objects.filter(groupname = curr_group).values()[0]['location_code']
     url = 'https://weather.naver.com/today/%s' % (loc)
@@ -221,11 +234,9 @@ def calendar(request):
             schedule_data_dic = []
             recommend = []
 
-
-
         context = {'data': data, 'sportsall':sports, 'membersall':members,
                    'sports_date':sports_date, 'schedule_data_dic':schedule_data_dic,
-                   'my_name':my_name, 'owner_name':owner_name, 'recommend':recommend}
+                   'my_name':my_name, 'owner_name':owner_name, 'recommend':recommend, 'sche_data':sche_data}
 
         return render(request, 'cal/calendar.html', context)
     except CustomGroup.DoesNotExist:
