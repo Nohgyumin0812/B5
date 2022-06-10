@@ -90,11 +90,13 @@ def calendar(request):
                 for item_day in item_Day:
                     item_day.save()
     ## 일정 추가 ##
-    sche_data = ScheGroup.objects.filter(group_id = curr_group_id).values()
-    sche_data = pd.DataFrame(sche_data).drop(['id', 'group_id'], axis = 1).set_index('sche_date').T.to_dict('list')
-    sche_data = json.dumps(sche_data, ensure_ascii= False)
-    print(sche_data)
-
+    try:
+        sche_data = ScheGroup.objects.filter(group_id = curr_group_id).values()
+        sche_data = pd.DataFrame(sche_data).drop(['id', 'group_id'], axis = 1).set_index('sche_date').T.to_dict('list')
+        sche_data = json.dumps(sche_data, ensure_ascii= False)
+        print(sche_data)
+    except:
+        sche_data = ""
 
     loc = CustomGroup.objects.filter(groupname = curr_group).values()[0]['location_code']
     url = 'https://weather.naver.com/today/%s' % (loc)
@@ -343,14 +345,26 @@ def group_managing(request):
         df_user['owner_id']= df_user['id']
         df_user = (df_user[['owner_id', 'username']])
         df_inner_join = pd.merge(df_group, df_user, left_on = 'owner_id', right_on = 'owner_id', how = 'inner')
-        print(df_inner_join)
         #print(df_user[df_user['id'] == df['owner_id']])
+        df_inner_join['member_num'] = 0
+        df_inner_join['sports'] = ""
+        df_inner_join['true'] = 0
+
         for i in range(df_inner_join.shape[0]):
             df_inner_join['username'][i] = [df_inner_join['username'][i]]
             df_inner_join['friendname'][i] = ast.literal_eval(df_inner_join['friendname'][i])+(df_inner_join['username'][i])
+            df_inner_join['member_num'][i] = len(df_inner_join['friendname'][i])
+            df_inner_join['sports'][i] = CustomGroup.objects.filter(groupname = df_inner_join['groupname'][i]).values()[0]['sports']
             if username in df_inner_join['friendname'][i]:
+                df_inner_join['true'][i] = 1
                 my_group.append(df_inner_join['groupname'][i])
+        #pd.set_option('display.max_columns', None)
         group_json = json.dumps(my_group, ensure_ascii=False)
+        df_inner_join = df_inner_join[df_inner_join['true'] ==1]
+
+        df_inner_join = df_inner_join[['groupname', 'member_num', 'sports']]
+        df_inner_join = df_inner_join.set_index('groupname').T.to_dict()
+        df_inner_join = json.dumps(df_inner_join, ensure_ascii= False)        ## 내 그룹 시 그룹명, 멤버수, 종목 출력 ##
 
         if request.method == "POST":
             invite_group_name = request.POST.get('gname')
@@ -367,12 +381,11 @@ def group_managing(request):
                 group_item.friendname = "[" + str(group_item.friendname).replace("[", '').replace(']', '') + ",'" + str(username) + "']"
 
             group_item.friendname = ast.literal_eval(group_item.friendname)
-            print(group_item.friendname)
             group_item.save()
             return redirect('cal:group_managing')
-        return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group})
+        return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group, 'df_inner_join':df_inner_join})
     except:
-        return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group})
+        return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group, 'df_inner_join':df_inner_join})
 
 
 def my_schedule(request):
