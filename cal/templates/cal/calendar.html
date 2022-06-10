@@ -256,10 +256,7 @@
         var reco_data = "{{ recommend }}".replace(/&quot;/g, "\"");
         var r_data = JSON.parse(reco_data);
 
-        //그룹 일정 데이터 처리
-        var group_sche = "{{ sche_data }}".replace(/&quot;/g, "\"");
-        var g_sche = JSON.parse(group_sche);
-        var g_k = Object.keys(g_sche);
+
 
         //달력 컨텐츠 출력
         dates.forEach((date, i) => {
@@ -372,19 +369,32 @@
                         }
                     }
                 }
-
-                //그룹 일정 디스플레이
-                var g_date=``;
-                for(g=0; g<g_k.length; g++){
-                    var conductor = g_k[g];
-                    conductor = g_k[g].split("-");
-                    conductor[1] = conductor[1].replace("0","");
-                    var tmp2 = conductor[1]+"."+conductor[2]+".";
-                    if(tmp2 == tmp){
-                        console.log(g_sche[g_k[g]]);
-                        g_date = `<li style="font-size:13px; line-height:20px;">${g_sche[g_k[g]][0]}(${g_sche[g_k[g]][1]})</li>`;
+                //그룹 일정 데이터 처리
+                var group_sche = "{{ sche_data }}".replace(/&quot;/g, "\"");
+                console.log(group_sche);
+                if(group_sche != ""){
+                    var g_sche = JSON.parse(group_sche);
+                
+                    var g_k = Object.keys(g_sche);
+    
+    
+                    //그룹 일정 디스플레이
+                    var g_date=``;
+                    for(g=0; g<g_k.length; g++){
+                        var conductor = g_k[g];
+                        conductor = g_k[g].split("-");
+                        conductor[1] = conductor[1].replace("0","");
+                        var tmp2 = conductor[1]+"."+conductor[2]+".";
+                        if(tmp2 == tmp){
+                            console.log(g_sche[g_k[g]]);
+                            g_date = `<li style="font-size:13px; line-height:20px;">${g_sche[g_k[g]][0]}(${g_sche[g_k[g]][1]})</li>`;
+                        }
                     }
                 }
+                else{
+                    g_date=``;
+                }
+                
 
             }
             else{
