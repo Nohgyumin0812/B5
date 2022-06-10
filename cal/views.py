@@ -3,6 +3,10 @@ from urllib import parse
 from urllib.parse import unquote, quote, quote_plus, urlencode
 import bs4
 import requests
+from django.contrib.auth.decorators import login_required
+import json
+import calendar
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -10,6 +14,8 @@ import ast
 from .forms import GroupForm, DayForm, InviteForm
 from .models import CustomGroup, DayGroup, InviteGroup
 from common.models import CustomUser
+from .models import Event
+
 from django.contrib.auth.models import Group
 import pandas as pd
 
@@ -232,12 +238,14 @@ def group_making(request):
         form = GroupForm(request.POST)
         print(form)
         if form.is_valid():
-            print("$$")
             group = form.save(commit=False)
+            print('##################')
             group.owner = request.user
             group.group_name = request.POST["groupname"]
             group.sports = request.POST.getlist('sports')
             group.friendname = request.POST.getlist("friendname")
+            print(group.friendname)
+
             group.location = request.POST['g-location']
             if group.location == '이문동':
                 group.location_code = '09230110'
@@ -332,6 +340,112 @@ def group_managing(request):
     except:
         return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group})
 
+def viewSeat(request):
+    year_month_list = Event.objects.all()
+    Day = request.POST.get('Day')
+    selYearMonth = request.POST.get('year-month')
+    resSeat = 0
+    for yml in year_month_list:
+        if yml.event == selYearMonth:
+            for dl in yml.day_set.all():
+                if dl.day == Day:
+                    resSeat = dl.remain_seat
+    context = {
+        'resSeat' : resSeat,
+    }
+    return render(request, 'cal/calendar.html')
+
+def checkSeat(request):
+    year_month_list = Event.objects.all()
+    user = request.user
+    Day = request.GET.get('Day')
+    selYearMonth = request.GET.get('year-month')
+    conCheck = request.GET.get('conCheck')
+    print(Day, conCheck, selYearMonth)
+
+    if conCheck == "confirm":
+        for yml in year_month_list:
+            if yml.event == selYearMonth:
+                for dl in yml.day_set.all():
+                    if dl.day == Day:
+                        dl.remain_seat -= 1
+                        dl.save()
+                        user.profile.book_day.add(dl)
+                        print(user.profile.book_day.filter(id=dl.id))
+                        user.save
+                        resSeat = dl.remain_seat
+    elif conCheck == "cancel":
+        for yml in year_month_list:
+            if yml.event == selYearMonth:
+                for dl in yml.day_set.all():
+                    if dl.day == Day:
+                        dl.remain_seat += 1
+                        dl.save()
+                        resSeat = dl.remain_seat
+    context = {
+        resSeat : resSeat,
+    }
+    return render(request, 'cal/calendar.html')
+
+def cancelSeat(request):
+    year_month_list = Event.objects.all()
+    Day = request.GET.get('Day')
+    selYearMonth = request.GET.get('year-month')
+
+    for yml in year_month_list:
+        if yml.event == selYearMonth:
+            for dl in yml.day_set.all():
+                if dl.day == Day:
+                    dayId = dl.id
+                    request.user.profile.book_day.filter(id=dayId).delete()
+                    dl.remain_seat += 1
+                    dl.save()
+                    resSeat = dl.remain_seat
+    context = {
+        'resSeat': resSeat,
+    }
+    return render(request, 'cal/calendar.html')
+
+@login_required()
+def data_sports(request):
+    sportsall = CustomGroup.objects.get(owner_id = request.user.id).sports
+    sportsall = ast.literal_eval(sportsall)
+    print(sportsall)
+    return render(request, 'calendar.html', {'sports': sportsall})
+
+@login_required()
+def data_member(request):
+    owner = CustomUser.objects.get(id = request.user.id).username
+    member = CustomGroup.objects.get(owner_id = request.user.id).friendname
+    member = ast.literal_eval(member)
+    if '' in member:
+        member.remove('')
+    membersall = [owner]+ member
+    print(membersall)
+    return render(request, 'calendar.html', {'membersall': membersall})
+    return render(request, 'cal/calendar.html')
+
+dayMax = 32
+
+def saveData(request):
+    global dayMax
+    year_month_list = Event.objects.all()
+    for yml in year_month_list:
+        if yml.event == "2022-May":
+            dayMax == 32
+        elif yml.event == "2022-June":
+            dayMax == 31
+        elif yml.event == "2022-July":
+            dayMax == 32
+        elif yml.event == "2022-August":
+            dayMax == 32
+        for i in range(1, dayMax):
+            varDay = Event()
+            varDay.day = i
+            varDay.remainSeat = 4
+            varDay.f_yearmonth = yml
+            varDay.save()
+    return render(request, 'cal/calendar.html')
 def my_schedule(request):
     schedule_data = []
     data = request.session['data']

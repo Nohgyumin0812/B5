@@ -37,3 +37,28 @@ class InviteForm(forms.ModelForm):
   class Meta:
     model = InviteGroup
     fields = ["invite_user", "group", "invite_status"]
+
+
+class ViewSeatForm(forms.ModelForm):
+  class Meta:
+    model = viewSeat
+    fields = ["seat", "yearmonth", "day"]
+
+
+class CheckSeatForm(forms.ModelForm):
+  class Meta:
+    model = checkSeat
+    fields = ["seat", "yearmonth", "day"]
+
+
+class CancelSeatForm(forms.ModelForm):
+  class Meta:
+    model = cancelSeat
+    fields = ["seat", "yearmonth", "day"]
+
+class SaveDataForm(forms.ModelForm):
+  class Meta:
+    model = saveData
+    fields = ["seat", "yearmonth", "day"]
+
+

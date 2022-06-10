@@ -42,4 +42,25 @@ class InviteGroup(models.Model):
     group = models.CharField(max_length=50, default='', blank = True)
     invite_status = models.CharField(max_length=50, default='', blank = True)
 
+class viewSeat(models.Model):
+    seat = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='viewseat', null = True, blank = True)
+    yearmonth = models.DateTimeField()
+    day = models.DateTimeField()
+
+class checkSeat(models.Model):
+    seat = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='checkseat', null = True, blank = True)
+    yearmonth = models.DateTimeField()
+    day = models.DateTimeField()
+
+class cancelSeat(models.Model):
+    seat = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='cancelseat', null = True, blank = True)
+    yearmonth = models.DateTimeField()
+    day = models.DateTimeField()
+
+class saveData(models.Model):
+    seat = models.CharField(max_length=50, default='', blank = True)
+    yearmonth = models.DateTimeField()
+    day = models.DateTimeField()
+
+
 
