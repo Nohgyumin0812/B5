@@ -36,7 +36,6 @@ class DayGroup(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='owner', null = True, blank = True)
 
 
-
 class InviteGroup(models.Model):
     invite_user = models.CharField(max_length=50, default='', blank = True)
     group = models.CharField(max_length=50, default='', blank = True)
