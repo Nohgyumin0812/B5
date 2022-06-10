@@ -41,7 +41,7 @@
 #groupList, #my-group-inner, #group-invite, #group-invite-inner{
     /* display: inline-block; */
     width:900px;
-    height:200px;
+    height:225px;
     text-align: center;
 }
 #my-group-inner{
@@ -50,7 +50,7 @@
 #groupList div{
     display: inline-block;
     width:200px;
-    height: 140px;
+    height: 165px;
     text-align: center;
     border:3px solid #94CEF2;
     border-radius: 10px;
