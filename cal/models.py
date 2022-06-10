@@ -46,3 +46,9 @@ class ScheGroup(models.Model):
     sche_date = models.CharField(max_length=50, default='', blank = True)
     sche_memo = models.CharField(max_length=50, default='', blank = True)
     group_id =  models.CharField(max_length=50, default='', blank = True)
+
+class my_ScheGroup(models.Model):
+    sche_name = models.CharField(max_length=50, default='', blank = True)
+    sche_date = models.CharField(max_length=50, default='', blank = True)
+    sche_memo = models.CharField(max_length=50, default='', blank = True)
+    user_id =  models.CharField(max_length=50, default='', blank = True)

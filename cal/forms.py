@@ -45,4 +45,8 @@ class ScheForm(forms.ModelForm):
     fields = ['sche_name', 'sche_date', 'sche_memo', 'group_id']
 
 
+class my_ScheForm(forms.ModelForm):
 
+  class Meta:
+    model = my_ScheGroup
+    fields = ['sche_name', 'sche_date', 'sche_memo', 'user_id']

@@ -11,8 +11,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 import ast
-from .forms import GroupForm, DayForm, InviteForm, ScheForm
-from .models import CustomGroup, DayGroup, InviteGroup, ScheGroup
+from .forms import GroupForm, DayForm, InviteForm, ScheForm, my_ScheForm
+from .models import CustomGroup, DayGroup, InviteGroup, ScheGroup, my_ScheGroup
 from common.models import CustomUser
 from .models import Event
 
@@ -473,15 +473,14 @@ def group_recommend(request):
     place_group = json.dumps(place_group, ensure_ascii= False)
     sports_group = json.dumps(sports_group, ensure_ascii = False)
 
-    #(place_group) # distance: 내 그룹과 상대 그룹 간의 거리
-    #print(sports_group) # common: 겹치는 운동종목 수
+    print(place_group) # distance: 내 그룹과 상대 그룹 간의 거리
+    print(sports_group) # common: 겹치는 운동종목 수
 
     context = {'place_group': place_group,'sports_group':sports_group}
     return render(request, 'cal/group_recommend.html', context)
 
 def mycalendar(request):
     loc = CustomUser.objects.filter(id= request.user.id).values()[0]['location_code']
-    print(loc)
     url = 'https://weather.naver.com/today/%s' % (loc)
     raw = requests.get(url)
     html = bs4.BeautifulSoup(raw.text, 'html.parser')
@@ -491,6 +490,29 @@ def mycalendar(request):
     sports_dic = {}
     indoor_sports = ['3', '4', '6']
     outdoor_sports = ['1', '2', '5']
+
+    if request.method == 'POST':
+        if "sche-name" in request.POST:
+            print(request.POST)
+            form = my_ScheForm(request.POST)
+            if form.is_valid():
+                Sche = form.save(commit=False)
+                Sche.sche_name = request.POST['sche-name']
+                Sche.sche_date = request.POST['sche-date']
+                Sche.sche_memo = request.POST['sche-memo']
+                Sche.user_id = request.user.id
+            Sche = form.save()
+            print("######")
+
+    ##개인 일정 추가##
+    try:
+        sche_data = my_ScheGroup.objects.filter(id = request.user.id).values()
+        sche_data = pd.DataFrame(sche_data).drop(['id', 'user_id'], axis = 1).set_index('my_sche_date').T.to_dict('list')
+        sche_data = json.dumps(sche_data, ensure_ascii= False)
+        print(sche_data)
+    except:
+        sche_data = ""
+    sche_data = json.dumps(sche_data, ensure_ascii= False)
     ## 그룹 종목 출력 ##
     sportsall = CustomUser.objects.get(id= request.user.id).sports
     sportsall = ast.literal_eval(sportsall)
@@ -524,7 +546,5 @@ def mycalendar(request):
 
     data = json.dumps(weather_dic, ensure_ascii=False)
     sports_date = json.dumps(sports_dic, ensure_ascii=False)
-    print(data)
-    print(sports_date)
-    context = {'data': data, 'sportsall': sports, 'sports_date': sports_date}
+    context = {'data': data, 'sportsall': sports, 'sports_date': sports_date, 'sche_data':sche_data}
     return render(request, 'cal/mycalendar.html', context)
