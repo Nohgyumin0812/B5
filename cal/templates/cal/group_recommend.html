@@ -42,35 +42,32 @@
       } );
     
     var neighbors_data = "{{ place_group }}".replace(/&quot;/g, "\"");
-    var neighbors_data = JSON.parse(neighbors_data);
-    var n_k = Object.keys(neighbors);
+    var neighbors = JSON.parse(neighbors_data);
     console.log(neighbors);
-    for(i=0; i<n_k.length; i++){
+    for(i=0; i<neighbors.length; i++){
         var neighbors_list = document.getElementById("neighbor-recommend-inner");
         neighbors_list.innerHTML += `<div id="neighborList" class="swiper-slide d2">
             <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}">
-            <br><p>${neighbors_data[i]}그룹</p>
-            <p>${[neighbors_data[i]]["location"]}</p>
+            <br><p>${neighbors[i]}그룹</p>
+            <p>${[neighbors[i]]["location"]}</p>
             <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
         </div>`;
-        console.log([neighbors_data[i]]["groupname"]);
-        console.log([neighbors_data[i]]["location"]);
+        console.log([neighbors[i]]["location"]);
     }
       
 
     var rivals_data = "{{ sports_group }}".replace(/&quot;/g, "\"");
-    var rivals_data = JSON.parse(rivals_data);
-    var r_k = Object.keys(rivals);
+    var rivals = JSON.parse(rivals_data);
     console.log(rivals);
-    for(i=0; i<r_k.length; i++){
+    for(i=0; i<rivals.length; i++){
         var rivals_list = document.getElementById("rival-recommend-inner");
         rivals_list.innerHTML += `<div id="rivalList" class="swiper-slide d2">
             <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}">
-            <br><p>${rivals_data[i]['groupname']}그룹</p>
-            <p>${rivals_data[i]['sports']}</p>
+            <br><p>${rivals[i]}그룹</p>
+            <p>${rivals[i]["sports"]}</p>
             <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
-        </div>`
+        </div>`;
+        console.log([rivals[i]["sports"]]);
     }
-    console.log(rivals_data);
 </script>
 {% endblock %}
