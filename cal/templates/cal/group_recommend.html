@@ -80,6 +80,7 @@
         var neighbors_list = document.getElementById("neighbor-recommend-inner");
         neighbors_list.innerHTML += `<div id="neighborList" class="swiper-slide d2">
             <form method="POST">
+            {% csrf_token %}
             <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}">
             <br><p>${neighbors[i]["groupname"]}그룹</p>
             <p>${neighbors[i]["location"]}</p>
@@ -101,6 +102,7 @@
         var rivals_list = document.getElementById("rival-recommend-inner");
         rivals_list.innerHTML += `<div id="rivalList" class="swiper-slide d2">
             <form method="POST">
+            {% csrf_token %}
             <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}">
             <br><p>${rivals[i]["groupname"]}그룹</p>
             <p>${rs}</p>
