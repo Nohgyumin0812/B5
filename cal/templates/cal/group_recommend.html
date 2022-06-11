@@ -89,16 +89,14 @@
             </form>
         </div>`;
     }
-    console.log(neighbors[i]["groupname"]);
-    console.log(neighbors[i]["location"]);
 
     // 상대팀이 될 수 있는 그룹 디스플레이
     var rivals_data = "{{ sports_group }}".replace(/&quot;/g, "\"");
     var rivals = JSON.parse(rivals_data);
     console.log(rivals);
     for(i=0; i<rivals.length; i++){
-        var rival_sports = rivals[i]["sports"].replace(/&#x27;/g,"");
-        rs = sportsIcon(rival_sports);
+        var rival_sports = rivals[i]["sports"];
+        var rs = sportsIcon(rival_sports);
         console.log(rs);
         var rivals_list = document.getElementById("rival-recommend-inner");
         rivals_list.innerHTML += `<div id="rivalList" class="swiper-slide d2">
