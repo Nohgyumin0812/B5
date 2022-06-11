@@ -418,7 +418,19 @@ def group_managing(request):
                 group_item.friendname = "[" + str(group_item.friendname).replace("[", '').replace(']', '') + ",'" + str(username) + "']"
 
         ##그룹초대 수락##
-        ## 'g_name' -> **
+        ## 'g_nameee' -> **
+        if request.method == "POST" and 'g_nameee' in request.POST:
+            item = mixCustomGroup.objects.get(groupname = request.POST['g_nameee'])
+            item.groupname
+            item.sports
+            item.friendname
+            item.location
+            item.location_code
+            item.x
+            item.y
+            item.y
+            item.dateFirst
+            item.sportFirst
 
 
             group_item.friendname = ast.literal_eval(group_item.friendname)

@@ -63,7 +63,6 @@ class my_ScheGroup(models.Model):
 class mixCustomGroup(models.Model):
     groupname = models.CharField(max_length=50, default='', blank = True)
     owner = models.CharField(max_length=50, default='', blank = True)
-    members = models.CharField(max_length=50, default='', blank = True)
     sports = models.CharField(max_length=50, default='', blank = True)
     friendname = models.CharField(max_length=50, default='', blank = True)
     location =models.CharField(max_length=50, default='', blank = True)
