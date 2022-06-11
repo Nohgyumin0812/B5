@@ -328,28 +328,32 @@ def group_managing(request):
     df = pd.DataFrame(group)
     df_user = pd.DataFrame(user)
 
-    ##그룹 요청##
+    try:
+        ##그룹 요청##
+        courses = InviteGroup.objects.filter(invite_user=request.user.username, invite_status=1).values()
+        courses = pd.DataFrame(courses)
 
+        courses['num_member'] = 0
+        courses['sports'] = "22"
+        for i in range(courses.shape[0]):
+            courses['num_member'][i] = len(ast.literal_eval(str(CustomGroup.objects.filter
+                                                                (groupname=courses['group'][i]).values()[0][
+                                                                    'friendname']).replace(' ', ''))) + 1
+            courses['sports'] = CustomGroup.objects.filter(groupname=courses['group'][i]).values()[0]['sports']
+        courses = courses[['group', 'num_member', 'sports']].set_index('group').T.to_dict()
 
-    courses = InviteGroup.objects.filter(invite_user=request.user.username, invite_status =1).values()
-    courses = pd.DataFrame(courses)
-
-    courses['num_member'] = 0
-    courses['sports'] = "22"
-    for i in range(courses.shape[0]):
-        courses['num_member'][i] = len(ast.literal_eval(str(CustomGroup.objects.filter
-                                                            (groupname =  courses['group'][i]).values()[0]['friendname']).replace(' ','')))+ 1
-        courses['sports'] = CustomGroup.objects.filter(groupname = courses['group'][i]).values()[0]['sports']
-    courses = courses[['group', 'num_member','sports']].set_index('group').T.to_dict()
-
-    invite_member_dic = {}
-    invite_member_dic['개인초대'] = courses
-    print(invite_member_dic)
+        invite_member_dic = {}
+        invite_member_dic['개인초대'] = courses
+        print(invite_member_dic)
+    except:
+        invite_member_dic = {}
 
     invite_group = json.dumps(invite_member_dic, ensure_ascii=False)
 
+
     ##그룹 관리##
     try:
+        df_inner_join = []
         df_group = (pd.DataFrame(df[['groupname','owner_id', 'friendname']]))
         df_user['owner_id']= df_user['id']
         df_user = (df_user[['owner_id', 'username']])
