@@ -48,7 +48,9 @@
 {% endblock %}
 
 {% block script %}
+<!-- jquery 사용을 위한 라이브러리 -->
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
 <script>
     //get 방식으로 데이터 전송
     function sendToCalendar(data){
@@ -157,6 +159,7 @@
         }
     }
     
+    //수락하기 버튼 클릭 시 데이터 전송 및 해당 그룹 캘린더 연결
     function sendData(d){
         $.ajax({
             type : 'POST',
@@ -170,8 +173,6 @@
 
         window.location.href = `{% url 'cal:calendar' %}?${d}`;
     }
-
-    
     
 
     //내 그룹 부분, 그룹 초대 요청 부분 슬라이드 방식으로 구현 -> swiper 라이브러리 사용
