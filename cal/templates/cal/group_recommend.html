@@ -96,7 +96,7 @@
     var rivals = JSON.parse(rivals_data);
     console.log(rivals);
     for(i=0; i<rivals.length; i++){
-        var rival_sports = rivals[i]["sports"];
+        var rival_sports = rivals[i]["sports"].replace(/&#x27;/g,"");
         rs = sportsIcon(rival_sports);
         console.log(rs);
         var rivals_list = document.getElementById("rival-recommend-inner");
