@@ -389,7 +389,7 @@ def group_managing(request):
         df_inner_join = json.dumps(df_inner_join, ensure_ascii= False)        ## 내 그룹 시 그룹명, 멤버수, 종목 출력 ##
 
         if request.method == "POST":
-            invite_group_name = request.POST.get('gname')
+            invite_group_name = request.POST.get('g_name')
             print(request.POST)
             Invite_item = InviteGroup.objects.get(group=invite_group_name, invite_user=username, invite_status=1)
             Invite_item.invite_status = 0
