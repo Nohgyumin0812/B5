@@ -5,12 +5,14 @@
 <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/group_recommend.css' %}"> -->
 <link rel="stylesheet" href="{% static 'css/group_recommend.css' %}">
 
+<!-- swiper 라이브러리 -->
 <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
 {% endblock %}
 
 {% block main %}
 <div id="group-outer">
+    <!-- 내 주변 그룹 디스플레이 -->
     <p class="ptag" style="margin-top:40px; padding-top:30px;">내 주변 그룹<img src="{% static 'img/icons8-location.png' %}"></p>
     <div id="neighbor-recommend" class="swiper">
         <div id="neighbor-recommend-inner" class="swiper-wrapper">
@@ -19,6 +21,7 @@
         <div class="swiper-button-next" id="bt2"></div>
     </div>
 
+    <!-- 상대팀이 될 수 있는 그룹 디스플레이 -->
     <p class="ptag" style="margin-top:40px;">상대팀이 될 수 있는 그룹<img src="{% static 'img/icons8-head-to-head.png' %}"></p>
     <div id="rival-recommend" class="swiper">
         <div id="rival-recommend-inner" class="swiper-wrapper">
@@ -28,8 +31,10 @@
     </div>
 </div>
 {% endblock %}
+
 {% block script %}
 <script>
+    // swiper 라이브러리
     const swiper = new Swiper( '.swiper', {
         autoplay: false,
         loop: false,
@@ -39,8 +44,33 @@
         },
         slidesPerView: 3,
         slidesPerGroup : 3,
-      } );
+    });
     
+    function sportsIcon(rs){
+        var r_s=``;
+        for (j=0; j<rs.lenght; j++){
+            if (rs=='1'){
+                r_s+=`<img id="spo" style="width:20px; height:20px;" src = "{% static 'img/icons8-축구-2-30.png' %}">`;
+            }
+            else if (rs=='2'){
+                r_s+=`<img id="spo" style="width:20px; height:20px;" src = "{% static 'img/icons8-달리는-24.png' %}">`;
+            }
+            else if (rs=='3'){
+                r_s+=`<img id="spo" style="width:20px; height:20px;" src = "{% static 'img/icons8-농구-30.png' %}">`;
+            }
+            else if (rs=='4'){
+                `<img id="spo" style="width:20px; height:20px;" src = "{% static 'img/icons8-shuttercock-32.png' %}">`;
+            }
+            else if (rs=='5'){
+                `<img id="spo" style="width:20px; height:20px;" src = "{% static 'img/icons8-야구-공-30.png' %}">`;
+            }
+            else{
+                `<img id="spo" style="width:20px; height:20px;" src = "{% static 'img/icons8-테니스-30.png' %}">`;
+            }
+        }
+    }
+    
+    // 내 주변 그룹 디스플레이
     var neighbors_data = "{{ place_group }}".replace(/&quot;/g, "\"");
     var neighbors = JSON.parse(neighbors_data);
     console.log(neighbors);
@@ -57,23 +87,25 @@
         console.log(neighbors[i]["groupname"])
         console.log(neighbors[i]["location"]);
     }
-      
 
+    // 상대팀이 될 수 있는 그룹 디스플레이
     var rivals_data = "{{ sports_group }}".replace(/&quot;/g, "\"");
     var rivals = JSON.parse(rivals_data);
     console.log(rivals);
     for(i=0; i<rivals.length; i++){
+        var rival_sports = rivals[i]["sports"];
+        rs = sportsIcon(rival_sports);
+        console.log(rs);
         var rivals_list = document.getElementById("rival-recommend-inner");
         rivals_list.innerHTML += `<div id="rivalList" class="swiper-slide d2">
             <form method="POST">
             <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}">
             <br><p>${rivals[i]["groupname"]}그룹</p>
-            <p>${rivals[i]["sports"]}</p>
+            <p>${rs}</p>
             <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
             </form>
         </div>`;
         console.log([rivals[i]["groupname"]]);
-        console.log([rivals[i]["sports"]]);
     }
 </script>
 {% endblock %}
