@@ -11,8 +11,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 import ast
-from .forms import GroupForm, DayForm, InviteForm, InviteGroupForm, ScheForm, my_ScheForm
-from .models import CustomGroup, DayGroup, InviteGroup,InviteGroupGroup, ScheGroup, my_ScheGroup
+from .forms import GroupForm, DayForm, InviteForm, InviteGroupForm, ScheForm, my_ScheForm, mixCustomForm
+from .models import CustomGroup, DayGroup, InviteGroup,InviteGroupGroup, ScheGroup, my_ScheGroup, mixCustomGroup
 from common.models import CustomUser
 from .models import Event
 
@@ -328,6 +328,7 @@ def group_managing(request):
     username = CustomUser.objects.get(id=request.user.id).username
     df = pd.DataFrame(group)
     df_user = pd.DataFrame(user)
+    invite_member_dic = {}
 
     try:
         ##그룹 요청-개인##
@@ -342,30 +343,35 @@ def group_managing(request):
             courses['sports'] = CustomGroup.objects.filter(groupname=courses['group'][i]).values()[0]['sports']
         courses = courses[['group', 'num_member', 'sports']].set_index('group').T.to_dict()
 
-        invite_member_dic = {}
         invite_member_dic['개인초대'] = courses
-        print(invite_member_dic)
     except:
-        invite_member_dic = {}
+        invite_member_dic['개인초대'] = {}
 
+    try:
         ## 그룹요청-그룹##
-    courses_group = InviteGroupGroup.objects.filter(owner_id=request.user.id, invite_status=1).values()
-    courses_group = pd.DataFrame(courses_group)
+        courses_group = InviteGroupGroup.objects.filter(owner_id=request.user.id, invite_status=1).values()
+        courses_group = pd.DataFrame(courses_group)
 
-    print(courses_group)
+        print(courses_group)
 
-    courses_group['num_member'] = 0
-    courses_group['sports'] = "22"
-    for i in range(courses_group.shape[0]):
-        courses_group['num_member'][i] = len(ast.literal_eval(str(CustomGroup.objects.filter
+        courses_group['num_member'] = 0
+        courses_group['sports'] = "22"
+        courses_group['my_group'] = ""
+
+        for i in range(courses_group.shape[0]):
+            courses_group['num_member'][i] = len(ast.literal_eval(str(CustomGroup.objects.filter
                                                                   (groupname=courses_group['group'][i]).values()[0][
                                                                       'friendname']).replace(' ', ''))) + 1
-        courses_group['sports'] = CustomGroup.objects.filter(groupname=courses_group['group'][i]).values()[0]['sports']
-    courses_group = courses_group[['group', 'num_member', 'sports']].set_index('group').T.to_dict()
+            courses_group['sports'] = CustomGroup.objects.filter(groupname=courses_group['group'][i]).values()[0]['sports']
+            courses_group['my_group'] = CustomGroup.objects.filter(groupname = courses_group['invite_group'][i]).values()[0]['groupname']
+        courses_group = courses_group[['group', 'num_member', 'sports', 'my_group']].set_index('group').T.to_dict()
 
-    invite_member_dic['그룹초대'] = courses_group
+
+        invite_member_dic['그룹초대'] = courses_group
+    except:
+        invite_member_dic['그룹초대'] = {}
+
     print(invite_member_dic)
-
     invite_group = json.dumps(invite_member_dic, ensure_ascii=False)
 
     ##그룹 관리##
@@ -396,7 +402,8 @@ def group_managing(request):
         df_inner_join = df_inner_join.set_index('groupname').T.to_dict()
         df_inner_join = json.dumps(df_inner_join, ensure_ascii= False)        ## 내 그룹 시 그룹명, 멤버수, 종목 출력 ##
 
-        if request.method == "POST":
+        ##개인초대 수락##
+        if request.method == "POST" and 'g_name' in request.POST:
             invite_group_name = request.POST.get('g_name')
             print(request.POST)
             Invite_item = InviteGroup.objects.get(group=invite_group_name, invite_user=username, invite_status=1)
@@ -410,9 +417,12 @@ def group_managing(request):
             else:
                 group_item.friendname = "[" + str(group_item.friendname).replace("[", '').replace(']', '') + ",'" + str(username) + "']"
 
+        ##그룹초대 수락##
+        ## 'g_name' -> **
+
+
             group_item.friendname = ast.literal_eval(group_item.friendname)
             group_item.save()
-            return redirect('cal:group_managing')
         return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group, 'df_inner_join':df_inner_join})
     except:
         return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group, 'df_inner_join':df_inner_join})
@@ -493,9 +503,13 @@ def group_recommend(request):
 
     if request.method == "POST":
         form = InviteGroupForm(request.POST)
+        print(request.POST)
         if form.is_valid():
             InviteGroup = form.save(commit=False)
-            new_group = str(request.POST['rg_name']).replace("'", '')
+            if 'rg_name' in request.POST:
+                new_group = str(request.POST['rg_name']).replace("'", '')
+            if 'ng_name' in request.POST:
+                new_group = str(request.POST['ng_name']).replace("'", '')
             print(request.POST)
             InviteGroup.invite_group = new_group
             InviteGroup.group = curr_group

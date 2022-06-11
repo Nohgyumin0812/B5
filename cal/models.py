@@ -59,3 +59,17 @@ class my_ScheGroup(models.Model):
     sche_date = models.CharField(max_length=50, default='', blank = True)
     sche_memo = models.CharField(max_length=50, default='', blank = True)
     user_id =  models.CharField(max_length=50, default='', blank = True)
+
+class mixCustomGroup(models.Model):
+    groupname = models.CharField(max_length=50, default='', blank = True)
+    owner = models.CharField(max_length=50, default='', blank = True)
+    members = models.CharField(max_length=50, default='', blank = True)
+    sports = models.CharField(max_length=50, default='', blank = True)
+    friendname = models.CharField(max_length=50, default='', blank = True)
+    location =models.CharField(max_length=50, default='', blank = True)
+    location_code = models.CharField(max_length=50, default='', blank = True)
+    x = models.CharField(max_length=50, default='', blank = True)
+    y = models.CharField(max_length=50, default='', blank = True)
+    dateFirst = models.CharField(max_length=50, default='', blank = True)
+    sportFirst = models.CharField(max_length=50, default='', blank = True)
+    invite_status = models.CharField(max_length=50, default='', blank = True)

@@ -57,3 +57,8 @@ class my_ScheForm(forms.ModelForm):
   class Meta:
     model = my_ScheGroup
     fields = ['sche_name', 'sche_date', 'sche_memo', 'user_id']
+
+class mixCustomForm(forms.ModelForm):
+  class Meta:
+    model = mixCustomGroup
+    fields = ["groupname", "sports", "friendname", "location", "location_code", "x", "y", "dateFirst", "sportFirst", "invite_status"]
