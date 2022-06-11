@@ -333,7 +333,6 @@ def group_managing(request):
         ##그룹 요청-개인##
         courses = InviteGroup.objects.filter(invite_user=request.user.username, invite_status=1).values()
         courses = pd.DataFrame(courses)
-
         courses['num_member'] = 0
         courses['sports'] = "22"
         for i in range(courses.shape[0]):
@@ -349,16 +348,25 @@ def group_managing(request):
     except:
         invite_member_dic = {}
 
-
         ## 그룹요청-그룹##
-    courses_group = InviteGroupGroup.objects.filter(owner_id = request.user.id, invite_status = 1).values()
+    courses_group = InviteGroupGroup.objects.filter(owner_id=request.user.id, invite_status=1).values()
     courses_group = pd.DataFrame(courses_group)
 
-    #courses_group = InviteGroupGroup.objects.filter()
-    print(1)
+    print(courses_group)
+
+    courses_group['num_member'] = 0
+    courses_group['sports'] = "22"
+    for i in range(courses_group.shape[0]):
+        courses_group['num_member'][i] = len(ast.literal_eval(str(CustomGroup.objects.filter
+                                                                  (groupname=courses_group['group'][i]).values()[0][
+                                                                      'friendname']).replace(' ', ''))) + 1
+        courses_group['sports'] = CustomGroup.objects.filter(groupname=courses_group['group'][i]).values()[0]['sports']
+    courses_group = courses_group[['group', 'num_member', 'sports']].set_index('group').T.to_dict()
+
+    invite_member_dic['그룹초대'] = courses_group
+    print(invite_member_dic)
 
     invite_group = json.dumps(invite_member_dic, ensure_ascii=False)
-
 
     ##그룹 관리##
     try:
@@ -535,14 +543,15 @@ def mycalendar(request):
     outdoor_sports = ['1', '2', '5']
 
     if request.method == 'POST':
-        if "sche-name" in request.POST:
+        if "my-sche-name" in request.POST:
             print(request.POST)
             form = my_ScheForm(request.POST)
+            print(form)
             if form.is_valid():
                 Sche = form.save(commit=False)
-                Sche.sche_name = request.POST['sche-name']
-                Sche.sche_date = request.POST['sche-date']
-                Sche.sche_memo = request.POST['sche-memo']
+                Sche.sche_name = request.POST['my-sche-name']
+                Sche.sche_date = request.POST['my-sche-date']
+                Sche.sche_memo = request.POST['my-sche-memo']
                 Sche.user_id = request.user.id
             Sche = form.save()
             print("######")
