@@ -84,6 +84,7 @@
             <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}">
             <br><p>${neighbors[i]["groupname"]}그룹</p>
             <p>${neighbors[i]["location"]}</p>
+            <input type="text" name="rg_name" value="${neighbors[i]["groupname"]}" style="display:none;">
             <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
             </form>
         </div>`;
@@ -106,6 +107,7 @@
             <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}">
             <br><p>${rivals[i]["groupname"]}그룹</p>
             <p>${rs}</p>
+            <input type="text" name="rg_name" value="${rivals[i]["groupname"]}" style="display:none;">
             <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
             </form>
         </div>`;
