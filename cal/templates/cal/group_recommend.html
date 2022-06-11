@@ -26,8 +26,6 @@
     <div id="rival-recommend" class="swiper">
         <div id="rival-recommend-inner" class="swiper-wrapper">
         </div>
-        <div class="swiper-button-prev" id="bt1"></div>
-        <div class="swiper-button-next" id="bt2"></div>
     </div>
 </div>
 {% endblock %}
@@ -39,8 +37,8 @@
         autoplay: false,
         loop: false,
         navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
         },
         slidesPerView: 3,
         slidesPerGroup : 3,
@@ -111,5 +109,8 @@
         </div>`;
         console.log(rivals[i]["groupname"]);
     }
+
+    document.getElementById("rival-recommend").innerHTML += `<div class="swiper-button-prev" id="bt1"></div>
+        <div class="swiper-button-next" id="bt2"></div>`
 </script>
 {% endblock %}
