@@ -11,8 +11,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 import ast
-from .forms import GroupForm, DayForm, InviteForm, ScheForm, my_ScheForm
-from .models import CustomGroup, DayGroup, InviteGroup, ScheGroup, my_ScheGroup
+from .forms import GroupForm, DayForm, InviteForm, InviteGroupForm, ScheForm, my_ScheForm
+from .models import CustomGroup, DayGroup, InviteGroup,InviteGroupGroup, ScheGroup, my_ScheGroup
 from common.models import CustomUser
 from .models import Event
 
@@ -93,11 +93,11 @@ def calendar(request):
     try:
         sche_data = ScheGroup.objects.filter(group_id = curr_group_id).values()
         sche_data = pd.DataFrame(sche_data).drop(['id', 'group_id'], axis = 1).set_index('sche_date').T.to_dict('list')
-        sche_data = json.dumps(sche_data, ensure_ascii= False)
         print(sche_data)
     except:
         sche_data = ""
 
+    sche_data = json.dumps(sche_data, ensure_ascii= False)
     loc = CustomGroup.objects.filter(groupname = curr_group).values()[0]['location_code']
     url = 'https://weather.naver.com/today/%s' % (loc)
     raw = requests.get(url)
@@ -264,6 +264,7 @@ def group_making(request):
             group.group_name = request.POST["groupname"]
             group.sports = request.POST.getlist('sports')
             group.friendname = request.POST.getlist("friendname")
+            group.invite_status = 0
             print(group.friendname)
 
             group.location = request.POST['g-location']
@@ -329,7 +330,7 @@ def group_managing(request):
     df_user = pd.DataFrame(user)
 
     try:
-        ##그룹 요청##
+        ##그룹 요청-개인##
         courses = InviteGroup.objects.filter(invite_user=request.user.username, invite_status=1).values()
         courses = pd.DataFrame(courses)
 
@@ -347,6 +348,14 @@ def group_managing(request):
         print(invite_member_dic)
     except:
         invite_member_dic = {}
+
+
+        ## 그룹요청-그룹##
+    courses_group = InviteGroupGroup.objects.filter(owner_id = request.user.id, invite_status = 1).values()
+    courses_group = pd.DataFrame(courses_group)
+
+    #courses_group = InviteGroupGroup.objects.filter()
+    print(1)
 
     invite_group = json.dumps(invite_member_dic, ensure_ascii=False)
 
@@ -455,7 +464,7 @@ def group_recommend(request):
 
     indexNames = df_group[df_group['groupname']==curr_group].index
     df_group.drop(indexNames, inplace = True)
-
+    df_group = df_group[df_group['invite_status'] == '0']
     df_group['x'] = df_group['x'].astype(float)
     df_group['y'] = df_group['y'].astype(float)
     df_group['distance'] = (df_group['x'] - float(group_x))**2 + (df_group['y']- float(group_y))**2
@@ -474,11 +483,41 @@ def group_recommend(request):
     sports_group = sports_group.sort_values(by = 'common', ascending = False)
     sports_group = sports_group.to_dict('records')
 
-    place_group = json.dumps(place_group, ensure_ascii= False)
-    sports_group = json.dumps(sports_group, ensure_ascii = False)
+    if request.method == "POST":
+        form = InviteGroupForm(request.POST)
+        if form.is_valid():
+            InviteGroup = form.save(commit=False)
+            new_group = str(request.POST['rg_name']).replace("'", '')
+            print(request.POST)
+            InviteGroup.invite_group = new_group
+            InviteGroup.group = curr_group
+            owner_id = CustomGroup.objects.filter(groupname= new_group).values()[0]['owner_id']
+            InviteGroup.invite_status = '1'
+            InviteGroup.owner_id = owner_id
+            InviteGroup = form.save()
+        return redirect('cal:group_recommend')
 
-    print(place_group) # distance: 내 그룹과 상대 그룹 간의 거리
+    ##초대상태##
+    place_group = pd.DataFrame(place_group)  # distance: 내 그룹과 상대 그룹 간의 거리
+    sports_group = pd.DataFrame(sports_group)
+    invite_length = len(InviteGroupGroup.objects.filter(group = curr_group, invite_status = 1).values())
+    invite_loc_list = []
+    invite_spo_list = []
+    for i in range(invite_length):
+        invite_loc_list.append(InviteGroupGroup.objects.filter(group = curr_group, invite_status = 1).values()[i]['invite_group'])
+        invite_spo_list.append(InviteGroupGroup.objects.filter(group = curr_group, invite_status = 1).values()[i]['invite_group'])
+
+    place_group = place_group[~place_group['groupname'].isin(invite_loc_list)]
+    place_group = place_group[['location', 'groupname']].to_dict('records')
+
+    sports_group = sports_group[~sports_group['groupname'].isin(invite_spo_list)]
+    sports_group = sports_group[['sports', 'groupname']].to_dict('records')
+
+    ##스포츠그룹-초대상태##
     print(sports_group) # common: 겹치는 운동종목 수
+
+    place_group = json.dumps(place_group, ensure_ascii=False)
+    sports_group = json.dumps(sports_group, ensure_ascii=False)
 
     context = {'place_group': place_group,'sports_group':sports_group}
     return render(request, 'cal/group_recommend.html', context)
