@@ -13,6 +13,8 @@
 <!-- swiper 라이브러리 -->
 <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+
+
 {% endblock %}
 
 {% block main %}
@@ -31,18 +33,22 @@
     <!-- 그룹 초대 요청 내역 디스플레이 -->
     <p class="ptag" style="margin-top:40px;">그룹 초대 요청<img src="{% static 'img/icons8-add-user-group-man-man-24.png' %}"></p>
     <div id="group-invite" class="swiper">
-        <form method="POST">
-            <div id="group-invite-inner" class="swiper-wrapper">
+
+        <div id="group-invite-inner" class="swiper-wrapper">
+            <!-- <form method="POST"> -->
                 {% csrf_token %}
-            </div>
-        </form>
+            <!-- </form> -->
+        </div>
         <div class="swiper-button-prev" id="bt1"></div>
         <div class="swiper-button-next" id="bt2"></div>
+
+
     </div>
 </div>
 {% endblock %}
 
 {% block script %}
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script>
     //get 방식으로 데이터 전송
     function sendToCalendar(data){
@@ -136,19 +142,37 @@
 
     //초대 요청 내역 디스플레이
     var invitation_list = "{{ invite_group }}".replace(/&quot;/g, "\"");
-    var invitation = JSON.parse(invitation_list);
-    var p_k = Object.keys(invitation["개인초대"]);
-
-    for(i=0; i<p_k.length; i++){
+    if(invitation_list != "{}"){
+        var invitation = JSON.parse(invitation_list);
+        var p_k = Object.keys(invitation["개인초대"]);
         var inner = document.getElementById("group-invite-inner");
-        var personal_d = invitation["개인초대"][p_k[i]];
-        var personal_d_num = personal_d["num_member"];
-        var personal_d_spo = personal_d["sports"];
-        personal_d_spo = sportConductor(personal_d_spo);
-        personal_d_spo = iconConductor(personal_d_spo);
-
-        inner.innerHTML += `<div class="swiper-slide d2"><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}" style="padding-top:10px;"><br>${p_k[i]} 그룹<br>${personal_d_num}명<br><span>${personal_d_spo}</span><br><input type="text" name="gname" value="${p_k[i]}" style="display:none;"><button id="accept" type="submit">수락하기</button></div>`;
+        for(i=0; i<p_k.length; i++){
+            var personal_d = invitation["개인초대"][p_k[i]];
+            var personal_d_num = personal_d["num_member"];
+            var personal_d_spo = personal_d["sports"];
+            personal_d_spo = sportConductor(personal_d_spo);
+            personal_d_spo = iconConductor(personal_d_spo);
+    
+            inner.innerHTML += `<div class="swiper-slide d2"><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}" style="padding-top:10px;"><br>${p_k[i]} 그룹<br>${personal_d_num}명<br><span>${personal_d_spo}</span><br><input type="text" name="gname" value="${p_k[i]}" style="display:none;"><button id="accept" type="button" onclick="sendData('${p_k[i]}')">수락하기</button></div>`;
+        }
     }
+    
+    function sendData(d){
+        $.ajax({
+            type : 'POST',
+            data : {
+                'g_name': d
+            },
+            success:function(data){
+                console.log(d);
+            },
+        });
+
+        window.location.href = `{% url 'cal:calendar' %}?${d}`;
+    }
+
+    
+    
 
     //내 그룹 부분, 그룹 초대 요청 부분 슬라이드 방식으로 구현 -> swiper 라이브러리 사용
     const swiper = new Swiper( '.swiper', {
