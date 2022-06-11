@@ -29,6 +29,7 @@ class CustomGroup(models.Model):
     y = models.CharField(max_length=50, default='', blank = True)
     dateFirst = models.CharField(max_length=50, default='', blank = True)
     sportFirst = models.CharField(max_length=50, default='', blank = True)
+    invite_status = models.CharField(max_length=50, default='', blank = True)
 
 class DayGroup(models.Model):
     group = models.ForeignKey(CustomGroup, on_delete=models.CASCADE, verbose_name='group', null = True, blank = True)
@@ -40,6 +41,12 @@ class InviteGroup(models.Model):
     invite_user = models.CharField(max_length=50, default='', blank = True)
     group = models.CharField(max_length=50, default='', blank = True)
     invite_status = models.CharField(max_length=50, default='', blank = True)
+
+class InviteGroupGroup(models.Model):
+    invite_group = models.CharField(max_length=50, default='', blank = True)
+    group = models.CharField(max_length=50, default='', blank = True)
+    invite_status = models.CharField(max_length=50, default='', blank = True)
+    owner_id = models.CharField(max_length=50, default='', blank = True)
 
 class ScheGroup(models.Model):
     sche_name = models.CharField(max_length=50, default='', blank = True)

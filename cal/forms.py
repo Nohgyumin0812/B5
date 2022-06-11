@@ -22,7 +22,7 @@ class GroupForm(forms.ModelForm):
 
   class Meta:
     model = CustomGroup
-    fields = ["groupname", "sports", "friendname", "location", "location_code", "x", "y", "dateFirst", "sportFirst"]
+    fields = ["groupname", "sports", "friendname", "location", "location_code", "x", "y", "dateFirst", "sportFirst", "invite_status"]
 
 
 class DayForm(forms.ModelForm):
@@ -37,6 +37,13 @@ class InviteForm(forms.ModelForm):
   class Meta:
     model = InviteGroup
     fields = ["invite_user", "group", "invite_status"]
+
+
+class InviteGroupForm(forms.ModelForm):
+
+  class Meta:
+    model = InviteGroupGroup
+    fields = ["invite_group", "group", "invite_status", "owner_id"]
 
 class ScheForm(forms.ModelForm):
 
