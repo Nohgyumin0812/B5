@@ -17,6 +17,8 @@
     <div id="neighbor-recommend" class="swiper">
         <div id="neighbor-recommend-inner" class="swiper-wrapper">
         </div>
+        <div class="swiper-button-prev" id="bt1"></div>
+        <div class="swiper-button-next" id="bt2"></div>
     </div>
 
     <!-- 상대팀이 될 수 있는 그룹 디스플레이 -->
@@ -29,7 +31,19 @@
 {% endblock %}
 
 {% block script %}
-<script>    
+<script>
+    // swiper 라이브러리
+    const swiper = new Swiper( '.swiper', {
+        autoplay: false,
+        loop: false,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        slidesPerView: 3,
+        slidesPerGroup : 3,
+    });
+    
     function sportsIcon(rsports){
         let rs = rsports.match(/\d+/g);
         var r_s=``;
@@ -75,8 +89,6 @@
             </form>
         </div>`;
     }
-    document.getElementById("neighbor-recommend").innerHTML += `<div class="swiper-button-prev" id="bt1"></div>
-        <div class="swiper-button-next" id="bt2"></div>`;
 
     // 상대팀이 될 수 있는 그룹 디스플레이
     var rivals_data = "{{ sports_group }}".replace(/&quot;/g, "\"");
@@ -100,17 +112,5 @@
 
     document.getElementById("rival-recommend").innerHTML += `<div class="swiper-button-prev" id="bt1"></div>
         <div class="swiper-button-next" id="bt2"></div>`;
-    
-    // swiper 라이브러리
-    const swiper = new Swiper( '.swiper', {
-        autoplay: false,
-        loop: false,
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        slidesPerView: 3,
-        slidesPerGroup : 3,
-    });
 </script>
 {% endblock %}
