@@ -86,7 +86,7 @@
 }
 #group-invite{
     width:1000px;
-    height: 200px;
+    height: 250px;
     background-color: #94CEF2;
     border-radius: 10px;
 }
@@ -97,7 +97,7 @@
 #group-invite-inner div{
     display: inline-block;
     width:233.5px !important;
-    height: 150px !important;
+    height: 205px !important;
     text-align: center;
     border-radius: 10px;
     background-color: white;

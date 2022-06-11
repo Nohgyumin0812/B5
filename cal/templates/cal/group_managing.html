@@ -98,22 +98,34 @@
         return sicons
     }
 
+    //개인/그룹 초대 요청의 운동 종목 데이터 처리
+    function sportConductor(s_d){
+        var arr = new Array();
+
+        s_d = s_d.replace("[","");
+        s_d = s_d.replace("]","");
+        s_d = s_d.replace(/ /g,"");
+        s_d = s_d.split(",");
+
+        for(l=0; l<s_d.length; l++){
+            arr.push(s_d[l].replace(/&#x27;/g, ""));
+        }
+        return arr
+    }
+
     //그룹 정보 데이터 처리
     var group_data = "{{ df_inner_join }}".replace(/&quot;/g, "\"");
     var g_data = JSON.parse(group_data);
-    console.log(g_data);
 
     //내 그룹 데이터 처리
     var mygroup_data = "{{ my_group }}".replace(/&#x27;/g, "\"");
     var mg_data = JSON.parse(mygroup_data);
-    console.log(mg_data);
 
     //내 그룹 디스플레이
     for(j=0; j<mg_data.length; j++){
         var t = g_data[mg_data[j]]["member_num"];
         var sp = g_data[mg_data[j]]["sports"];
         sp = sportConductor(sp);
-        console.log(sp);
         var sp_icon = iconConductor(sp);
 
         //get방식으로 calendar페이지로 데이터 전송 및 그룹별 캘린더 페이지 이동
@@ -125,11 +137,17 @@
     //초대 요청 내역 디스플레이
     var invitation_list = "{{ invite_group }}".replace(/&quot;/g, "\"");
     var invitation = JSON.parse(invitation_list);
-    console.log(invitation["개인초대"][0]);
-    var send;
-    for(i=0; i<invitation["개인초대"].length; i++){
+    var p_k = Object.keys(invitation["개인초대"]);
+
+    for(i=0; i<p_k.length; i++){
         var inner = document.getElementById("group-invite-inner");
-        inner.innerHTML += `<div class="swiper-slide d2"><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}" style="padding-top:10px;"><br>${invitation["개인초대"][i]} 그룹<br><input type="text" name="${i}" value="${invitation["개인초대"][i]}" style="display:none;"><button id="accept" type="submit">수락하기</button></div>`;
+        var personal_d = invitation["개인초대"][p_k[i]];
+        var personal_d_num = personal_d["num_member"];
+        var personal_d_spo = personal_d["sports"];
+        personal_d_spo = sportConductor(personal_d_spo);
+        personal_d_spo = iconConductor(personal_d_spo);
+
+        inner.innerHTML += `<div class="swiper-slide d2"><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}" style="padding-top:10px;"><br>${p_k[i]} 그룹<br>${personal_d_num}명<br><span>${personal_d_spo}</span><br><input type="text" name="gname" value="${p_k[i]}" style="display:none;"><button id="accept" type="submit">수락하기</button></div>`;
     }
 
     //내 그룹 부분, 그룹 초대 요청 부분 슬라이드 방식으로 구현 -> swiper 라이브러리 사용
