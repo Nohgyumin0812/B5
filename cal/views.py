@@ -373,7 +373,7 @@ def group_managing(request):
 
     print(invite_member_dic)
     invite_group = json.dumps(invite_member_dic, ensure_ascii=False)
-
+    print(invite_group)
     ##그룹 관리##
     try:
         df_inner_join = []
@@ -402,7 +402,6 @@ def group_managing(request):
         df_inner_join = df_inner_join.set_index('groupname').T.to_dict()
         df_inner_join = json.dumps(df_inner_join, ensure_ascii= False)        ## 내 그룹 시 그룹명, 멤버수, 종목 출력 ##
 
-        ##개인초대 수락##
         if request.method == "POST" and 'g_name' in request.POST:
             invite_group_name = request.POST.get('g_name')
             print(request.POST)
@@ -417,24 +416,30 @@ def group_managing(request):
             else:
                 group_item.friendname = "[" + str(group_item.friendname).replace("[", '').replace(']', '') + ",'" + str(username) + "']"
 
+            group_item.friendname = ast.literal_eval(group_item.friendname)
+            group_item.save()
+
+
         ##그룹초대 수락##
         ## 'g_nameee' -> **
         if request.method == "POST" and 'g_nameee' in request.POST:
-            item = mixCustomGroup.objects.get(groupname = request.POST['g_nameee'])
-            item.groupname
-            item.sports
-            item.friendname
-            item.location
-            item.location_code
-            item.x
-            item.y
-            item.y
-            item.dateFirst
-            item.sportFirst
-
-
-            group_item.friendname = ast.literal_eval(group_item.friendname)
-            group_item.save()
+            print(request.POST)
+            form = mixCustomForm(request.POST)
+            if form.is_valid():
+                group_group_item  = form.save(commit=False)
+                group_group_item.groupname = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['groupname'] + CustomGroup.objects.filter(groupname = request.POST['두 번째 나온 그룹명']).values()[0]['groupname']
+                group_group_item.sports = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['sports']
+                group_group_item.owner = CustomUser.objects.filter(id= CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['owner_id']).values()[0]['username']
+                group_group_item.friendname = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['friendname']
+                + CustomGroup.objects.filter(groupname = request.POST['두 번째 나온 그룹명']).values()[0]['friendname']
+                + CustomUser.objects.filter(id = CustomGroup.objects.filter(groupname = request.POST['두 번째 나온 그룹명']).values()[0]['owner_id']).values()[0]['username']
+                group_group_item.location = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['location']
+                group_group_item.location_code = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['location_code']
+                group_group_item.x = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['x']
+                group_group_item.y = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['y']
+                group_group_item.dateFirst = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['dateFirst']
+                group_group_item.sportFirst = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['sportFirst']
+                group_group_item.save()
         return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group, 'df_inner_join':df_inner_join})
     except:
         return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group, 'df_inner_join':df_inner_join})
