@@ -47,12 +47,15 @@
     for(i=0; i<neighbors.length; i++){
         var neighbors_list = document.getElementById("neighbor-recommend-inner");
         neighbors_list.innerHTML += `<div id="neighborList" class="swiper-slide d2">
+            <form method="POST">
             <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}">
-            <br><p>${neighbors[i]}그룹</p>
-            <p>${[neighbors[i]]["location"]}</p>
+            <br><p>${neighbors[i]["groupname"]}그룹</p>
+            <p>${neighbors[i]["location"]}</p>
             <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
+            </form>
         </div>`;
-        console.log([neighbors[i]]["location"]);
+        console.log(neighbors[i]["groupname"])
+        console.log(neighbors[i]["location"]);
     }
       
 
@@ -62,11 +65,14 @@
     for(i=0; i<rivals.length; i++){
         var rivals_list = document.getElementById("rival-recommend-inner");
         rivals_list.innerHTML += `<div id="rivalList" class="swiper-slide d2">
+            <form method="POST">
             <br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}">
-            <br><p>${rivals[i]}그룹</p>
+            <br><p>${rivals[i]["groupname"]}그룹</p>
             <p>${rivals[i]["sports"]}</p>
             <button type="submit" id="invite-btn" class="invite-btn">초대하기</button>
+            </form>
         </div>`;
+        console.log([rivals[i]["groupname"]]);
         console.log([rivals[i]["sports"]]);
     }
 </script>
