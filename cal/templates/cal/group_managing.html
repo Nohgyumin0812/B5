@@ -121,24 +121,22 @@
         return arr
     }
 
-    //그룹 정보 데이터 처리
-    var group_data = "{{ df_inner_join }}".replace(/&quot;/g, "\"");
-    var g_data = JSON.parse(group_data);
-
     //내 그룹 데이터 처리
-    var mygroup_data = "{{ my_group }}".replace(/&#x27;/g, "\"");
-    var mg_data = JSON.parse(mygroup_data);
+    var group_data = "{{ df_inner_join }}".replace(/&quot;/g, "");
+    group_data = group_data.replace(/&#x27;/g, "\"");
+    var g_data = JSON.parse(group_data);
+    var gd_k = Object.keys(g_data);
+    console.log(g_data);
 
     //내 그룹 디스플레이
-    for(j=0; j<mg_data.length; j++){
-        var t = g_data[mg_data[j]]["member_num"];
-        var sp = g_data[mg_data[j]]["sports"];
-        sp = sportConductor(sp);
+    for(j=0; j<gd_k.length; j++){
+        var t = g_data[gd_k[j]]["member_num"];
+        var sp = g_data[gd_k[j]]["sports"];
         var sp_icon = iconConductor(sp);
 
         //get방식으로 calendar페이지로 데이터 전송 및 그룹별 캘린더 페이지 이동
         //그룹 별 인원 및 선호 종목 디스플레이
-        document.getElementById("groupList").innerHTML += `<a href="javascript:sendToCalendar('${mg_data[j]}');" class="swiper-slide"><div><img style="margin-top:13px;" class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>${mg_data[j]} 그룹<br>${t}명<br><span>${sp_icon}</span></div></a>`;
+        document.getElementById("groupList").innerHTML += `<a href="javascript:sendToCalendar('${gd_k[j]}');" class="swiper-slide"><div><img style="margin-top:13px;" class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}"><br>${gd_k[j]} 그룹<br>${t}명<br><span>${sp_icon}</span></div></a>`;
     }
 
 
@@ -202,8 +200,6 @@
                 console.log(d2);
             },
         });
-
-        window.location.href = `{% url 'cal:calendar' %}?${d1}`;
     }
 
     //내 그룹 부분, 그룹 초대 요청 부분 슬라이드 방식으로 구현 -> swiper 라이브러리 사용
