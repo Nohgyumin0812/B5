@@ -303,7 +303,7 @@
                             else if(result[tmp] === "황사"){
                                 img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-먼지-48.png' %}">`
                             }
-                            else if(result[tmp].includes("비") || result[tmp] === "소나기"){
+                            else if(result[tmp].includes("비") || result[tmp].includes("소나기")){
                                 img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-강렬한-비-48.png' %}">`
                             }
                             else if(result[tmp].includes("눈")){
