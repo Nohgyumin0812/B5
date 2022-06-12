@@ -156,6 +156,7 @@ def calendar(request):
         if '' in member:
             member.remove('')
         membersall = [owner]+ member
+        membersall = list(set(membersall))
         members = json.dumps(membersall, ensure_ascii=False)
 
         request.session['data'] = data
