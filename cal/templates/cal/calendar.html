@@ -439,7 +439,7 @@
         kick.innerHTML += `<label style="margin-right:10px;"><input type="checkbox" name="kickList[]" value="${members[i]}">${members[i]}</label>`;
     }
 
-    //그룹 추천페이지 이동 시 현재 그룹명 get방식으로 전송
+    //현재 url에서 수신받은 그룹명 추출
     var cur_url = window.location.href;
     var group = cur_url.split('?');
     group = decodeURIComponent(group[1], "UTF-8");
@@ -452,7 +452,7 @@
     //혼합그룹(서로 다른 두 그룹이 합쳐져 새 그룹이 된 경우)인 경우 확인
     var mix_group = "{{ mix_status }}".replace(/&quot;/g, "\"");
 
-    //그룹 방장명 !== 현재 유저명 이면 추천페이지 이동 불가
+    //그룹 방장명 !== 현재 유저명 이거나 해당 그룹이 혼합그룹인 경우 추천페이지 이동 불가
     function groupName(){
         if(myID !== ownerID){
             alert("그룹 방장에게만 권한이 있습니다!");
@@ -461,6 +461,7 @@
             alert("혼합 그룹은 추천 기능을 이용할 수 없습니다!");
         }
         else{
+            //그룹 추천페이지 이동 시 현재 그룹명 get방식으로 전송
             window.location.href = `{% url 'cal:group_recommend' %}?${group}`;
         }
     }
