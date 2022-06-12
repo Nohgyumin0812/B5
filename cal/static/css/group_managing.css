@@ -97,13 +97,13 @@
 #group-invite-inner div{
     display: inline-block;
     width:233.5px !important;
-    height: 205px !important;
+    height: 230px !important;
     text-align: center;
     border-radius: 10px;
     background-color: white;
 }
 #group-invite-inner{
-    margin-top: 27px;
+    margin-top: 16px;
 }
 .d2{
     margin:0px 50px;
@@ -119,4 +119,10 @@
     font-size: 15px;
     color: white;
     margin-top:5px;
+}
+.invite{
+    font-size: 10px;
+    position:relative;
+    top:10px;
+    left:80px;
 }

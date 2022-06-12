@@ -148,6 +148,8 @@
         var invitation = JSON.parse(invitation_list);
         var p_k = Object.keys(invitation["개인초대"]);
         var inner = document.getElementById("group-invite-inner");
+
+        //개인 초대 내역 디스플레이
         for(i=0; i<p_k.length; i++){
             var personal_d = invitation["개인초대"][p_k[i]];
             var personal_d_num = personal_d["num_member"];
@@ -155,12 +157,25 @@
             personal_d_spo = sportConductor(personal_d_spo);
             personal_d_spo = iconConductor(personal_d_spo);
     
-            inner.innerHTML += `<div class="swiper-slide d2"><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}" style="padding-top:10px;"><br>${p_k[i]} 그룹<br>${personal_d_num}명<br><span>${personal_d_spo}</span><br><input type="text" name="gname" value="${p_k[i]}" style="display:none;"><button id="accept" type="button" onclick="sendData('${p_k[i]}')">수락하기</button></div>`;
+            inner.innerHTML += `<div class="swiper-slide d2"><span class="invite">개인 초대</span><br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}" style="padding-top:10px;"><br>${p_k[i]} 그룹<br>${personal_d_num}명<br><span>${personal_d_spo}</span><br><button id="accept" type="button" onclick="sendData1('${p_k[i]}')">수락하기</button></div>`;
+        }
+
+        //그룹 초대 내역 디스플레이
+        var g_k = Object.keys(invitation["그룹초대"]);
+        for(j=0; j<g_k.length; j++){
+            var group_d = invitation["그룹초대"][g_k[j]];
+            var group_d_num = group_d["num_member"];
+            var group_d_spo = group_d["sports"];
+            var group_d_my = group_d["my_group"];
+            group_d_spo = sportConductor(group_d_spo);
+            group_d_spo = iconConductor(group_d_spo);
+    
+            inner.innerHTML += `<div class="swiper-slide d2"><span class="invite">그룹 초대</span><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}" style="padding-top:10px;"><br>${g_k[j]} 그룹<br>${group_d_num}명<br><span>${group_d_spo}</span><br><button id="accept" type="button" onclick="sendData2('${g_k[j]}','${group_d_my}')">수락하기</button></div>`;
         }
     }
     
-    //수락하기 버튼 클릭 시 데이터 전송 및 해당 그룹 캘린더 연결
-    function sendData(d){
+    //개인 초대 수락하기 버튼 클릭 시 데이터 전송 및 해당 그룹 캘린더 연결
+    function sendData1(d){
         $.ajax({
             type : 'POST',
             data : {
@@ -174,6 +189,22 @@
         window.location.href = `{% url 'cal:calendar' %}?${d}`;
     }
     
+    //그룹 초대 수락하기 버튼 클릭 시 데이터 전송 및 해당 그룹 캘린더 연결
+    function sendData2(d1,d2){
+        $.ajax({
+            type : 'POST',
+            data : {
+                'first_group_name': d1,
+                'second_group_name' : d2,
+            },
+            success:function(data){
+                console.log(d1);
+                console.log(d2);
+            },
+        });
+
+        window.location.href = `{% url 'cal:calendar' %}?${d1}`;
+    }
 
     //내 그룹 부분, 그룹 초대 요청 부분 슬라이드 방식으로 구현 -> swiper 라이브러리 사용
     const swiper = new Swiper( '.swiper', {
