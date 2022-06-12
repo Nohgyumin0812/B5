@@ -122,8 +122,10 @@
     }
 
     //내 그룹 데이터 처리
-    var group_data = "{{ df_inner_join }}".replace(/&quot;/g, "");
+    var group_data = "{{ df_inner_join }}".replace(/&quot;/g, "\"");
+    console.log(group_data);
     group_data = group_data.replace(/&#x27;/g, "\"");
+    console.log(group_data);
     var g_data = JSON.parse(group_data);
     var gd_k = Object.keys(g_data);
     console.log(g_data);
