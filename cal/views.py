@@ -257,7 +257,8 @@ def group_making(request):
             print('##################')
             group.owner = request.user
             group.group_name = request.POST["groupname"]
-            group.sports = request.POST.getlist('sports')
+            print(request.POST.getlist('sports'))
+            group.sports = ast.literal_eval(str(request.POST.getlist('sports')).replace(" ",''))
             group.friendname = request.POST.getlist("friendname")
             group.invite_status = 0
             print(group.friendname)
@@ -306,7 +307,7 @@ def group_making(request):
 
             group.dateFirst = request.POST['dateFirst']
             group.sportFirst = request.POST['sportFirst']
-
+            group.mixstatus = "0"
             group.save()
             return redirect('cal:group_managing')
     return render(request, 'cal/group_making.html')
@@ -392,7 +393,7 @@ def group_managing(request):
             df_inner_join['username'][i] = [df_inner_join['username'][i]]
             df_inner_join['friendname'][i] = ast.literal_eval(df_inner_join['friendname'][i])+(df_inner_join['username'][i])
             df_inner_join['member_num'][i] = len(df_inner_join['friendname'][i])
-            df_inner_join['sports'][i] = CustomGroup.objects.filter(groupname = df_inner_join['groupname'][i]).values()[0]['sports']
+            df_inner_join['sports'][i] = ast.literal_eval(str(CustomGroup.objects.filter(groupname = df_inner_join['groupname'][i]).values()[0]['sports']).replace(' ',''))
             if username in df_inner_join['friendname'][i]:
                 df_inner_join['true'][i] = 1
                 my_group.append(df_inner_join['groupname'][i])
@@ -505,6 +506,7 @@ def group_managing(request):
                 CustomGroup.objects.filter(groupname=request.POST['first_group_name']).values()[0]['sportFirst']
                 Invite_Group_item = InviteGroupGroup.objects.get(owner_id = request.user.id, invite_status= 1)
                 Invite_Group_item.invite_status = '0'
+                group_group_item.mix_status = '1'
                 Invite_Group_item.save()
                 group_group_item.save()
 

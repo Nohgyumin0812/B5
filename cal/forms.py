@@ -22,7 +22,7 @@ class GroupForm(forms.ModelForm):
 
   class Meta:
     model = CustomGroup
-    fields = ["groupname", "sports", "friendname", "location", "location_code", "x", "y", "dateFirst", "sportFirst", "invite_status"]
+    fields = ["groupname", "sports", "friendname", "location", "location_code", "x", "y", "dateFirst", "sportFirst", "invite_status", "mix_status"]
 
 
 class DayForm(forms.ModelForm):
@@ -61,4 +61,4 @@ class my_ScheForm(forms.ModelForm):
 class mixCustomForm(forms.ModelForm):
   class Meta:
     model = mixCustomGroup
-    fields = ["groupname", "sports", "friendname", "location", "location_code", "x", "y", "dateFirst", "sportFirst"]
+    fields = ["groupname", "sports", "friendname", "location", "location_code", "x", "y", "dateFirst", "sportFirst", "mix_status"]

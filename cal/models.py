@@ -30,6 +30,7 @@ class CustomGroup(models.Model):
     dateFirst = models.CharField(max_length=50, default='', blank = True)
     sportFirst = models.CharField(max_length=50, default='', blank = True)
     invite_status = models.CharField(max_length=50, default='', blank = True)
+    mix_status = models.CharField(max_length=50, default='', blank = True)
 
 class DayGroup(models.Model):
     group = models.ForeignKey(CustomGroup, on_delete=models.CASCADE, verbose_name='group', null = True, blank = True)
@@ -73,3 +74,4 @@ class mixCustomGroup(models.Model):
     dateFirst = models.CharField(max_length=50, default='', blank = True)
     sportFirst = models.CharField(max_length=50, default='', blank = True)
     invite_status = models.CharField(max_length=50, default='', blank = True)
+    mix_status = models.CharField(max_length=50, default='', blank = True)
