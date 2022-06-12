@@ -168,7 +168,7 @@
             group_d_spo = sportConductor(group_d_spo);
             group_d_spo = iconConductor(group_d_spo);
     
-            inner.innerHTML += `<div class="swiper-slide d2"><span class="invite">그룹 초대</span><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}" style="padding-top:10px;"><br>${g_k[j]} 그룹<br>${group_d_num}명<br><span>${group_d_spo}</span><br><button id="accept" type="button" onclick="sendData2('${g_k[j]}','${group_d_my}')">수락하기</button></div>`;
+            inner.innerHTML += `<div class="swiper-slide d2"><span class="invite">그룹 초대(${group_d_my})</span><br><img class="icons" src="{% static 'img/KakaoTalk_20220510_230525576_01.png' %}" style="padding-top:10px;"><br>${g_k[j]} 그룹<br>${group_d_num}명<br><span>${group_d_spo}</span><br><button id="accept" type="button" onclick="sendData2('${g_k[j]}','${group_d_my}')">수락하기</button></div>`;
         }
     }
     
