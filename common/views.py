@@ -1,9 +1,6 @@
 from django.contrib import auth
-from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
-from .forms import SignupForm
 from .models import CustomUser
-from cal.models import CustomGroup
 
 #로그인 뷰함수
 def login(request):

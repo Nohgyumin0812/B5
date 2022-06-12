@@ -1,6 +1,6 @@
-from django.forms import ModelForm, DateInput
-from .models import *
 from django import forms
+from .models import *
+
 
 class GroupForm(forms.ModelForm):
 

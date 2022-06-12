@@ -8,6 +8,7 @@
 # 개인캘린더 메인 뷰함수- 일정추가, 날씨 크롤링
 # 로그인, 로그아웃, 회원가입 뷰함수 (common/views.py)
 
+
 import ast
 import json
 from urllib import parse
