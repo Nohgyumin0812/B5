@@ -127,7 +127,8 @@ def calendar(request):
                     #weather_dic[date_data.text] = []
                     # weather_dic[date_data.text].append(weather.text)
                     weather_dic[date_data.text] = weather.text
-                    if '비' in weather.text or weather.text == '흐리고 비' or weather.text == '흐리고 한때 비' or weather.text == '흐리고 가끔 비' or weather.text == '비 또는 눈' or weather.text ==  '눈 또는 비' or weather.text == '가끔 비 또는 눈' \
+                    print(weather_dic)
+                    if '비' in weather.text or '소' in weather.text or weather.text == '흐리고 비' or weather.text == '흐리고 한때 비' or weather.text == '흐리고 가끔 비' or weather.text == '비 또는 눈' or weather.text ==  '눈 또는 비' or weather.text == '가끔 비 또는 눈' \
                             or weather.text == '한때 비 또는 눈' or weather.text == '가끔 눈 또는 비' or weather.text == '한때 눈 또는 비' or \
                             weather.text == '안개' or weather.text == '연무' or weather.text == '박무 (엷은 안개)' or weather.text == '빗방울' \
                             or weather.text == '눈날림' or weather.text == '낙뢰' or weather.text == '황사' or weather.text == '비' or weather.text == '눈':
@@ -136,7 +137,7 @@ def calendar(request):
                         sports_dic[date_data.text] = list(set(sportsall) & set(outdoor_sports))
                     else:
                         sports_dic[date_data.text] = "날씨없음"
-
+        print(sports_dic)
     # file_path = "./sample.json"
     # with open(file_path, 'w') as outfile:
     #     json.dump(weather_dic, outfile, ensure_ascii=False)
