@@ -444,8 +444,6 @@ def group_managing(request):
 
         ########
         df_inner_join.update(mix_df_inner_join)
-        df_inner_join = json.dumps(df_inner_join, ensure_ascii= False)        ## 내 그룹 시 그룹명, 멤버수, 종목 출력 ##
-
     except:
         print("혼합그룹없을때")
 
@@ -514,6 +512,7 @@ def group_managing(request):
     except:
         print("그룹요청수락")
 
+    df_inner_join = json.dumps(df_inner_join, ensure_ascii= False)
     invite_group = json.dumps(invite_member_dic, ensure_ascii=False)
     print(invite_group)
     print(df_inner_join)
