@@ -44,6 +44,9 @@ def calendar(request):
     my_name = json.dumps(my_name,ensure_ascii=False )
     owner_name = json.dumps(owner_name,ensure_ascii=False )
 
+    ## 혼합그룹 구분##
+    mix_status = CustomGroup.objects.filter(groupname= curr_group).values()[0]['mix_status']
+    mix_status = json.dumps(mix_status, ensure_ascii= False)
     if request.method == "POST":
         if my_id == owner_id:
             if 'invite-name' in request.POST:
@@ -239,7 +242,7 @@ def calendar(request):
 
         context = {'data': data, 'sportsall':sports, 'membersall':members,
                    'sports_date':sports_date, 'schedule_data_dic':schedule_data_dic,
-                   'my_name':my_name, 'owner_name':owner_name, 'recommend':recommend, 'sche_data':sche_data}
+                   'my_name':my_name, 'owner_name':owner_name, 'recommend':recommend, 'sche_data':sche_data, 'mix_status':mix_status}
 
         return render(request, 'cal/calendar.html', context)
     except CustomGroup.DoesNotExist:
@@ -506,11 +509,13 @@ def group_managing(request):
                 CustomGroup.objects.filter(groupname=request.POST['first_group_name']).values()[0]['sportFirst']
                 Invite_Group_item = InviteGroupGroup.objects.get(owner_id = request.user.id, invite_status= 1)
                 Invite_Group_item.invite_status = '0'
+                group_group_item.invite_status = '2'
+
                 group_group_item.mix_status = '1'
                 Invite_Group_item.save()
                 group_group_item.save()
+                return redirect('cal:group_managing')
 
-            return redirect('cal:group_managing')
     except:
         print("그룹요청수락")
 
@@ -518,6 +523,30 @@ def group_managing(request):
     invite_group = json.dumps(invite_member_dic, ensure_ascii=False)
     print(invite_group)
     print(df_inner_join)
+
+    origin_group = pd.DataFrame(CustomGroup.objects.all().values())[['groupname', 'owner_id', 'sports', 'friendname', 'location', 'location_code', 'x', 'y', 'dateFirst', 'sportFirst', 'invite_status','mix_status']]
+    mix_group = pd.DataFrame(mixCustomGroup.objects.all().values())[['groupname', 'owner_id', 'sports', 'friendname', 'location', 'location_code', 'x', 'y', 'dateFirst', 'sportFirst', 'invite_status','mix_status']]
+
+    for i in range(pd.DataFrame(mixCustomGroup.objects.all().values()).shape[0]):
+        if pd.DataFrame(mixCustomGroup.objects.all().values())['groupname'][i] in list(origin_group['groupname']):
+            continue
+        form = GroupForm(request.POST)
+        if form.is_valid():
+            mixgroup_item = form.save(commit=False)
+            mixgroup_item.groupname = pd.DataFrame(mixCustomGroup.objects.all().values())['groupname'][i]
+            mixgroup_item.sports = pd.DataFrame(mixCustomGroup.objects.all().values())['sports'][i]
+            mixgroup_item.friendname =pd.DataFrame(mixCustomGroup.objects.all().values())['friendname'][i]
+            mixgroup_item.location = pd.DataFrame(mixCustomGroup.objects.all().values())['location'][i]
+            mixgroup_item.location_code = pd.DataFrame(mixCustomGroup.objects.all().values())['location_code'][i]
+            mixgroup_item.x = pd.DataFrame(mixCustomGroup.objects.all().values())['x'][i]
+            mixgroup_item.y = pd.DataFrame(mixCustomGroup.objects.all().values())['y'][i]
+            mixgroup_item.dateFirst = pd.DataFrame(mixCustomGroup.objects.all().values())['dateFirst'][i]
+            mixgroup_item.sportFirst = pd.DataFrame(mixCustomGroup.objects.all().values())['sportFirst'][i]
+            mixgroup_item.invite_status = pd.DataFrame(mixCustomGroup.objects.all().values())['invite_status'][i]
+            mixgroup_item.mix_status = pd.DataFrame(mixCustomGroup.objects.all().values())['mix_status'][i]
+            mixgroup_item.owner_id = pd.DataFrame(mixCustomGroup.objects.all().values())['owner_id'][i]
+            mixgroup_item = form.save()
+
 
     return render(request, 'cal/group_managing.html', {'invite_group':invite_group, 'df_inner_join':df_inner_join})
 

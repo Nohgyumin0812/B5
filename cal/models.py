@@ -18,10 +18,10 @@ class Event(models.Model):
 
 
 class CustomGroup(models.Model):
-    groupname = models.CharField('groupname', max_length=200, blank=False, null=False, unique = True)
+    groupname = models.CharField(max_length=50, default='', blank = True, unique = True)
     owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='owner', null = True, blank = True)
     members = models.ManyToManyField(CustomUser, verbose_name='members', related_name='members', blank = True, default='')
-    sports = models.CharField(max_length=50, default='')
+    sports = models.CharField(max_length=50,blank = True, default='')
     friendname = models.CharField(max_length=50, default='', blank = True)
     location =models.CharField(max_length=50, default='', blank = True)
     location_code = models.CharField(max_length=50, default='', blank = True)
