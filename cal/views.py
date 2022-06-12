@@ -432,7 +432,7 @@ def group_managing(request):
                 mix_df_inner_join['username'][i])
             mix_df_inner_join['member_num'][i] = len(mix_df_inner_join['friendname'][i])
             mix_df_inner_join['sports'][i] = \
-                mixCustomGroup.objects.filter(groupname=mix_df_inner_join['groupname'][i]).values()[0]['sports']
+                ast.literal_eval(str(mixCustomGroup.objects.filter(groupname=mix_df_inner_join['groupname'][i]).values()[0]['sports']).replace(' ',''))
             if username in mix_df_inner_join['friendname'][i]:
                 mix_df_inner_join['true'][i] = 1
                 mix_my_group.append(mix_df_inner_join['groupname'][i])
