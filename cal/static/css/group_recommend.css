@@ -1,4 +1,4 @@
-/* 작성자 : 정혜원 */
+/* 작성자 : 정혜원, 최고운 */
 
 @font-face {
     font-family: 'KOTRA_BOLD-Bold';
@@ -92,13 +92,6 @@
 .d2{
     margin:0px 50px;
 }
-
-/* 이웃그룹 추천 */
-
-/* #neighborList:hover, #rivalList:hover{
-    background-color: rgba(193, 193, 193, 0.712);
-    /* filter: brightness(80%);
-} */
 
 #neighborList:hover button, #rivalList:hover button{
     display: inline-block;
