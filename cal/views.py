@@ -397,13 +397,14 @@ def group_managing(request):
                 df_inner_join['true'][i] = 1
                 my_group.append(df_inner_join['groupname'][i])
         #pd.set_option('display.max_columns', None)
-        group_json = json.dumps(my_group, ensure_ascii=False)
         df_inner_join = df_inner_join[df_inner_join['true'] ==1]
 
         df_inner_join = df_inner_join[['groupname', 'member_num', 'sports']]
         df_inner_join = df_inner_join.set_index('groupname').T.to_dict()
+    except:
+        print("일반그룹없을때")
 
-
+    try:
         mix_df_inner_join = []
         mix_df_group = (pd.DataFrame(mix_df[['groupname', 'owner_id', 'friendname']]))
         mix_df_group['owner_id'] = pd.to_numeric(mix_df_group['owner_id'])
@@ -443,11 +444,12 @@ def group_managing(request):
 
         ########
         df_inner_join.update(mix_df_inner_join)
-        print(df_inner_join)
         df_inner_join = json.dumps(df_inner_join, ensure_ascii= False)        ## 내 그룹 시 그룹명, 멤버수, 종목 출력 ##
 
+    except:
+        print("혼합그룹없을때")
 
-
+    try:
         if request.method == "POST" and 'g_name' in request.POST:
             invite_group_name = request.POST.get('g_name')
             print(request.POST)
@@ -464,13 +466,10 @@ def group_managing(request):
 
             group_item.friendname = ast.literal_eval(group_item.friendname)
             group_item.save()
-
     except:
-        print(1)
-
+        print("개인초대 오류")
 
         ##그룹초대 수락##
-
     try:
         if request.method == "POST" and 'first_group_name' in request.POST:
             form = mixCustomForm(request.POST)
@@ -510,12 +509,16 @@ def group_managing(request):
                 Invite_Group_item.invite_status = '0'
                 Invite_Group_item.save()
                 group_group_item.save()
+
+            return redirect('cal:group_managing')
     except:
-        print(1)
+        print("그룹요청수락")
 
     invite_group = json.dumps(invite_member_dic, ensure_ascii=False)
+    print(invite_group)
+    print(df_inner_join)
 
-    return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group, 'df_inner_join':df_inner_join})
+    return render(request, 'cal/group_managing.html', {'invite_group':invite_group, 'df_inner_join':df_inner_join})
 
 def my_schedule(request):
     schedule_data = []
