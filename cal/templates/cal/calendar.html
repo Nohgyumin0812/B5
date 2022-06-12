@@ -449,10 +449,16 @@
     var myID = "{{ my_name }}".replace(/&quot;/g, "\"");
     var ownerID = "{{ owner_name }}".replace(/&quot;/g, "\"");
 
+    //혼합그룹(서로 다른 두 그룹이 합쳐져 새 그룹이 된 경우)인 경우 확인
+    var mix_group = "{{ mix_status }}".replace(/&quot;/g, "\"");
+
     //그룹 방장명 !== 현재 유저명 이면 추천페이지 이동 불가
     function groupName(){
         if(myID !== ownerID){
             alert("그룹 방장에게만 권한이 있습니다!");
+        }
+        else if(mix_group == "2"){
+            alert("혼합 그룹은 추천 기능을 이용할 수 없습니다!");
         }
         else{
             window.location.href = `{% url 'cal:group_recommend' %}?${group}`;

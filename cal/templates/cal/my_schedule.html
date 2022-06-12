@@ -2,7 +2,7 @@
     작성자 : 최고운, 정혜원
 
     최고운 - 날씨 출력, 사용자의 가능한 날짜 입력 받기, 저장하기 버튼 구현, 완료하기 버튼 구현 
-    정혜원 - 
+    정혜원 - 달력 제작
  -->
 
 {% extends 'cal/base.html' %}
@@ -147,7 +147,7 @@
                             else if(result[tmp] === "황사"){
                                 img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-먼지-48.png' %}">`
                             }
-                            else if(result[tmp].includes("비") || result[tmp] === "소나기"){
+                            else if(result[tmp].includes("비") || result[tmp].includes("소나기")){
                                 img = `<img id="wet" style="width:30px; height:30px; margin-left:5px;" src = "{% static 'img/icons8-강렬한-비-48.png' %}">`
                             }
                             else if(result[tmp].includes("눈")){
