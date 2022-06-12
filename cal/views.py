@@ -43,8 +43,6 @@ def calendar(request):
 
     my_name = json.dumps(my_name,ensure_ascii=False )
     owner_name = json.dumps(owner_name,ensure_ascii=False )
-    print(my_name)
-    print(owner_name)
 
     if request.method == "POST":
         if my_id == owner_id:
@@ -127,7 +125,6 @@ def calendar(request):
                     #weather_dic[date_data.text] = []
                     # weather_dic[date_data.text].append(weather.text)
                     weather_dic[date_data.text] = weather.text
-                    print(weather_dic)
                     if '비' in weather.text or '소' in weather.text or weather.text == '흐리고 비' or weather.text == '흐리고 한때 비' or weather.text == '흐리고 가끔 비' or weather.text == '비 또는 눈' or weather.text ==  '눈 또는 비' or weather.text == '가끔 비 또는 눈' \
                             or weather.text == '한때 비 또는 눈' or weather.text == '가끔 눈 또는 비' or weather.text == '한때 눈 또는 비' or \
                             weather.text == '안개' or weather.text == '연무' or weather.text == '박무 (엷은 안개)' or weather.text == '빗방울' \
@@ -137,7 +134,6 @@ def calendar(request):
                         sports_dic[date_data.text] = list(set(sportsall) & set(outdoor_sports))
                     else:
                         sports_dic[date_data.text] = "날씨없음"
-        print(sports_dic)
     # file_path = "./sample.json"
     # with open(file_path, 'w') as outfile:
     #     json.dump(weather_dic, outfile, ensure_ascii=False)
@@ -219,8 +215,6 @@ def calendar(request):
 
             member_percent = int(CustomGroup.objects.filter(groupname = curr_group).values()[0]['sportFirst'])
 
-            print(sports_percent)
-            print(member_percent)
             df_recommend['point'] = sports_percent * df_recommend['sports'] + member_percent * df_recommend['member']
             df_recommend['rank_point'] = df_recommend['point'].rank(method='min')
             rank_point = list(set(list(df_recommend['rank_point'])))
@@ -331,6 +325,15 @@ def group_managing(request):
     df_user = pd.DataFrame(user)
     invite_member_dic = {}
 
+    mix_my_group = []
+    mix_group = mixCustomGroup.objects.all().values()
+    mix_user = CustomUser.objects.all().values()
+    mix_username = CustomUser.objects.get(id=request.user.id).username
+    mix_df = pd.DataFrame(mix_group)
+    mix_df_user = pd.DataFrame(mix_user)
+    mix_invite_member_dic = {}
+
+
     try:
         ##그룹 요청-개인##
         courses = InviteGroup.objects.filter(invite_user=request.user.username, invite_status=1).values()
@@ -372,9 +375,7 @@ def group_managing(request):
     except:
         invite_member_dic['그룹초대'] = {}
 
-    print(invite_member_dic)
-    invite_group = json.dumps(invite_member_dic, ensure_ascii=False)
-    print(invite_group)
+
     ##그룹 관리##
     try:
         df_inner_join = []
@@ -401,7 +402,51 @@ def group_managing(request):
 
         df_inner_join = df_inner_join[['groupname', 'member_num', 'sports']]
         df_inner_join = df_inner_join.set_index('groupname').T.to_dict()
+
+
+        mix_df_inner_join = []
+        mix_df_group = (pd.DataFrame(mix_df[['groupname', 'owner_id', 'friendname']]))
+        mix_df_group['owner_id'] = pd.to_numeric(mix_df_group['owner_id'])
+        mix_df_user['owner_id'] = pd.to_numeric(mix_df_user['id'])
+
+
+        mix_df_user = (mix_df_user[['owner_id', 'username']])
+        print(mix_df_user)
+        print(mix_df_group)
+
+        mix_df_inner_join = pd.merge(mix_df_group, mix_df_user, left_on='owner_id', right_on='owner_id', how='inner')
+
+        print(mix_df_inner_join)
+
+        # print(df_user[df_user['id'] == df['owner_id']])
+        mix_df_inner_join['member_num'] = 0
+        mix_df_inner_join['sports'] = ""
+        mix_df_inner_join['true'] = 0
+        print("#######")
+
+        for i in range(mix_df_inner_join.shape[0]):
+            mix_df_inner_join['username'][i] = [mix_df_inner_join['username'][i]]
+            mix_df_inner_join['friendname'][i] = ast.literal_eval(mix_df_inner_join['friendname'][i]) + (
+                mix_df_inner_join['username'][i])
+            mix_df_inner_join['member_num'][i] = len(mix_df_inner_join['friendname'][i])
+            mix_df_inner_join['sports'][i] = \
+                mixCustomGroup.objects.filter(groupname=mix_df_inner_join['groupname'][i]).values()[0]['sports']
+            if username in mix_df_inner_join['friendname'][i]:
+                mix_df_inner_join['true'][i] = 1
+                mix_my_group.append(mix_df_inner_join['groupname'][i])
+
+        # pd.set_option('display.max_columns', None)
+        mix_df_inner_join = mix_df_inner_join[mix_df_inner_join['true'] == 1]
+
+        mix_df_inner_join = mix_df_inner_join[['groupname', 'member_num', 'sports']]
+        mix_df_inner_join = mix_df_inner_join.set_index('groupname').T.to_dict()
+
+        ########
+        df_inner_join.update(mix_df_inner_join)
+        print(df_inner_join)
         df_inner_join = json.dumps(df_inner_join, ensure_ascii= False)        ## 내 그룹 시 그룹명, 멤버수, 종목 출력 ##
+
+
 
         if request.method == "POST" and 'g_name' in request.POST:
             invite_group_name = request.POST.get('g_name')
@@ -420,31 +465,57 @@ def group_managing(request):
             group_item.friendname = ast.literal_eval(group_item.friendname)
             group_item.save()
 
+    except:
+        print(1)
+
 
         ##그룹초대 수락##
-        ## 'g_nameee' -> **
-        if request.method == "POST" and 'g_nameee' in request.POST:
-            print(request.POST)
+
+    try:
+        if request.method == "POST" and 'first_group_name' in request.POST:
             form = mixCustomForm(request.POST)
             if form.is_valid():
-                group_group_item  = form.save(commit=False)
-                group_group_item.groupname = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['groupname'] + CustomGroup.objects.filter(groupname = request.POST['두 번째 나온 그룹명']).values()[0]['groupname']
-                group_group_item.sports = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['sports']
-                group_group_item.owner = CustomUser.objects.filter(id= CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['owner_id']).values()[0]['username']
-                group_group_item.friendname = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['friendname']
-                + CustomGroup.objects.filter(groupname = request.POST['두 번째 나온 그룹명']).values()[0]['friendname']
-                + CustomUser.objects.filter(id = CustomGroup.objects.filter(groupname = request.POST['두 번째 나온 그룹명']).values()[0]['owner_id']).values()[0]['username']
-                group_group_item.location = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['location']
-                group_group_item.location_code = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['location_code']
-                group_group_item.x = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['x']
-                group_group_item.y = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['y']
-                group_group_item.dateFirst = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['dateFirst']
-                group_group_item.sportFirst = CustomGroup.objects.filter(groupname = request.POST['첫 번째 나온 그룹명']).values()[0]['sportFirst']
-                group_group_item.save()
-        return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group, 'df_inner_join':df_inner_join})
-    except:
-        return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group, 'df_inner_join':df_inner_join})
+                print(1)
+                group_group_item = form.save(commit=False)
 
+                group_group_item.groupname = \
+                CustomGroup.objects.filter(groupname=request.POST['first_group_name']).values()[0]['groupname'] , "+",CustomGroup.objects.filter(groupname=request.POST['second_group_name']).values()[0]['groupname']
+                group_group_item.groupname = str(group_group_item.groupname).replace('(', '').replace(')','').replace(',', '').replace("'",'').replace(" ", '')
+
+                group_group_item.sports = CustomGroup.objects.filter(groupname=request.POST['first_group_name']).values()[0][
+                    'sports']
+                group_group_item.owner = CustomUser.objects.filter(
+                    id=CustomGroup.objects.filter(groupname=request.POST['first_group_name']).values()[0][
+                        'owner_id']).values()[0]['username']
+                group_group_item.owner_id = CustomUser.objects.filter(username = group_group_item.owner).values()[0]['id']
+                group_group_item.friendname = \
+                str(CustomGroup.objects.filter(groupname=request.POST['first_group_name']).values()[0]['friendname']), \
+                str(CustomGroup.objects.filter(groupname=request.POST['second_group_name']).values()[0]['friendname']),\
+                str(CustomUser.objects.filter(
+                    id=CustomGroup.objects.filter(groupname=request.POST['second_group_name']).values()[0][
+                        'owner_id']).values()[0]['username'])
+                group_group_item.friendname = list(set(ast.literal_eval(str(group_group_item.friendname).replace("(", '').replace(")", '').replace('[', '').replace(']', '').replace('"', '').replace(' ', ''))))
+
+                group_group_item.location = \
+                CustomGroup.objects.filter(groupname=request.POST['first_group_name']).values()[0]['location']
+                group_group_item.location_code = \
+                CustomGroup.objects.filter(groupname=request.POST['first_group_name']).values()[0]['location_code']
+                group_group_item.x = CustomGroup.objects.filter(groupname=request.POST['first_group_name']).values()[0]['x']
+                group_group_item.y = CustomGroup.objects.filter(groupname=request.POST['first_group_name']).values()[0]['y']
+                group_group_item.dateFirst = \
+                CustomGroup.objects.filter(groupname=request.POST['first_group_name']).values()[0]['dateFirst']
+                group_group_item.sportFirst = \
+                CustomGroup.objects.filter(groupname=request.POST['first_group_name']).values()[0]['sportFirst']
+                Invite_Group_item = InviteGroupGroup.objects.get(owner_id = request.user.id, invite_status= 1)
+                Invite_Group_item.invite_status = '0'
+                Invite_Group_item.save()
+                group_group_item.save()
+    except:
+        print(1)
+
+    invite_group = json.dumps(invite_member_dic, ensure_ascii=False)
+
+    return render(request, 'cal/group_managing.html', {'my_group':my_group, 'invite_group':invite_group, 'df_inner_join':df_inner_join})
 
 def my_schedule(request):
     schedule_data = []
@@ -537,28 +608,28 @@ def group_recommend(request):
             InviteGroup = form.save()
         return redirect('cal:group_recommend')
 
-    ##초대상태##
-    place_group = pd.DataFrame(place_group)  # distance: 내 그룹과 상대 그룹 간의 거리
-    sports_group = pd.DataFrame(sports_group)
-    invite_length = len(InviteGroupGroup.objects.filter(group = curr_group, invite_status = 1).values())
-    invite_loc_list = []
-    invite_spo_list = []
-    for i in range(invite_length):
-        invite_loc_list.append(InviteGroupGroup.objects.filter(group = curr_group, invite_status = 1).values()[i]['invite_group'])
-        invite_spo_list.append(InviteGroupGroup.objects.filter(group = curr_group, invite_status = 1).values()[i]['invite_group'])
+    try:
+        ##초대상태##
+        place_group = pd.DataFrame(place_group)  # distance: 내 그룹과 상대 그룹 간의 거리
+        sports_group = pd.DataFrame(sports_group)
+        invite_length = len(InviteGroupGroup.objects.filter(group = curr_group, invite_status = 1).values())
+        invite_loc_list = []
+        invite_spo_list = []
+        for i in range(invite_length):
+            invite_loc_list.append(InviteGroupGroup.objects.filter(group = curr_group, invite_status = 1).values()[i]['invite_group'])
+            invite_spo_list.append(InviteGroupGroup.objects.filter(group = curr_group, invite_status = 1).values()[i]['invite_group'])
 
-    place_group = place_group[~place_group['groupname'].isin(invite_loc_list)]
-    place_group = place_group[['location', 'groupname']].to_dict('records')
+        place_group = place_group[~place_group['groupname'].isin(invite_loc_list)]
+        place_group = place_group[['location', 'groupname']].to_dict('records')
 
-    sports_group = sports_group[~sports_group['groupname'].isin(invite_spo_list)]
-    sports_group = sports_group[['sports', 'groupname']].to_dict('records')
+        sports_group = sports_group[~sports_group['groupname'].isin(invite_spo_list)]
+        sports_group = sports_group[['sports', 'groupname']].to_dict('records')
 
-    ##스포츠그룹-초대상태##
-    print(sports_group) # common: 겹치는 운동종목 수
-
-    place_group = json.dumps(place_group, ensure_ascii=False)
-    sports_group = json.dumps(sports_group, ensure_ascii=False)
-
+        place_group = json.dumps(place_group, ensure_ascii=False)
+        sports_group = json.dumps(sports_group, ensure_ascii=False)
+    except:
+        place_group=[]
+        sports_group=[]
     context = {'place_group': place_group,'sports_group':sports_group}
     return render(request, 'cal/group_recommend.html', context)
 
