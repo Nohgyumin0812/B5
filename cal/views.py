@@ -307,7 +307,7 @@ def group_making(request):
 
             group.dateFirst = request.POST['dateFirst']
             group.sportFirst = request.POST['sportFirst']
-            group.mixstatus = "0"
+            group.mix_status = "0"
             group.save()
             return redirect('cal:group_managing')
     return render(request, 'cal/group_making.html')
