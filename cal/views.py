@@ -1,29 +1,31 @@
+# 작성자: 노규민
+
+# 캘린더 메인 뷰함수- 함께하기, 초대하기, 강퇴하기, 일정추가, 날씨 크롤링, 가중치 추천 알고리즘
+# 그룹핑 메인 뷰함수- 그룹 가입, 위치정보 삽입
+# 그룹관리 메인 뷰함수- 단일 그룹관리, 혼합 그룹관리, 그룹요청-개인, 그룹요청-그룹, 개인초대 수락, 그룹초대 수락, 혼합그룹 생성
+# 일정가능일 추가 메인 뷰함수- 가능일 추가
+# 그룹추천 메인 뷰함수- 위치 기반 그룹 추천, 종목 기반 그룹 추천
+# 개인캘린더 메인 뷰함수- 일정추가, 날씨 크롤링
+# 로그인, 로그아웃, 회원가입 뷰함수 (common/views.py)
+
+import ast
 import json
 from urllib import parse
-from urllib.parse import unquote, quote, quote_plus, urlencode
 import bs4
+import pandas as pd
 import requests
 from django.contrib.auth.decorators import login_required
-import json
-import calendar
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
-import ast
-from .forms import GroupForm, DayForm, InviteForm, InviteGroupForm, ScheForm, my_ScheForm, mixCustomForm
-from .models import CustomGroup, DayGroup, InviteGroup,InviteGroupGroup, ScheGroup, my_ScheGroup, mixCustomGroup
-from common.models import CustomUser
-from .models import Event
-
-from django.contrib.auth.models import Group
-import pandas as pd
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
-import urllib
+from common.models import CustomUser
+from .forms import GroupForm, DayForm, InviteForm, InviteGroupForm, ScheForm, my_ScheForm, mixCustomForm
+from .models import CustomGroup, DayGroup, InviteGroup, InviteGroupGroup, ScheGroup, my_ScheGroup, mixCustomGroup
+
 
 def index(request):
     return render(request, 'common/login.html')
 
+# 캘린더 메인 뷰함수
 @login_required()
 def calendar(request):
     curr_url = parse.unquote(str(request.build_absolute_uri()))
@@ -73,7 +75,6 @@ def calendar(request):
                 Sche = form.save()
                 print("######")
 
-        ##강퇴기능은 값 받아와야 함, 리스트에서 값 받아오면 수정
             if "kickList[]" in request.POST:
                 #멤버 삭제
                 print("@@@@@@@@@@@@")
@@ -249,11 +250,13 @@ def calendar(request):
     except CustomGroup.DoesNotExist:
         return render(request, 'cal/group_making.html')
 
+# 그룹핑 메인 뷰함수
 @login_required()
 def group_making(request):
     if request.method == 'POST':
         print(request.POST)
 
+        #그룹가입
         form = GroupForm(request.POST)
         print(form)
         if form.is_valid():
@@ -267,6 +270,7 @@ def group_making(request):
             group.invite_status = 0
             print(group.friendname)
 
+            #위치정보 삽입
             group.location = request.POST['g-location']
             if group.location == '이문동':
                 group.location_code = '09230110'
@@ -316,12 +320,11 @@ def group_making(request):
             return redirect('cal:group_managing')
     return render(request, 'cal/group_making.html')
 
-#2015
-#00016
-
+# 그룹관리 메인 뷰함수
 @csrf_exempt
 @login_required()
 def group_managing(request):
+    #단일 그룹관리
     my_group = []
     group = CustomGroup.objects.all().values()
     user = CustomUser.objects.all().values()
@@ -330,6 +333,7 @@ def group_managing(request):
     df_user = pd.DataFrame(user)
     invite_member_dic = {}
 
+    #혼합 그룹관리
     mix_my_group = []
     mix_group = mixCustomGroup.objects.all().values()
     mix_user = CustomUser.objects.all().values()
@@ -452,7 +456,7 @@ def group_managing(request):
     except:
         print("혼합그룹없을때")
 
-    try:
+    try: #개인초대 수락
         if request.method == "POST" and 'g_name' in request.POST:
             invite_group_name = request.POST.get('g_name')
             print(request.POST)
@@ -472,8 +476,8 @@ def group_managing(request):
     except:
         print("개인초대 오류")
 
-        ##그룹초대 수락##
-    try:
+
+    try:##그룹초대 수락##
         if request.method == "POST" and 'first_group_name' in request.POST:
             form = mixCustomForm(request.POST)
             if form.is_valid():
@@ -532,7 +536,7 @@ def group_managing(request):
         if pd.DataFrame(mixCustomGroup.objects.all().values())['groupname'][i] in list(origin_group['groupname']):
             continue
         form = GroupForm(request.POST)
-        if form.is_valid():
+        if form.is_valid(): #혼합그룹 생성
             mixgroup_item = form.save(commit=False)
             mixgroup_item.groupname = pd.DataFrame(mixCustomGroup.objects.all().values())['groupname'][i]
             mixgroup_item.sports = pd.DataFrame(mixCustomGroup.objects.all().values())['sports'][i]
@@ -551,6 +555,7 @@ def group_managing(request):
 
     return render(request, 'cal/group_managing.html', {'invite_group':invite_group, 'df_inner_join':df_inner_join})
 
+#일정가능일 추가 메인 뷰함수
 def my_schedule(request):
     schedule_data = []
     data = request.session['data']
@@ -574,7 +579,7 @@ def my_schedule(request):
 
     schedule_data = DayGroup.objects.filter(group_id = my_group_id).values_list()
     schedule_data = pd.DataFrame(schedule_data)
-    try:
+    try: #가능일 추가
         schedule_data = schedule_data[schedule_data.iloc[:, 1] == my_group_id].iloc[:, 2]
         schedule_data_lst = []
 
@@ -595,8 +600,11 @@ def my_schedule(request):
                    'sports_date':sports_date,'curr_group':curr_group}
         return render(request, 'cal/my_schedule.html', context)
 
+# 그룹추천 메인 뷰함수
 def group_recommend(request):
+
     ##내 주변 그룹##
+    #위치 기반 그룹 추천
     curr_group = request.session['curr_group']
     group_x = CustomGroup.objects.filter(groupname=curr_group).values()[0]['x']
     group_y = CustomGroup.objects.filter(groupname=curr_group).values()[0]['y']
@@ -614,6 +622,7 @@ def group_recommend(request):
     place_group = df_group[['location', 'groupname']].to_dict('records')
 
     ##상대팀이 될 수 있는 그룹##
+    #종목 기반 그룹 추천
     group_sports = ast.literal_eval(CustomGroup.objects.filter(groupname=curr_group).values()[0]['sports'])
     sports_group = df_group[['groupname', 'sports']]
 
@@ -667,6 +676,7 @@ def group_recommend(request):
     context = {'place_group': place_group,'sports_group':sports_group}
     return render(request, 'cal/group_recommend.html', context)
 
+#개인캘린더 메인 뷰함수
 def mycalendar(request):
     loc = CustomUser.objects.filter(id= request.user.id).values()[0]['location_code']
     url = 'https://weather.naver.com/today/%s' % (loc)

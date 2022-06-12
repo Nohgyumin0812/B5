@@ -4,7 +4,8 @@ from django.shortcuts import render, redirect
 from .forms import SignupForm
 from .models import CustomUser
 from cal.models import CustomGroup
-#로그인 구현
+
+#로그인 뷰함수
 def login(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -18,12 +19,12 @@ def login(request):
     else:
         return render(request, 'common/login.html')
 
-#로그아웃 구현
+#로그아웃 뷰함수
 def logout(request):
     auth.logout(request)
     return redirect('/')
 
-
+#회원가입 뷰함수
 def signup(request):
     if request.method =='POST':
         print(request.POST)
