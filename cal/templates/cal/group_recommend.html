@@ -1,3 +1,8 @@
+<!-- 작성자 : 정혜원, 최고운
+
+정혜원 - html/css 작성, 내 주변 그룹 디스플레이, 상대팀이 될 수 있는 그룹 디스플레이
+최고운 - html/css 작성, group-outer 파트 -->
+
 {% extends 'cal/base.html' %}
 {% load static %}
 
@@ -30,18 +35,8 @@
 
 {% block script %}
 <script>
-    // swiper 라이브러리
-    const swiper = new Swiper( '.swiper', {
-        autoplay: false,
-        loop: false,
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        slidesPerView: 3,
-        slidesPerGroup : 3,
-    });
     
+    // 상대팀의 선호 종목 아이콘 디스플레이
     function sportsIcon(rsports){
         let rs = rsports.match(/\d+/g);
         var r_s=``;
@@ -116,5 +111,17 @@
 
     document.getElementById("rival-recommend").innerHTML += `<div class="swiper-button-prev" id="bt1"></div>
         <div class="swiper-button-next" id="bt2"></div>`;
+
+    // swiper 라이브러리
+    const swiper = new Swiper( '.swiper', {
+        autoplay: false,
+        loop: false,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        slidesPerView: 3,
+        slidesPerGroup : 3,
+    });
 </script>
 {% endblock %}
