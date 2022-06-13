@@ -451,18 +451,23 @@
 
     //혼합그룹(서로 다른 두 그룹이 합쳐져 새 그룹이 된 경우)인 경우 확인
     var mix_group = "{{ mix_status }}".replace(/&quot;/g, "\"");
+    console.log(typeof(mix_group));
 
     //그룹 방장명 !== 현재 유저명 이거나 해당 그룹이 혼합그룹인 경우 추천페이지 이동 불가
     function groupName(){
         if(myID !== ownerID){
             alert("그룹 방장에게만 권한이 있습니다!");
         }
-        else if(mix_group == "2"){
-            alert("혼합 그룹은 추천 기능을 이용할 수 없습니다!");
-        }
         else{
-            //그룹 추천페이지 이동 시 현재 그룹명 get방식으로 전송
-            window.location.href = `{% url 'cal:group_recommend' %}?${group}`;
+            //혼합그룹 추천하기 기능 이용 불가
+            if(mix_group.includes("1") == true){
+                alert("혼합 그룹은 추천 기능을 이용할 수 없습니다!");
+            }
+            else{
+                //그룹 추천페이지 이동 시 현재 그룹명 get방식으로 전송
+                window.location.href = `{% url 'cal:group_recommend' %}?${group}`;
+            }
+            
         }
     }
 
