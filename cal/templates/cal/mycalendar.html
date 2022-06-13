@@ -227,6 +227,7 @@
                 //개인 일정 데이터 처리
                 var group_sche = "{{ sche_data }}".replace(/&quot;/g, "\"");
                 group_sche = group_sche.substring(1,group_sche.length-1);
+                console.log(group_sche);
                 if(group_sche != ""){
                     var g_sche = JSON.parse(group_sche);
                     var g_k = Object.keys(g_sche);
