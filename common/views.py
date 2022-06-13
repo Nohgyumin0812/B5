@@ -28,7 +28,9 @@ def signup(request):
         username=request.POST["username"]
         print(username)
         password=request.POST["password1"]
-
+        password_2=request.POST["password2"]
+        if password != password_2:
+            return redirect('common:signup')
         email=request.POST["email"]
         tel = request.POST['tel']
         location = request.POST['location']

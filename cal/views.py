@@ -530,29 +530,31 @@ def group_managing(request):
     print(invite_group)
     print(df_inner_join)
 
-    origin_group = pd.DataFrame(CustomGroup.objects.all().values())[['groupname', 'owner_id', 'sports', 'friendname', 'location', 'location_code', 'x', 'y', 'dateFirst', 'sportFirst', 'invite_status','mix_status']]
-    mix_group = pd.DataFrame(mixCustomGroup.objects.all().values())[['groupname', 'owner_id', 'sports', 'friendname', 'location', 'location_code', 'x', 'y', 'dateFirst', 'sportFirst', 'invite_status','mix_status']]
+    try:
+        origin_group = pd.DataFrame(CustomGroup.objects.all().values())[['groupname', 'owner_id', 'sports', 'friendname', 'location', 'location_code', 'x', 'y', 'dateFirst', 'sportFirst', 'invite_status','mix_status']]
+        mix_group = pd.DataFrame(mixCustomGroup.objects.all().values())[['groupname', 'owner_id', 'sports', 'friendname', 'location', 'location_code', 'x', 'y', 'dateFirst', 'sportFirst', 'invite_status','mix_status']]
 
-    for i in range(pd.DataFrame(mixCustomGroup.objects.all().values()).shape[0]):
-        if pd.DataFrame(mixCustomGroup.objects.all().values())['groupname'][i] in list(origin_group['groupname']):
-            continue
-        form = GroupForm(request.POST)
-        if form.is_valid(): #혼합그룹 생성
-            mixgroup_item = form.save(commit=False)
-            mixgroup_item.groupname = pd.DataFrame(mixCustomGroup.objects.all().values())['groupname'][i]
-            mixgroup_item.sports = pd.DataFrame(mixCustomGroup.objects.all().values())['sports'][i]
-            mixgroup_item.friendname =pd.DataFrame(mixCustomGroup.objects.all().values())['friendname'][i]
-            mixgroup_item.location = pd.DataFrame(mixCustomGroup.objects.all().values())['location'][i]
-            mixgroup_item.location_code = pd.DataFrame(mixCustomGroup.objects.all().values())['location_code'][i]
-            mixgroup_item.x = pd.DataFrame(mixCustomGroup.objects.all().values())['x'][i]
-            mixgroup_item.y = pd.DataFrame(mixCustomGroup.objects.all().values())['y'][i]
-            mixgroup_item.dateFirst = pd.DataFrame(mixCustomGroup.objects.all().values())['dateFirst'][i]
-            mixgroup_item.sportFirst = pd.DataFrame(mixCustomGroup.objects.all().values())['sportFirst'][i]
-            mixgroup_item.invite_status = pd.DataFrame(mixCustomGroup.objects.all().values())['invite_status'][i]
-            mixgroup_item.mix_status = pd.DataFrame(mixCustomGroup.objects.all().values())['mix_status'][i]
-            mixgroup_item.owner_id = pd.DataFrame(mixCustomGroup.objects.all().values())['owner_id'][i]
-            mixgroup_item = form.save()
-
+        for i in range(pd.DataFrame(mixCustomGroup.objects.all().values()).shape[0]):
+            if pd.DataFrame(mixCustomGroup.objects.all().values())['groupname'][i] in list(origin_group['groupname']):
+                continue
+            form = GroupForm(request.POST)
+            if form.is_valid(): #혼합그룹 생성
+                mixgroup_item = form.save(commit=False)
+                mixgroup_item.groupname = pd.DataFrame(mixCustomGroup.objects.all().values())['groupname'][i]
+                mixgroup_item.sports = pd.DataFrame(mixCustomGroup.objects.all().values())['sports'][i]
+                mixgroup_item.friendname =pd.DataFrame(mixCustomGroup.objects.all().values())['friendname'][i]
+                mixgroup_item.location = pd.DataFrame(mixCustomGroup.objects.all().values())['location'][i]
+                mixgroup_item.location_code = pd.DataFrame(mixCustomGroup.objects.all().values())['location_code'][i]
+                mixgroup_item.x = pd.DataFrame(mixCustomGroup.objects.all().values())['x'][i]
+                mixgroup_item.y = pd.DataFrame(mixCustomGroup.objects.all().values())['y'][i]
+                mixgroup_item.dateFirst = pd.DataFrame(mixCustomGroup.objects.all().values())['dateFirst'][i]
+                mixgroup_item.sportFirst = pd.DataFrame(mixCustomGroup.objects.all().values())['sportFirst'][i]
+                mixgroup_item.invite_status = pd.DataFrame(mixCustomGroup.objects.all().values())['invite_status'][i]
+                mixgroup_item.mix_status = pd.DataFrame(mixCustomGroup.objects.all().values())['mix_status'][i]
+                mixgroup_item.owner_id = pd.DataFrame(mixCustomGroup.objects.all().values())['owner_id'][i]
+                mixgroup_item = form.save()
+    except:
+        print("혼합그룹 없음")
 
     return render(request, 'cal/group_managing.html', {'invite_group':invite_group, 'df_inner_join':df_inner_join})
 
