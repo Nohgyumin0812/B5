@@ -28,6 +28,7 @@ def signup(request):
         username=request.POST["username"]
         print(username)
         password=request.POST["password1"]
+        password_2=request.POST["password2"]
 
         email=request.POST["email"]
         tel = request.POST['tel']
@@ -74,7 +75,8 @@ def signup(request):
             y= '127.068233'
 
         sports = request.POST.getlist('sports[]')
-
+        if password != password_2:
+            return redirect('common:signup')
         user= CustomUser.objects.create_user(username,email, password, tel = tel,location = location, sports = sports, location_code = location_code, x=x, y=y)
         user.save()
 
