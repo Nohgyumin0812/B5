@@ -706,12 +706,12 @@ def mycalendar(request):
 
     ##개인 일정 추가##
     try:
-        sche_data = my_ScheGroup.objects.filter(id = request.user.id).values()
+        sche_data = my_ScheGroup.objects.filter(user_id = request.user.id).values()
         sche_data = pd.DataFrame(sche_data).drop(['id', 'user_id'], axis = 1).set_index('sche_date').T.to_dict('list')
-        sche_data = json.dumps(sche_data, ensure_ascii= False)
     except:
         sche_data = ""
-    print(sche_data)
+
+    sche_data = json.dumps(sche_data, ensure_ascii=False)
 
     sche_data = json.dumps(sche_data, ensure_ascii= False)
     ## 그룹 종목 출력 ##
