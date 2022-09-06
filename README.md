@@ -1,9 +1,3 @@
-"# Nohgyumin0812" 
-"# Nohgyumin0812" 
-"# Nohgyumin0812" 
-"# Nohgyumin0812" 
-"# Nohgyumin0812" 
-"# calendar" 
-"# calendar" 
-"# calendar" 
-"# calendar" 
+2021-2 한국외국어대학교 종합설계 프로젝트 "언제 만나"
+
+스포츠인들을 위한 일정 관리 웹 서비스
